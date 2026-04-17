@@ -28,19 +28,17 @@ def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
     df.columns = df.columns.str.strip()
 
-    print(df.columns.tolist())
-
     prices = []
     highs = []
     lows = []
     names = []
 
-for ticker in df["Ticker"]:
-    price, high, low, name = fetch_data(ticker)
-    prices.append(price)
-    highs.append(high)
-    lows.append(low)
-    names.append(name)
+    for ticker in df["Ticker"]:
+        price, high, low, name = fetch_data(ticker)
+        prices.append(price)
+        highs.append(high)
+        lows.append(low)
+        names.append(name)
 
     df["Preis"] = prices
     df["52W High"] = highs
