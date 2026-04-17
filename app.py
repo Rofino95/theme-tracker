@@ -75,14 +75,26 @@ with col_filter2:
         ["Alle"] + sorted(df["Main Theme"].dropna().unique().tolist())
     )
 
-filtered_grouped = grouped.copy()
+filtered_df = df.copy()
+
+if filter_main_theme != "Alle":
+    filtered_df = filtered_df[filtered_df["Main Theme"] == filter_main_theme]
+
+filtered_grouped = (
+    filtered_df.groupby("Sub Theme", as_index=False)
+    .agg({
+        "Trend Score": "mean",
+        "Momentum": "mean"
+    })
+)
+
+filtered_grouped["Trend Score"] = filtered_grouped["Trend Score"].round(2)
+filtered_grouped["Momentum"] = filtered_grouped["Momentum"].round(2)
+filtered_grouped["Status"] = filtered_grouped["Trend Score"].apply(get_status)
+filtered_grouped = filtered_grouped.sort_values(by="Trend Score", ascending=False)
 
 if filter_status != "Alle":
     filtered_grouped = filtered_grouped[filtered_grouped["Status"] == filter_status]
-
-if filter_main_theme != "Alle":
-    allowed_subthemes = df[df["Main Theme"] == filter_main_theme]["Sub Theme"].unique()
-    filtered_grouped = filtered_grouped[filtered_grouped["Sub Theme"].isin(allowed_subthemes)]
     
 def color_status(val):
     if val == "Bullisch":
@@ -128,10 +140,10 @@ st.subheader("Sub Theme im Detail")
 
 selected_theme = st.selectbox(
     "Waehle ein Sub Theme",
-    grouped["Sub Theme"].tolist()
+    filtered_grouped["Sub Theme"].tolist()
 )
 
-detail_df = df[df["Sub Theme"] == selected_theme].copy()
+detail_df = filtered_df[filtered_df["Sub Theme"] == selected_theme].copy()
 detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
 
 selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
