@@ -35,6 +35,19 @@ grouped["Momentum"] = grouped["Momentum"].round(2)
 grouped["Status"] = grouped["Trend Score"].apply(get_status)
 grouped = grouped.sort_values(by="Trend Score", ascending=False)
 
+main_grouped = (
+    df.groupby("Main Theme", as_index=False)
+    .agg({
+        "Trend Score": "mean",
+        "Momentum": "mean"
+    })
+)
+
+main_grouped["Trend Score"] = main_grouped["Trend Score"].round(2)
+main_grouped["Momentum"] = main_grouped["Momentum"].round(2)
+main_grouped["Status"] = main_grouped["Trend Score"].apply(get_status)
+main_grouped = main_grouped.sort_values(by="Trend Score", ascending=False)
+
 # Top / Flop
 top_theme = grouped.iloc[0]["Sub Theme"]
 top_score = grouped.iloc[0]["Trend Score"]
@@ -48,15 +61,29 @@ col1, col2 = st.columns(2)
 col1.metric("Top Theme", top_theme, top_score)
 col2.metric("Schwaechstes Theme", flop_theme, f"-{flop_score}")
 
-filter_status = st.selectbox(
-    "Status filtern",
-    ["Alle", "Bullisch", "Neutral", "Baerisch"]
-)
+col_filter1, col_filter2 = st.columns(2)
+
+with col_filter1:
+    filter_status = st.selectbox(
+        "Status filtern",
+        ["Alle", "Bullisch", "Neutral", "Baerisch"]
+    )
+
+with col_filter2:
+    filter_main_theme = st.selectbox(
+        "Main Theme filtern",
+        ["Alle"] + sorted(df["Main Theme"].dropna().unique().tolist())
+    )
 
 filtered_grouped = grouped.copy()
+
 if filter_status != "Alle":
     filtered_grouped = filtered_grouped[filtered_grouped["Status"] == filter_status]
 
+if filter_main_theme != "Alle":
+    allowed_subthemes = df[df["Main Theme"] == filter_main_theme]["Sub Theme"].unique()
+    filtered_grouped = filtered_grouped[filtered_grouped["Sub Theme"].isin(allowed_subthemes)]
+    
 def color_status(val):
     if val == "Bullisch":
         return "background-color: #123524; color: white"
@@ -67,14 +94,18 @@ def color_status(val):
 
 styled = filtered_grouped.style.map(color_status, subset=["Status"])
 
+st.markdown("### Main Theme Uebersicht")
+
 st.dataframe(
-    styled.format({
+    main_grouped.style.map(color_status, subset=["Status"]).format({
         "Trend Score": "{:.2f}",
         "Momentum": "{:.2f}"
     }),
     use_container_width=True,
     hide_index=True
 )
+
+st.markdown("### Sub Theme Uebersicht")
 
 st.info(
     """
@@ -103,6 +134,9 @@ selected_theme = st.selectbox(
 detail_df = df[df["Sub Theme"] == selected_theme].copy()
 detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
 
+selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
+
+st.write(f"**Main Theme:** {selected_main_theme}")
 st.write(f"**Bestandteile von {selected_theme}**")
 
 st.dataframe(
