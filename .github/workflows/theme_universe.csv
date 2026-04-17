@@ -1,0 +1,150 @@
+Main Theme	Sub Theme	Ticker
+AI / Tech	AI Compute	NVDA
+AI / Tech	AI Compute	MRVL
+AI / Tech	AI Compute	AVGO
+AI / Tech	AI Compute	INTC
+AI / Tech	AI Compute	TSM
+AI / Tech	AI Compute	ARM
+AI / Tech	AI Compute	SMCI
+AI / Tech	AI Compute	ASML
+AI / Tech	AI Compute	KLAC
+		
+AI / Tech	AI Networking	ANET
+AI / Tech	AI Networking	CSCO
+AI / Tech	AI Networking	JNPR
+AI / Tech	AI Networking	FFIV
+AI / Tech	AI Networking	CIEN
+AI / Tech	AI Networking	HPE
+AI / Tech	AI Networking	DELL
+AI / Tech	AI Networking	NTAP
+AI / Tech	AI Networking	NET
+AI / Tech	AI Networking	PANW
+		
+AI / Tech	Photonics	COHR
+AI / Tech	Photonics	LITE
+AI / Tech	Photonics	AAOI
+AI / Tech	Photonics	POET
+AI / Tech	Photonics	AXTI
+AI / Tech	Photonics	CIEN
+AI / Tech	Photonics	INFN
+AI / Tech	Photonics	IPGP
+AI / Tech	Photonics	SIVE
+AI / Tech	Photonics	FN
+		
+AI / Tech	Semiconductor Equipment	ASML
+AI / Tech	Semiconductor Equipment	AMAT
+AI / Tech	Semiconductor Equipment	TER
+AI / Tech	Semiconductor Equipment	LRCX
+AI / Tech	Semiconductor Equipment	ACLS
+AI / Tech	Semiconductor Equipment	ONTO
+AI / Tech	Semiconductor Equipment	SCREEN
+AI / Tech	Semiconductor Equipment	TEL
+AI / Tech	Semiconductor Equipment	DISCO
+		
+AI / Tech	Semiconductor Materials	SOI.PA
+AI / Tech	Semiconductor Materials	ENTG
+AI / Tech	Semiconductor Materials	COHR
+AI / Tech	Semiconductor Materials	AXTI
+AI / Tech	Semiconductor Materials	SKYT
+AI / Tech	Semiconductor Materials	WOLF
+AI / Tech	Semiconductor Materials	STM
+AI / Tech	Semiconductor Materials	UMC
+AI / Tech	Semiconductor Materials	TSM
+AI / Tech	Semiconductor Materials	INTC
+		
+AI / Tech	Cybersecurity	CRWD
+AI / Tech	Cybersecurity	ZS
+AI / Tech	Cybersecurity	NET
+AI / Tech	Cybersecurity	PANW
+AI / Tech	Cybersecurity	FTNT
+AI / Tech	Cybersecurity	OKTA
+AI / Tech	Cybersecurity	DDOG
+AI / Tech	Cybersecurity	ESTC
+AI / Tech	Cybersecurity	S
+AI / Tech	Cybersecurity	CIBR
+		
+Energy	Grid Infrastructure	NEE
+Energy	Grid Infrastructure	DUK
+Energy	Grid Infrastructure	SO
+Energy	Grid Infrastructure	EXC
+Energy	Grid Infrastructure	AEP
+Energy	Grid Infrastructure	CEG
+Energy	Grid Infrastructure	VST
+Energy	Grid Infrastructure	XEL
+Energy	Grid Infrastructure	ED
+Energy	Grid Infrastructure	D
+		
+Energy	Power Equipment	GE
+Energy	Power Equipment	ABBN
+Energy	Power Equipment	SIE.DE
+Energy	Power Equipment	EATON
+Energy	Power Equipment	ETN
+Energy	Power Equipment	SU
+Energy	Power Equipment	HUBB
+Energy	Power Equipment	EMR
+		
+Energy	Renewables	VWS.CO
+Energy	Renewables	ORSTED.CO
+Energy	Renewables	ENPH
+Energy	Renewables	FSLR
+Energy	Renewables	SEDG
+Energy	Renewables	NOVA
+Energy	Renewables	CSIQ
+Energy	Renewables	JKS
+Energy	Renewables	RUN
+Energy	Renewables	NEE
+		
+Healthcare	Medtech	ISRG
+Healthcare	Medtech	MDT
+Healthcare	Medtech	SYK
+Healthcare	Medtech	BSX
+Healthcare	Medtech	ABT
+Healthcare	Medtech	DXCM
+Healthcare	Medtech	EW
+Healthcare	Medtech	IDXX
+Healthcare	Medtech	ILMN
+Healthcare	Medtech	ZBH
+		
+Healthcare	Biotech	VRTX
+Healthcare	Biotech	REGN
+Healthcare	Biotech	MRNA
+Healthcare	Biotech	BNTX
+Healthcare	Biotech	GILD
+Healthcare	Biotech	AMGN
+Healthcare	Biotech	BIIB
+Healthcare	Biotech	INCY
+Healthcare	Biotech	ALNY
+Healthcare	Biotech	EXEL
+		
+Finance	Fintech	SQ
+Finance	Fintech	AXP
+Finance	Fintech	PYPL
+Finance	Fintech	ADYEN.AS
+Finance	Fintech	AFRM
+Finance	Fintech	COIN
+Finance	Fintech	NU
+Finance	Fintech	SOFI
+Finance	Fintech	FIS
+Finance	Fintech	GPN
+		
+Finance	Banks	JPM
+Finance	Banks	BAC
+Finance	Banks	C
+Finance	Banks	WFC
+Finance	Banks	GS
+Finance	Banks	MS
+Finance	Banks	DB
+Finance	Banks	UBS
+Finance	Banks	HSBC
+Finance	Banks	BNP.PA
+		
+Industrials	Defense	LMT
+Industrials	Defense	NOC
+Industrials	Defense	RTX
+Industrials	Defense	BA
+Industrials	Defense	GD
+Industrials	Defense	LHX
+Industrials	Defense	SAF.PA
+Industrials	Defense	RR.L
+Industrials	Defense	KTOS
+Industrials	Defense	PLTR
