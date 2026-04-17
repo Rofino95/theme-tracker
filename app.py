@@ -153,6 +153,7 @@ st.write(f"**Bestandteile von {selected_theme}**")
 
 st.dataframe(
     detail_df[[
+        "Name",
         "Ticker",
         "Preis",
         "52W High",
