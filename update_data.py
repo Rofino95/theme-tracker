@@ -7,18 +7,22 @@ OUTPUT_FILE = "theme_scores.csv"
 def fetch_data(ticker):
     try:
         data = yf.Ticker(ticker)
+        info = data.info
         hist = data.history(period="1y")
 
         if hist.empty:
-            return None, None, None
+            return None, None, None, None
 
         price = hist["Close"].iloc[-1]
         high = hist["High"].max()
         low = hist["Low"].min()
 
-        return price, high, low
+        name = info.get("shortName") or info.get("longName") or ticker
+
+        return price, high, low, name
+
     except:
-        return None, None, None
+        return None, None, None, ticker
 
 def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
@@ -29,16 +33,19 @@ def main():
     prices = []
     highs = []
     lows = []
+    names = []
 
     for ticker in df["Ticker"]:
-        price, high, low = fetch_data(ticker)
-        prices.append(price)
-        highs.append(high)
-        lows.append(low)
+    price, high, low, name = fetch_data(ticker)
+    prices.append(price)
+    highs.append(high)
+    lows.append(low)
+    names.append(name)
 
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
+    df["Name"] = names
 
     df = df.dropna()
 
