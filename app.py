@@ -1,7 +1,12 @@
+import os
 import pandas as pd
 import streamlit as st
 
 st.set_page_config(page_title="Theme Tracker", layout="wide")
+
+if not os.path.exists("theme_scores.csv"):
+    st.error("theme_scores.csv wurde nicht gefunden. Bitte zuerst update_data.py ausfuehren oder prüfen, ob die Datei im Repo liegt.")
+    st.stop()
 
 df = pd.read_csv("theme_scores.csv")
 
