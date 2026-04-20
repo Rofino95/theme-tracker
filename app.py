@@ -193,32 +193,6 @@ st.dataframe(
     height=height
 )
 
-
-
-st.markdown("---")
-st.subheader("Sub Theme im Detail")
-
-selected_theme = st.selectbox(
-    "Waehle ein Sub Theme",
-    filtered_grouped["Sub Theme"].tolist()
-)
-
-detail_df = filtered_df[filtered_df["Sub Theme"] == selected_theme].copy()
-detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
-
-theme_status_detail = filtered_grouped[filtered_grouped["Sub Theme"] == selected_theme]["Status"].iloc[0]
-theme_bullish_pct_detail = filtered_grouped[filtered_grouped["Sub Theme"] == selected_theme]["Bullisch %"].iloc[0]
-
-detail_df["Signal"] = detail_df.apply(
-    lambda row: get_signal(
-        row["Trend Score"],
-        row["Momentum"],
-        theme_status_detail,
-        theme_bullish_pct_detail
-    ),
-    axis=1
-)
-
 st.markdown("---")
 st.subheader("Aktiensuche")
 
@@ -272,6 +246,30 @@ if search_term:
         )
     else:
         st.warning("Keine passende Aktie gefunden.")
+
+st.markdown("---")
+st.subheader("Sub Theme im Detail")
+
+selected_theme = st.selectbox(
+    "Waehle ein Sub Theme",
+    filtered_grouped["Sub Theme"].tolist()
+)
+
+detail_df = filtered_df[filtered_df["Sub Theme"] == selected_theme].copy()
+detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
+
+theme_status_detail = filtered_grouped[filtered_grouped["Sub Theme"] == selected_theme]["Status"].iloc[0]
+theme_bullish_pct_detail = filtered_grouped[filtered_grouped["Sub Theme"] == selected_theme]["Bullisch %"].iloc[0]
+
+detail_df["Signal"] = detail_df.apply(
+    lambda row: get_signal(
+        row["Trend Score"],
+        row["Momentum"],
+        theme_status_detail,
+        theme_bullish_pct_detail
+    ),
+    axis=1
+)
 
 selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
 
