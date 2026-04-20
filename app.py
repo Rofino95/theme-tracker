@@ -163,6 +163,7 @@ st.dataframe(
     }),
     use_container_width=True,
     hide_index=True
+    height=height
 )
 
 st.info(
@@ -274,4 +275,5 @@ st.dataframe(
     }),
     use_container_width=True,
     hide_index=True
+    height=height
 )
