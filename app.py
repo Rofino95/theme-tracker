@@ -200,16 +200,16 @@ st.write(f"**Bestandteile von {selected_theme}**")
 best_stock = detail_df.iloc[0]["Name"]
 best_score = detail_df.iloc[0]["Trend Score"]
 
-worst_stock = detail_df.iloc[-1]["Name"]
-worst_score = detail_df.iloc[-1]["Trend Score"]
+weakest_stock = detail_df.iloc[-1]["Name"]
+weakest_score = detail_df.iloc[-1]["Trend Score"]
 
 stock_count = len(detail_df)
 bullish_pct_detail = round((detail_df["Status"] == "Bullisch").mean() * 100, 0)
 
 col_a, col_b, col_c, col_d = st.columns(4)
 
-col_a.metric("Beste Aktie", best_stock, f"{best_score:.2f}")
-col_b.metric("Schwaechste Aktie", worst_stock, f"-{worst_score:.2f}")
+col_a.metric("Staerkste Aktie", best_stock, f"{best_score:.2f}")
+col_b.metric("Relativ schwaechste Aktie", weakest_stock, f"{weakest_score:.2f}")
 col_c.metric("Anzahl Aktien", stock_count)
 col_d.metric("Bullisch %", f"{bullish_pct_detail:.0f}%")
 
