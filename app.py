@@ -20,11 +20,11 @@ def get_status(score):
         return "Baerisch"
         
 def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
-    if stock_score >= 0.90 and stock_momentum < 0.20:
+    if stock_score > 0.85 and stock_momentum < 0.25:
         return "Take Profits"
     elif stock_score < 0.35 and stock_momentum < -0.20 and theme_status == "Baerisch":
         return "Avoid"
-    elif stock_score >= 0.60 and stock_momentum > 0 and theme_status in ["Bullisch", "Neutral"] and theme_bullish_pct >= 50:
+    elif 0.60 <= stock_score <= 0.85 and stock_momentum > 0 and theme_status in ["Bullisch", "Neutral"] and theme_bullish_pct >= 50:
         return "Attraktiv"
     elif stock_score >= 0.50 and stock_momentum >= -0.10 and theme_status != "Baerisch":
         return "Hold"
