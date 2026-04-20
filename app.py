@@ -84,13 +84,47 @@ filtered_grouped = (
     filtered_df.groupby("Sub Theme", as_index=False)
     .agg({
         "Trend Score": "mean",
-        "Momentum": "mean"
+        "Momentum": "mean",
+        "Ticker": "count"
     })
+    .rename(columns={"Ticker": "Anzahl Aktien"})
 )
 
 filtered_grouped["Trend Score"] = filtered_grouped["Trend Score"].round(2)
 filtered_grouped["Momentum"] = filtered_grouped["Momentum"].round(2)
 filtered_grouped["Status"] = filtered_grouped["Trend Score"].apply(get_status)
+
+bullish_pct = (
+    filtered_df.assign(IsBullish=filtered_df["Status"] == "Bullisch")
+    .groupby("Sub Theme")["IsBullish"]
+    .mean()
+    .mul(100)
+    .round(0)
+    .reset_index(name="Bullisch %")
+)
+
+neutral_pct = (
+    filtered_df.assign(IsNeutral=filtered_df["Status"] == "Neutral")
+    .groupby("Sub Theme")["IsNeutral"]
+    .mean()
+    .mul(100)
+    .round(0)
+    .reset_index(name="Neutral %")
+)
+
+bearish_pct = (
+    filtered_df.assign(IsBearish=filtered_df["Status"] == "Baerisch")
+    .groupby("Sub Theme")["IsBearish"]
+    .mean()
+    .mul(100)
+    .round(0)
+    .reset_index(name="Baerisch %")
+)
+
+filtered_grouped = filtered_grouped.merge(bullish_pct, on="Sub Theme", how="left")
+filtered_grouped = filtered_grouped.merge(neutral_pct, on="Sub Theme", how="left")
+filtered_grouped = filtered_grouped.merge(bearish_pct, on="Sub Theme", how="left")
+
 filtered_grouped = filtered_grouped.sort_values(by="Trend Score", ascending=False)
 
 if filter_status != "Alle":
@@ -118,6 +152,18 @@ st.dataframe(
 )
 
 st.markdown("### Sub Theme Uebersicht")
+
+st.dataframe(
+    styled.format({
+        "Trend Score": "{:.2f}",
+        "Momentum": "{:.2f}",
+        "Bullisch %": "{:.0f}%",
+        "Neutral %": "{:.0f}%",
+        "Baerisch %": "{:.0f}%"
+    }),
+    use_container_width=True,
+    hide_index=True
+)
 
 st.info(
     """
