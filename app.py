@@ -153,6 +153,8 @@ st.dataframe(
 
 st.markdown("### Sub Theme Uebersicht")
 
+height = 50 + len(filtered_grouped) * 35
+
 st.dataframe(
     styled.format({
         "Trend Score": "{:.2f}",
