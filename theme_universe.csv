@@ -1,0 +1,564 @@
+Main Theme,Sub Theme,Ticker
+AI / Tech,AI Compute,NVDA
+AI / Tech,AI Compute,MRVL
+AI / Tech,AI Compute,AVGO
+AI / Tech,AI Compute,INTC
+AI / Tech,AI Compute,TSM
+AI / Tech,AI Compute,ARM
+AI / Tech,AI Compute,SMCI
+AI / Tech,AI Compute,ASML
+AI / Tech,AI Compute,KLAC
+AI / Tech,AI Compute,MU
+AI / Tech,AI Compute,000660.KS
+AI / Tech,AI Compute,005930.KS
+AI / Tech,AI Compute,AMD
+AI / Tech,AI Compute,QCOM
+AI / Tech,AI Compute,TXN
+AI / Tech,AI Networking,ANET
+AI / Tech,AI Networking,CSCO
+AI / Tech,AI Networking,JNPR
+AI / Tech,AI Networking,FFIV
+AI / Tech,AI Networking,CIEN
+AI / Tech,AI Networking,HPE
+AI / Tech,AI Networking,DELL
+AI / Tech,AI Networking,NTAP
+AI / Tech,AI Networking,NET
+AI / Tech,AI Networking,PANW
+AI / Tech,AI Networking,INFN
+AI / Tech,AI Networking,VIAV
+AI / Tech,AI Networking,CALX
+AI / Tech,AI Networking,EXTR
+AI / Tech,AI Networking,ZBRA
+AI / Tech,Photonics,COHR
+AI / Tech,Photonics,LITE
+AI / Tech,Photonics,AAOI
+AI / Tech,Photonics,POET
+AI / Tech,Photonics,AXTI
+AI / Tech,Photonics,CIEN
+AI / Tech,Photonics,INFN
+AI / Tech,Photonics,IPGP
+AI / Tech,Photonics,FN
+AI / Tech,Photonics,VIAV
+AI / Tech,Photonics,OCLR
+AI / Tech,Photonics,LSCC
+AI / Tech,Photonics,SIVE.ST
+AI / Tech,Photonics,IQE.L
+AI / Tech,Photonics,IIVI
+AI / Tech,Semiconductor Equipment,ASML
+AI / Tech,Semiconductor Equipment,AMAT
+AI / Tech,Semiconductor Equipment,TER
+AI / Tech,Semiconductor Equipment,LRCX
+AI / Tech,Semiconductor Equipment,ACLS
+AI / Tech,Semiconductor Equipment,ONTO
+AI / Tech,Semiconductor Equipment,TEL
+AI / Tech,Semiconductor Equipment,DISCO
+AI / Tech,Semiconductor Equipment,NVMI
+AI / Tech,Semiconductor Equipment,FORM
+AI / Tech,Semiconductor Equipment,MKSI
+AI / Tech,Semiconductor Equipment,UCTT
+AI / Tech,Semiconductor Equipment,ICHR
+AI / Tech,Semiconductor Equipment,AIXA.DE
+AI / Tech,Semiconductor Equipment,SMHN.DE
+AI / Tech,Semiconductor Materials,SOI.PA
+AI / Tech,Semiconductor Materials,ENTG
+AI / Tech,Semiconductor Materials,AXTI
+AI / Tech,Semiconductor Materials,SKYT
+AI / Tech,Semiconductor Materials,WOLF
+AI / Tech,Semiconductor Materials,STM
+AI / Tech,Semiconductor Materials,UMC
+AI / Tech,Semiconductor Materials,TSM
+AI / Tech,Semiconductor Materials,INTC
+AI / Tech,Semiconductor Materials,MU
+AI / Tech,Semiconductor Materials,000660.KS
+AI / Tech,Semiconductor Materials,005930.KS
+AI / Tech,Semiconductor Materials,AIXA.DE
+AI / Tech,Semiconductor Materials,IQE.L
+AI / Tech,Semiconductor Materials,MKSI
+AI / Tech,Cybersecurity,CRWD
+AI / Tech,Cybersecurity,ZS
+AI / Tech,Cybersecurity,NET
+AI / Tech,Cybersecurity,PANW
+AI / Tech,Cybersecurity,FTNT
+AI / Tech,Cybersecurity,OKTA
+AI / Tech,Cybersecurity,DDOG
+AI / Tech,Cybersecurity,ESTC
+AI / Tech,Cybersecurity,S
+AI / Tech,Cybersecurity,CIBR
+AI / Tech,Cybersecurity,CYBR
+AI / Tech,Cybersecurity,RPD
+AI / Tech,Cybersecurity,TENB
+AI / Tech,Cybersecurity,QLYS
+AI / Tech,Cybersecurity,VRNS
+AI / Tech,AI Software & Platforms,MSFT
+AI / Tech,AI Software & Platforms,GOOGL
+AI / Tech,AI Software & Platforms,META
+AI / Tech,AI Software & Platforms,AMZN
+AI / Tech,AI Software & Platforms,ORCL
+AI / Tech,AI Software & Platforms,SNOW
+AI / Tech,AI Software & Platforms,PLTR
+AI / Tech,AI Software & Platforms,AI
+AI / Tech,AI Software & Platforms,SOUN
+AI / Tech,AI Software & Platforms,NBIS
+AI / Tech,AI Software & Platforms,CPNG
+AI / Tech,AI Software & Platforms,MNDY
+AI / Tech,AI Software & Platforms,HUBS
+AI / Tech,AI Software & Platforms,CRM
+AI / Tech,AI Software & Platforms,NOW
+AI / Tech,Cloud Infrastructure,AMZN
+AI / Tech,Cloud Infrastructure,MSFT
+AI / Tech,Cloud Infrastructure,GOOGL
+AI / Tech,Cloud Infrastructure,IBM
+AI / Tech,Cloud Infrastructure,ORCL
+AI / Tech,Cloud Infrastructure,FSLY
+AI / Tech,Cloud Infrastructure,NET
+AI / Tech,Cloud Infrastructure,DDOG
+AI / Tech,Cloud Infrastructure,ESTC
+AI / Tech,Cloud Infrastructure,SPLK
+AI / Tech,Cloud Infrastructure,DT
+AI / Tech,Cloud Infrastructure,NEWR
+AI / Tech,Cloud Infrastructure,NBIS
+AI / Tech,Cloud Infrastructure,CFLT
+AI / Tech,Cloud Infrastructure,MDB
+AI / Tech,Robotics & Automation,6954.T
+AI / Tech,Robotics & Automation,ABB
+AI / Tech,Robotics & Automation,ABBN
+AI / Tech,Robotics & Automation,ROK
+AI / Tech,Robotics & Automation,IRBT
+AI / Tech,Robotics & Automation,NVDA
+AI / Tech,Robotics & Automation,TER
+AI / Tech,Robotics & Automation,BRKS
+AI / Tech,Robotics & Automation,ISRG
+AI / Tech,Robotics & Automation,PATH
+AI / Tech,Robotics & Automation,AZTA
+AI / Tech,Robotics & Automation,NNDM
+AI / Tech,Robotics & Automation,XONE
+AI / Tech,Robotics & Automation,TRMB
+AI / Tech,Robotics & Automation,FANUC
+Energy,Grid Infrastructure,NEE
+Energy,Grid Infrastructure,DUK
+Energy,Grid Infrastructure,SO
+Energy,Grid Infrastructure,EXC
+Energy,Grid Infrastructure,AEP
+Energy,Grid Infrastructure,CEG
+Energy,Grid Infrastructure,VST
+Energy,Grid Infrastructure,XEL
+Energy,Grid Infrastructure,ED
+Energy,Grid Infrastructure,D
+Energy,Grid Infrastructure,PCG
+Energy,Grid Infrastructure,AWK
+Energy,Grid Infrastructure,PPL
+Energy,Grid Infrastructure,WEC
+Energy,Grid Infrastructure,ES
+Energy,Grid Infrastructure,FE
+Energy,Power Equipment,GE
+Energy,Power Equipment,ABBN
+Energy,Power Equipment,SIE.DE
+Energy,Power Equipment,EATON
+Energy,Power Equipment,ETN
+Energy,Power Equipment,SU
+Energy,Power Equipment,HUBB
+Energy,Power Equipment,EMR
+Energy,Power Equipment,ITRI
+Energy,Power Equipment,REXR
+Energy,Power Equipment,PWR
+Energy,Power Equipment,BW
+Energy,Power Equipment,AMSC
+Energy,Power Equipment,POWL
+Energy,Power Equipment,GEV
+Energy,Renewables,VWS.CO
+Energy,Renewables,ORSTED.CO
+Energy,Renewables,ENPH
+Energy,Renewables,FSLR
+Energy,Renewables,SEDG
+Energy,Renewables,NOVA
+Energy,Renewables,CSIQ
+Energy,Renewables,JKS
+Energy,Renewables,RUN
+Energy,Renewables,NEE
+Energy,Renewables,BE
+Energy,Renewables,PLUG
+Energy,Renewables,BEP
+Energy,Renewables,CWEN
+Energy,Renewables,ARRY
+Energy,Renewables,AES
+Energy,Nuclear Energy,CEG
+Energy,Nuclear Energy,CCJ
+Energy,Nuclear Energy,UEC
+Energy,Nuclear Energy,DNN
+Energy,Nuclear Energy,NXE
+Energy,Nuclear Energy,UUUU
+Energy,Nuclear Energy,URG
+Energy,Nuclear Energy,SMR
+Energy,Nuclear Energy,OKLO
+Energy,Nuclear Energy,GEV
+Energy,Nuclear Energy,VST
+Energy,Nuclear Energy,BWX
+Energy,Nuclear Energy,LEU
+Energy,Nuclear Energy,LTBR
+Energy,Nuclear Energy,NNE
+Energy,Energy Storage & Batteries,TSLA
+Energy,Energy Storage & Batteries,ENPH
+Energy,Energy Storage & Batteries,PLUG
+Energy,Energy Storage & Batteries,BE
+Energy,Energy Storage & Batteries,QS
+Energy,Energy Storage & Batteries,STEM
+Energy,Energy Storage & Batteries,FLUX
+Energy,Energy Storage & Batteries,FREYR
+Energy,Energy Storage & Batteries,ENVX
+Energy,Energy Storage & Batteries,AMPS
+Energy,Energy Storage & Batteries,LNZA
+Energy,Energy Storage & Batteries,BLDP
+Energy,Energy Storage & Batteries,FCEL
+Energy,Energy Storage & Batteries,HYLN
+Energy,Energy Storage & Batteries,MVST
+Energy,Oil & Gas,XOM
+Energy,Oil & Gas,CVX
+Energy,Oil & Gas,SHEL
+Energy,Oil & Gas,BP
+Energy,Oil & Gas,TTE.PA
+Energy,Oil & Gas,COP
+Energy,Oil & Gas,EOG
+Energy,Oil & Gas,PXD
+Energy,Oil & Gas,SLB
+Energy,Oil & Gas,HAL
+Energy,Oil & Gas,MPC
+Energy,Oil & Gas,VLO
+Energy,Oil & Gas,PSX
+Energy,Oil & Gas,KMI
+Energy,Oil & Gas,WMB
+Healthcare,Medtech,ISRG
+Healthcare,Medtech,MDT
+Healthcare,Medtech,SYK
+Healthcare,Medtech,BSX
+Healthcare,Medtech,ABT
+Healthcare,Medtech,DXCM
+Healthcare,Medtech,EW
+Healthcare,Medtech,IDXX
+Healthcare,Medtech,ILMN
+Healthcare,Medtech,ZBH
+Healthcare,Medtech,BDX
+Healthcare,Medtech,RMD
+Healthcare,Medtech,PODD
+Healthcare,Medtech,NVCR
+Healthcare,Medtech,INSP
+Healthcare,Medtech,SWAV
+Healthcare,Biotech,VRTX
+Healthcare,Biotech,REGN
+Healthcare,Biotech,MRNA
+Healthcare,Biotech,BNTX
+Healthcare,Biotech,GILD
+Healthcare,Biotech,AMGN
+Healthcare,Biotech,BIIB
+Healthcare,Biotech,INCY
+Healthcare,Biotech,ALNY
+Healthcare,Biotech,EXEL
+Healthcare,Biotech,SGEN
+Healthcare,Biotech,BMRN
+Healthcare,Biotech,IONS
+Healthcare,Biotech,HALO
+Healthcare,Biotech,ACAD
+Healthcare,Biotech,RARE
+Healthcare,Pharma,LLY
+Healthcare,Pharma,NVO
+Healthcare,Pharma,PFE
+Healthcare,Pharma,ABBV
+Healthcare,Pharma,MRK
+Healthcare,Pharma,JNJ
+Healthcare,Pharma,BMY
+Healthcare,Pharma,AZN
+Healthcare,Pharma,GSK
+Healthcare,Pharma,RHHBY
+Healthcare,Pharma,SNY
+Healthcare,Pharma,NVS
+Healthcare,Pharma,TAK
+Healthcare,Pharma,CTLT
+Healthcare,Pharma,PRGO
+Healthcare,AI in Healthcare,ISRG
+Healthcare,AI in Healthcare,NVDA
+Healthcare,AI in Healthcare,VEEV
+Healthcare,AI in Healthcare,OMCL
+Healthcare,AI in Healthcare,NVCR
+Healthcare,AI in Healthcare,RXRX
+Healthcare,AI in Healthcare,SDGR
+Healthcare,AI in Healthcare,EXAI
+Healthcare,AI in Healthcare,ABCL
+Healthcare,AI in Healthcare,INVA
+Healthcare,AI in Healthcare,TVTX
+Healthcare,AI in Healthcare,AAPL
+Healthcare,AI in Healthcare,MSFT
+Healthcare,AI in Healthcare,IBM
+Healthcare,AI in Healthcare,GEHC
+Finance,Fintech,SQ
+Finance,Fintech,AXP
+Finance,Fintech,PYPL
+Finance,Fintech,ADYEN.AS
+Finance,Fintech,AFRM
+Finance,Fintech,COIN
+Finance,Fintech,NU
+Finance,Fintech,SOFI
+Finance,Fintech,FIS
+Finance,Fintech,GPN
+Finance,Fintech,V
+Finance,Fintech,MA
+Finance,Fintech,WISE.L
+Finance,Fintech,PAYX
+Finance,Fintech,WEX
+Finance,Fintech,FLYW
+Finance,Banks,JPM
+Finance,Banks,BAC
+Finance,Banks,C
+Finance,Banks,WFC
+Finance,Banks,GS
+Finance,Banks,MS
+Finance,Banks,DB
+Finance,Banks,UBS
+Finance,Banks,HSBC
+Finance,Banks,BNP.PA
+Finance,Banks,SAN.MC
+Finance,Banks,ING
+Finance,Banks,LLOY.L
+Finance,Banks,MUFG
+Finance,Banks,8306.T
+Finance,Banks,TD
+Finance,Asset Management,BLK
+Finance,Asset Management,BAM
+Finance,Asset Management,APO
+Finance,Asset Management,KKR
+Finance,Asset Management,CG
+Finance,Asset Management,BX
+Finance,Asset Management,ARES
+Finance,Asset Management,TPG
+Finance,Asset Management,IVZ
+Finance,Asset Management,WDR
+Finance,Asset Management,AMG
+Finance,Asset Management,BEN
+Finance,Asset Management,APAM
+Finance,Asset Management,VCNX
+Finance,Asset Management,SEIC
+Finance,Insurance,BRK-B
+Finance,Insurance,AIG
+Finance,Insurance,MET
+Finance,Insurance,PRU
+Finance,Insurance,AFL
+Finance,Insurance,CB
+Finance,Insurance,TRV
+Finance,Insurance,PGR
+Finance,Insurance,HIG
+Finance,Insurance,ALL
+Finance,Insurance,ACGL
+Finance,Insurance,RNR
+Finance,Insurance,ERIE
+Finance,Insurance,CINF
+Finance,Insurance,L
+Industrials,Defense,LMT
+Industrials,Defense,NOC
+Industrials,Defense,RTX
+Industrials,Defense,BA
+Industrials,Defense,GD
+Industrials,Defense,LHX
+Industrials,Defense,SAF.PA
+Industrials,Defense,RR.L
+Industrials,Defense,KTOS
+Industrials,Defense,PLTR
+Industrials,Defense,HII
+Industrials,Defense,TDG
+Industrials,Defense,LDOS
+Industrials,Defense,SAIC
+Industrials,Defense,DRS
+Industrials,Defense,BWXT
+Industrials,Aerospace,BA
+Industrials,Aerospace,AIR.PA
+Industrials,Aerospace,TDG
+Industrials,Aerospace,HWM
+Industrials,Aerospace,SPR
+Industrials,Aerospace,AXON
+Industrials,Aerospace,KTOS
+Industrials,Aerospace,RKLB
+Industrials,Aerospace,ATRO
+Industrials,Aerospace,HEI
+Industrials,Aerospace,TGI
+Industrials,Aerospace,CPA
+Industrials,Aerospace,DAL
+Industrials,Aerospace,UAL
+Industrials,Aerospace,ERJ
+Industrials,Infrastructure & Construction,PWR
+Industrials,Infrastructure & Construction,ACM
+Industrials,Infrastructure & Construction,J
+Industrials,Infrastructure & Construction,FLR
+Industrials,Infrastructure & Construction,MTZ
+Industrials,Infrastructure & Construction,EME
+Industrials,Infrastructure & Construction,STLD
+Industrials,Infrastructure & Construction,NUE
+Industrials,Infrastructure & Construction,X
+Industrials,Infrastructure & Construction,CLF
+Industrials,Infrastructure & Construction,MLM
+Industrials,Infrastructure & Construction,VMC
+Industrials,Infrastructure & Construction,CRH
+Industrials,Infrastructure & Construction,EXP
+Industrials,Infrastructure & Construction,SUM
+Industrials,Logistics & Transport,UPS
+Industrials,Logistics & Transport,FDX
+Industrials,Logistics & Transport,XPO
+Industrials,Logistics & Transport,ODFL
+Industrials,Logistics & Transport,SAIA
+Industrials,Logistics & Transport,JBHT
+Industrials,Logistics & Transport,WERN
+Industrials,Logistics & Transport,KNX
+Industrials,Logistics & Transport,CHRW
+Industrials,Logistics & Transport,EXPD
+Industrials,Logistics & Transport,GXO
+Industrials,Logistics & Transport,DSGX
+Industrials,Logistics & Transport,GRAB
+Industrials,Logistics & Transport,LYFT
+Industrials,Logistics & Transport,UBER
+Consumer & Retail,E-Commerce,AMZN
+Consumer & Retail,E-Commerce,SHOP
+Consumer & Retail,E-Commerce,MELI
+Consumer & Retail,E-Commerce,SE
+Consumer & Retail,E-Commerce,CPNG
+Consumer & Retail,E-Commerce,BABA
+Consumer & Retail,E-Commerce,JD
+Consumer & Retail,E-Commerce,PDD
+Consumer & Retail,E-Commerce,ETSY
+Consumer & Retail,E-Commerce,EBAY
+Consumer & Retail,E-Commerce,WMT
+Consumer & Retail,E-Commerce,TGT
+Consumer & Retail,E-Commerce,COST
+Consumer & Retail,E-Commerce,CHWY
+Consumer & Retail,E-Commerce,W
+Consumer & Retail,Luxury & Brands,MC.PA
+Consumer & Retail,Luxury & Brands,RMS.PA
+Consumer & Retail,Luxury & Brands,CFR.SW
+Consumer & Retail,Luxury & Brands,KER.PA
+Consumer & Retail,Luxury & Brands,BURBY
+Consumer & Retail,Luxury & Brands,MONC.MI
+Consumer & Retail,Luxury & Brands,NKE
+Consumer & Retail,Luxury & Brands,ADDYY
+Consumer & Retail,Luxury & Brands,EL
+Consumer & Retail,Luxury & Brands,TPR
+Consumer & Retail,Luxury & Brands,RL
+Consumer & Retail,Luxury & Brands,CPRI
+Consumer & Retail,Luxury & Brands,PVH
+Consumer & Retail,Luxury & Brands,G-III
+Consumer & Retail,Luxury & Brands,VFC
+Consumer & Retail,Luxury & Brands,LULU
+Consumer & Retail,Food & Beverages,NESN.SW
+Consumer & Retail,Food & Beverages,KO
+Consumer & Retail,Food & Beverages,PEP
+Consumer & Retail,Food & Beverages,MDLZ
+Consumer & Retail,Food & Beverages,K
+Consumer & Retail,Food & Beverages,GIS
+Consumer & Retail,Food & Beverages,CPB
+Consumer & Retail,Food & Beverages,SJM
+Consumer & Retail,Food & Beverages,MKC
+Consumer & Retail,Food & Beverages,HRL
+Consumer & Retail,Food & Beverages,STZ
+Consumer & Retail,Food & Beverages,SAM
+Consumer & Retail,Food & Beverages,TAP
+Consumer & Retail,Food & Beverages,BUD
+Consumer & Retail,Food & Beverages,HEINY
+Consumer & Retail,Gaming & Entertainment,MSFT
+Consumer & Retail,Gaming & Entertainment,EA
+Consumer & Retail,Gaming & Entertainment,TTWO
+Consumer & Retail,Gaming & Entertainment,RBLX
+Consumer & Retail,Gaming & Entertainment,U
+Consumer & Retail,Gaming & Entertainment,NTDOY
+Consumer & Retail,Gaming & Entertainment,SONY
+Consumer & Retail,Gaming & Entertainment,NFLX
+Consumer & Retail,Gaming & Entertainment,DIS
+Consumer & Retail,Gaming & Entertainment,LYV
+Consumer & Retail,Gaming & Entertainment,MSGS
+Consumer & Retail,Gaming & Entertainment,IMAX
+Consumer & Retail,Gaming & Entertainment,SKLZ
+Consumer & Retail,Gaming & Entertainment,DKNG
+Consumer & Retail,Gaming & Entertainment,RSI
+Real Assets,Real Estate (REITs),AMT
+Real Assets,Real Estate (REITs),PLD
+Real Assets,Real Estate (REITs),EQIX
+Real Assets,Real Estate (REITs),CCI
+Real Assets,Real Estate (REITs),PSA
+Real Assets,Real Estate (REITs),O
+Real Assets,Real Estate (REITs),VICI
+Real Assets,Real Estate (REITs),WPC
+Real Assets,Real Estate (REITs),STAG
+Real Assets,Real Estate (REITs),COLD
+Real Assets,Real Estate (REITs),EXR
+Real Assets,Real Estate (REITs),CUBE
+Real Assets,Real Estate (REITs),LSI
+Real Assets,Real Estate (REITs),NSA
+Real Assets,Real Estate (REITs),REXR
+Real Assets,Commodities & Mining,RIO
+Real Assets,Commodities & Mining,BHP
+Real Assets,Commodities & Mining,VALE
+Real Assets,Commodities & Mining,FCX
+Real Assets,Commodities & Mining,AA
+Real Assets,Commodities & Mining,NEM
+Real Assets,Commodities & Mining,GOLD
+Real Assets,Commodities & Mining,AEM
+Real Assets,Commodities & Mining,KGC
+Real Assets,Commodities & Mining,WPM
+Real Assets,Commodities & Mining,MP
+Real Assets,Commodities & Mining,LYNAS
+Real Assets,Commodities & Mining,NOVONIX
+Real Assets,Commodities & Mining,ILUKA
+Real Assets,Commodities & Mining,SBSW
+Real Assets,Agriculture,DE
+Real Assets,Agriculture,AGCO
+Real Assets,Agriculture,CNH
+Real Assets,Agriculture,CF
+Real Assets,Agriculture,MOS
+Real Assets,Agriculture,NTR
+Real Assets,Agriculture,FMC
+Real Assets,Agriculture,ADM
+Real Assets,Agriculture,BG
+Real Assets,Agriculture,INGR
+Real Assets,Agriculture,SFM
+Real Assets,Agriculture,CALM
+Real Assets,Agriculture,VITL
+Real Assets,Agriculture,APPH
+Real Assets,Agriculture,HYFM
+Mobility & Transport Tech,Electric Vehicles,TSLA
+Mobility & Transport Tech,Electric Vehicles,NIO
+Mobility & Transport Tech,Electric Vehicles,LI
+Mobility & Transport Tech,Electric Vehicles,XPEV
+Mobility & Transport Tech,Electric Vehicles,RIVN
+Mobility & Transport Tech,Electric Vehicles,LCID
+Mobility & Transport Tech,Electric Vehicles,FSR
+Mobility & Transport Tech,Electric Vehicles,WKHS
+Mobility & Transport Tech,Electric Vehicles,GOEV
+Mobility & Transport Tech,Electric Vehicles,GM
+Mobility & Transport Tech,Electric Vehicles,F
+Mobility & Transport Tech,Electric Vehicles,STLA
+Mobility & Transport Tech,Electric Vehicles,BMW.DE
+Mobility & Transport Tech,Electric Vehicles,VOW3.DE
+Mobility & Transport Tech,Electric Vehicles,HMC
+Mobility & Transport Tech,Autonomous Driving,TSLA
+Mobility & Transport Tech,Autonomous Driving,GOOGL
+Mobility & Transport Tech,Autonomous Driving,MBLY
+Mobility & Transport Tech,Autonomous Driving,APTV
+Mobility & Transport Tech,Autonomous Driving,QCOM
+Mobility & Transport Tech,Autonomous Driving,INVZ
+Mobility & Transport Tech,Autonomous Driving,AEVA
+Mobility & Transport Tech,Autonomous Driving,OUST
+Mobility & Transport Tech,Autonomous Driving,LIDR
+Mobility & Transport Tech,Autonomous Driving,LAZR
+Mobility & Transport Tech,Autonomous Driving,VLDR
+Mobility & Transport Tech,Autonomous Driving,AUR
+Mobility & Transport Tech,Autonomous Driving,PLUS
+Mobility & Transport Tech,Autonomous Driving,MOBILEYE
+Mobility & Transport Tech,Autonomous Driving,INDI
+Mobility & Transport Tech,Space,RKLB
+Mobility & Transport Tech,Space,ASTS
+Mobility & Transport Tech,Space,PL
+Mobility & Transport Tech,Space,BKSY
+Mobility & Transport Tech,Space,SATL
+Mobility & Transport Tech,Space,KTOS
+Mobility & Transport Tech,Space,NOC
+Mobility & Transport Tech,Space,LMT
+Mobility & Transport Tech,Space,MAXR
+Mobility & Transport Tech,Space,GSAT
+Mobility & Transport Tech,Space,ORBC
+Mobility & Transport Tech,Space,BA
+Mobility & Transport Tech,Space,IRDM
+Mobility & Transport Tech,Space,SPIR
+Mobility & Transport Tech,Space,MNTS
