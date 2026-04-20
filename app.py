@@ -196,36 +196,52 @@ st.dataframe(
 st.markdown("---")
 st.subheader("Aktiensuche")
 
-search_term = st.text_input("Suche nach Aktienname oder Ticker")
+search_term = st.text_input("Suche nach Aktienname oder Ticker", key="global_search")
 
 if search_term:
     search_df = df.copy()
-    search_df["Signal"] = search_df.apply(
-        lambda row: get_signal(
-            row["Trend Score"],
-            row["Momentum"],
-            get_status(
-                df[df["Sub Theme"] == row["Sub Theme"]]["Trend Score"].mean()
-            ),
-            round((df[df["Sub Theme"] == row["Sub Theme"]]["Status"] == "Bullisch").mean() * 100, 0)
-        ),
-        axis=1
-    )
 
     result_df = search_df[
         search_df["Name"].str.contains(search_term, case=False, na=False) |
         search_df["Ticker"].str.contains(search_term, case=False, na=False)
     ].copy()
 
-    result_df = result_df.sort_values(by="Trend Score", ascending=False)
-
     if len(result_df) > 0:
+        grouped_search = (
+            result_df.groupby(["Name", "Ticker"], as_index=False)
+            .agg({
+                "Preis": "first",
+                "Trend Score": "mean",
+                "Momentum": "mean",
+                "Status": "first",
+                "Signal": "first"
+            })
+        )
+
+        theme_map = (
+            result_df.groupby(["Name", "Ticker"])["Sub Theme"]
+            .apply(lambda x: ", ".join(sorted(set(x))))
+            .reset_index(name="Sub Themes")
+        )
+
+        main_theme_map = (
+            result_df.groupby(["Name", "Ticker"])["Main Theme"]
+            .apply(lambda x: ", ".join(sorted(set(x))))
+            .reset_index(name="Main Themes")
+        )
+
+        grouped_search = grouped_search.merge(theme_map, on=["Name", "Ticker"], how="left")
+        grouped_search = grouped_search.merge(main_theme_map, on=["Name", "Ticker"], how="left")
+
+        grouped_search["Trend Score"] = grouped_search["Trend Score"].round(2)
+        grouped_search["Momentum"] = grouped_search["Momentum"].round(2)
+
         st.dataframe(
-            result_df[[
-                "Main Theme",
-                "Sub Theme",
+            grouped_search[[
                 "Name",
                 "Ticker",
+                "Main Themes",
+                "Sub Themes",
                 "Preis",
                 "Trend Score",
                 "Momentum",
@@ -242,7 +258,7 @@ if search_term:
             }),
             use_container_width=True,
             hide_index=True,
-            height=min(900, 50 + len(result_df) * 35)
+            height=min(900, 50 + len(grouped_search) * 35)
         )
     else:
         st.warning("Keine passende Aktie gefunden.")
