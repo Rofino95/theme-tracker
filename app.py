@@ -209,40 +209,6 @@ Momentum:
 """
 )
 
-st.info(
-    """
-Signal-Logik
-
-🟢 Attraktiv:
-- Trend Score mindestens 0.60
-- Momentum positiv
-- Theme ist Bullisch oder Neutral
-- mindestens 50% der Aktien im Theme sind Bullisch
-
-🔵 Hold:
-- Trend Score mindestens 0.50
-- Momentum nicht klar negativ
-- Theme nicht Baerisch
-
-🟡 Review:
-- Aktie ist weder stark genug fuer Attraktiv/Hold
-- oder Momentum/Trend werden schwaecher
-
-🟠 Take Profits:
-- Aktie sehr stark gelaufen (Trend Score sehr hoch)
-- Momentum flacht ab
-- Hinweis auf moegliche Gewinnsicherung
-
-🔴 Avoid:
-- schwacher Trend Score
-- negatives Momentum
-- und das Theme selbst ist Baerisch
-
-Wichtig:
-Das Signal ist keine Finanzberatung, sondern eine regelbasierte technische Einordnung innerhalb des jeweiligen Themes.
-"""
-)
-
 st.markdown("---")
 st.subheader("Sub Theme im Detail")
 
@@ -268,6 +234,60 @@ detail_df["Signal"] = detail_df.apply(
 )
 
 selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
+
+st.markdown("---")
+st.subheader("Aktiensuche")
+
+search_term = st.text_input("Suche nach Aktienname oder Ticker")
+
+if search_term:
+    search_df = df.copy()
+    search_df["Signal"] = search_df.apply(
+        lambda row: get_signal(
+            row["Trend Score"],
+            row["Momentum"],
+            get_status(
+                df[df["Sub Theme"] == row["Sub Theme"]]["Trend Score"].mean()
+            ),
+            round((df[df["Sub Theme"] == row["Sub Theme"]]["Status"] == "Bullisch").mean() * 100, 0)
+        ),
+        axis=1
+    )
+
+    result_df = search_df[
+        search_df["Name"].str.contains(search_term, case=False, na=False) |
+        search_df["Ticker"].str.contains(search_term, case=False, na=False)
+    ].copy()
+
+    result_df = result_df.sort_values(by="Trend Score", ascending=False)
+
+    if len(result_df) > 0:
+        st.dataframe(
+            result_df[[
+                "Main Theme",
+                "Sub Theme",
+                "Name",
+                "Ticker",
+                "Preis",
+                "Trend Score",
+                "Momentum",
+                "Status",
+                "Signal"
+            ]]
+            .style
+            .map(color_status, subset=["Status"])
+            .map(color_signal, subset=["Signal"])
+            .format({
+                "Preis": "{:.2f}",
+                "Trend Score": "{:.2f}",
+                "Momentum": "{:.2f}"
+            }),
+            use_container_width=True,
+            hide_index=True,
+            height=min(900, 50 + len(result_df) * 35)
+        )
+    else:
+        st.warning("Keine passende Aktie gefunden.")
 
 st.write(f"**Main Theme:** {selected_main_theme}")
 st.write(f"**Bestandteile von {selected_theme}**")
@@ -358,56 +378,53 @@ st.dataframe(
     hide_index=True,
     height=height_detail
 )
-st.markdown("---")
-st.subheader("Aktiensuche")
 
-search_term = st.text_input("Suche nach Aktienname oder Ticker")
+st.info(
+    """
+Legende
 
-if search_term:
-    search_df = df.copy()
-    search_df["Signal"] = search_df.apply(
-        lambda row: get_signal(
-            row["Trend Score"],
-            row["Momentum"],
-            get_status(
-                df[df["Sub Theme"] == row["Sub Theme"]]["Trend Score"].mean()
-            ),
-            round((df[df["Sub Theme"] == row["Sub Theme"]]["Status"] == "Bullisch").mean() * 100, 0)
-        ),
-        axis=1
-    )
+🟢 Bullisch: Trend Score ueber 0.70  
+🟡 Neutral: Trend Score ueber 0.50 bis 0.70  
+🔴 Baerisch: Trend Score 0.50 oder niedriger  
 
-    result_df = search_df[
-        search_df["Name"].str.contains(search_term, case=False, na=False) |
-        search_df["Ticker"].str.contains(search_term, case=False, na=False)
-    ].copy()
+Momentum:
+- ab 0.50 = stark positiv
+- 0.00 bis 0.49 = leicht positiv
+- -0.49 bis -0.01 = schwach
+- ab -0.50 = stark negativ
+"""
+)
 
-    result_df = result_df.sort_values(by="Trend Score", ascending=False)
+st.info(
+    """
+Signal-Logik
 
-    if len(result_df) > 0:
-        st.dataframe(
-            result_df[[
-                "Main Theme",
-                "Sub Theme",
-                "Name",
-                "Ticker",
-                "Preis",
-                "Trend Score",
-                "Momentum",
-                "Status",
-                "Signal"
-            ]]
-            .style
-            .map(color_status, subset=["Status"])
-            .map(color_signal, subset=["Signal"])
-            .format({
-                "Preis": "{:.2f}",
-                "Trend Score": "{:.2f}",
-                "Momentum": "{:.2f}"
-            }),
-            use_container_width=True,
-            hide_index=True,
-            height=min(900, 50 + len(result_df) * 35)
-        )
-    else:
-        st.warning("Keine passende Aktie gefunden.")
+🟢 Attraktiv:
+- Trend Score mindestens 0.60
+- Momentum positiv
+- Theme ist Bullisch oder Neutral
+- mindestens 50% der Aktien im Theme sind Bullisch
+
+🔵 Hold:
+- Trend Score mindestens 0.50
+- Momentum nicht klar negativ
+- Theme nicht Baerisch
+
+🟡 Review:
+- Aktie ist weder stark genug fuer Attraktiv/Hold
+- oder Momentum/Trend werden schwaecher
+
+🟠 Take Profits:
+- Aktie sehr stark gelaufen (Trend Score sehr hoch)
+- Momentum flacht ab
+- Hinweis auf moegliche Gewinnsicherung
+
+🔴 Avoid:
+- schwacher Trend Score
+- negatives Momentum
+- und das Theme selbst ist Baerisch
+
+Wichtig:
+Das Signal ist keine Finanzberatung, sondern eine regelbasierte technische Einordnung innerhalb des jeweiligen Themes.
+"""
+)
