@@ -213,8 +213,7 @@ if search_term:
                 "Preis": "first",
                 "Trend Score": "mean",
                 "Momentum": "mean",
-                "Status": "first",
-                "Signal": "first"
+                "Status": "first"
             })
         )
 
@@ -235,6 +234,16 @@ if search_term:
 
         grouped_search["Trend Score"] = grouped_search["Trend Score"].round(2)
         grouped_search["Momentum"] = grouped_search["Momentum"].round(2)
+
+        grouped_search["Signal"] = grouped_search.apply(
+            lambda row: get_signal(
+                row["Trend Score"],
+                row["Momentum"],
+                row["Status"],
+                50
+            ),
+            axis=1
+        )
 
         st.dataframe(
             grouped_search[[
