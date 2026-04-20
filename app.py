@@ -258,7 +258,7 @@ col_d.metric("Bullisch %", f"{bullish_pct_detail:.0f}%")
 col_a.caption(get_status(best_score))
 col_b.caption(get_status(weakest_score))
 
-height = 50 + len(filtered_grouped) * 35
+height_detail = 50 + len(detail_df) * 35
 
 st.dataframe(
     detail_df[[
