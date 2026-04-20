@@ -203,13 +203,8 @@ best_score = detail_df.iloc[0]["Trend Score"]
 weakest_stock = detail_df.iloc[-1]["Name"]
 weakest_score = detail_df.iloc[-1]["Trend Score"]
 
-best_metric = metric_delta_by_status(best_score)
-weakest_metric = metric_delta_by_status(weakest_score)
-
 stock_count = len(detail_df)
 bullish_pct_detail = round((detail_df["Status"] == "Bullisch").mean() * 100, 0)
-
-col_a, col_b, col_c, col_d = st.columns(4)
 
 def metric_delta_by_status(score):
     status = get_status(score)
@@ -217,21 +212,26 @@ def metric_delta_by_status(score):
     if status == "Bullisch":
         return {
             "delta": f"{score:.2f}",
-            "delta_color": "green",
+            "delta_color": "normal",
             "delta_arrow": "up"
         }
     elif status == "Neutral":
         return {
             "delta": f"→ {score:.2f}",
-            "delta_color": "yellow",
+            "delta_color": "off",
             "delta_arrow": "off"
         }
     else:
         return {
             "delta": f"{score:.2f}",
-            "delta_color": "red",
+            "delta_color": "inverse",
             "delta_arrow": "down"
         }
+
+best_metric = metric_delta_by_status(best_score)
+weakest_metric = metric_delta_by_status(weakest_score)
+
+col_a, col_b, col_c, col_d = st.columns(4)
 
 col_a.metric(
     "Staerkste Aktie",
@@ -249,11 +249,11 @@ col_b.metric(
     delta_arrow=weakest_metric["delta_arrow"]
 )
 
-col_a.caption(get_status(best_score))
-col_b.caption(get_status(weakest_score))
-
 col_c.metric("Anzahl Aktien", stock_count)
 col_d.metric("Bullisch %", f"{bullish_pct_detail:.0f}%")
+
+col_a.caption(get_status(best_score))
+col_b.caption(get_status(weakest_score))
 
 st.dataframe(
     detail_df[[
