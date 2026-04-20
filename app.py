@@ -20,18 +20,28 @@ def get_status(score):
         return "Baerisch"
         
 def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
-    if stock_score > 0.90:
-        return "Take Profits"
-    elif stock_score > 0.80 and stock_momentum < 0.30:
-        return "Take Profits"
-    elif stock_score < 0.35 and stock_momentum < -0.20 and theme_status == "Baerisch":
+
+    # 1. Avoid (klar schwach)
+    if stock_score < 0.35 and stock_momentum < -0.20 and theme_status == "Baerisch":
         return "Avoid"
-    elif 0.60 <= stock_score <= 0.85 and stock_momentum > 0 and theme_status in ["Bullisch", "Neutral"] and theme_bullish_pct >= 50:
+
+    # 2. Take Profits (stark, aber Momentum bricht)
+    if stock_score > 0.85 and stock_momentum < 0.30:
+        return "Take Profits"
+
+    # 3. Attraktiv (früher / gesunder Trend)
+    if 0.60 <= stock_score <= 0.85 and stock_momentum > 0 and theme_status in ["Bullisch", "Neutral"] and theme_bullish_pct >= 50:
         return "Attraktiv"
-    elif stock_score >= 0.50 and stock_momentum >= -0.10 and theme_status != "Baerisch":
+
+    # 4. Hold (stark + Momentum stark → laufen lassen)
+    if stock_score > 0.85 and stock_momentum >= 0.30:
         return "Hold"
-    else:
-        return "Review"
+
+    if stock_score >= 0.50 and stock_momentum >= -0.10 and theme_status != "Baerisch":
+        return "Hold"
+
+    # 5. Rest
+    return "Review"
 
 df["Status"] = df["Trend Score"].apply(get_status)
 
