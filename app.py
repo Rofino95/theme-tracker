@@ -193,21 +193,7 @@ st.dataframe(
     height=height
 )
 
-st.info(
-    """
-Legende
 
-🟢 Bullisch: Trend Score ueber 0.70  
-🟡 Neutral: Trend Score ueber 0.50 bis 0.70  
-🔴 Baerisch: Trend Score 0.50 oder niedriger  
-
-Momentum:
-- ab 0.50 = stark positiv
-- 0.00 bis 0.49 = leicht positiv
-- -0.49 bis -0.01 = schwach
-- ab -0.50 = stark negativ
-"""
-)
 
 st.markdown("---")
 st.subheader("Sub Theme im Detail")
@@ -232,8 +218,6 @@ detail_df["Signal"] = detail_df.apply(
     ),
     axis=1
 )
-
-selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
 
 st.markdown("---")
 st.subheader("Aktiensuche")
@@ -288,6 +272,8 @@ if search_term:
         )
     else:
         st.warning("Keine passende Aktie gefunden.")
+
+selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
 
 st.write(f"**Main Theme:** {selected_main_theme}")
 st.write(f"**Bestandteile von {selected_theme}**")
