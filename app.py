@@ -421,24 +421,25 @@ st.info(
 Signal-Logik
 
 🟢 Attraktiv:
-- Trend Score mindestens 0.60
+- Trend Score zwischen 0.60 und 0.85
 - Momentum positiv
 - Theme ist Bullisch oder Neutral
 - mindestens 50% der Aktien im Theme sind Bullisch
 
 🔵 Hold:
-- Trend Score mindestens 0.50
-- Momentum nicht klar negativ
-- Theme nicht Baerisch
+- Aktie befindet sich in einem starken laufenden Trend
+- hoher Trend Score und Momentum weiterhin solide
+- kein unmittelbares Schwaechesignal
 
 🟡 Review:
-- Aktie ist weder stark genug fuer Attraktiv/Hold
-- oder Momentum/Trend werden schwaecher
+- Aktie ist weder klar attraktiv noch klar schwach
+- Trend oder Momentum sind uneindeutig
+- genauer beobachten
 
 🟠 Take Profits:
-- Aktie sehr stark gelaufen (Trend Score sehr hoch)
-- Momentum flacht ab
-- Hinweis auf moegliche Gewinnsicherung
+- Aktie ist bereits sehr weit gelaufen
+- Trend Score hoch, aber Momentum flacht ab
+- Hinweis auf moegliche Gewinnsicherung, nicht automatisch Verkauf
 
 🔴 Avoid:
 - schwacher Trend Score
