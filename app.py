@@ -162,7 +162,7 @@ st.dataframe(
         "Baerisch %": "{:.0f}%"
     }),
     use_container_width=True,
-    hide_index=True
+    hide_index=True,
     height=800
 )
 
@@ -274,6 +274,6 @@ st.dataframe(
         "Momentum": "{:.2f}"
     }),
     use_container_width=True,
-    hide_index=True
+    hide_index=True,
     height=800
 )
