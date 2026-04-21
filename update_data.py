@@ -33,14 +33,16 @@ def main():
     highs = []
     lows = []
     names = []
+    descriptions = []
 
     for ticker in df["Ticker"]:
-        price, high, low, name = fetch_data(ticker)
-        prices.append(price)
-        highs.append(high)
-        lows.append(low)
-        names.append(name)
-
+    price, high, low, name, description = fetch_data(ticker)
+    prices.append(price)
+    highs.append(high)
+    lows.append(low)
+    names.append(name)
+    descriptions.append(description)
+    
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
