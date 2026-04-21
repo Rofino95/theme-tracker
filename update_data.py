@@ -11,18 +11,19 @@ def fetch_data(ticker):
         hist = data.history(period="1y")
 
         if hist.empty:
-            return None, None, None, None
+            return None, None, None, ticker, ""
 
         price = hist["Close"].iloc[-1]
         high = hist["High"].max()
         low = hist["Low"].min()
 
         name = info.get("shortName") or info.get("longName") or ticker
+        description = info.get("longBusinessSummary") or ""
 
-        return price, high, low, name
+        return price, high, low, name, description
 
     except:
-        return None, None, None, ticker
+        return None, None, None, ticker, ""
 
 def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
