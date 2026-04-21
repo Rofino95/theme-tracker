@@ -47,6 +47,7 @@ def main():
     df["52W High"] = highs
     df["52W Low"] = lows
     df["Name"] = names
+    df["Description"] = descriptions
 
     df = df.dropna()
 
