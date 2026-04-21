@@ -1,5 +1,6 @@
 import pandas as pd
 import yfinance as yf
+from deep_translator import GoogleTranslator
 
 INPUT_FILE = "theme_universe.csv"
 OUTPUT_FILE = "theme_scores.csv"
@@ -18,7 +19,12 @@ def fetch_data(ticker):
         low = hist["Low"].min()
 
         name = info.get("shortName") or info.get("longName") or ticker
-        description = info.get("longBusinessSummary") or ""
+        description_en = info.get("longBusinessSummary") or ""
+
+try:
+    description = GoogleTranslator(source="auto", target="de").translate(description_en)
+except:
+    description = description_en
 
         return price, high, low, name, description
 
