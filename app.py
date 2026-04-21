@@ -43,6 +43,18 @@ def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
     # 5. Rest
     return "Review"
 
+def get_trend_phase(stock_score, stock_momentum):
+    if stock_score < 0.35 and stock_momentum < -0.20:
+        return "Weak"
+    elif stock_score > 0.85 and stock_momentum < 0.30:
+        return "Late Trend"
+    elif stock_score > 0.75 and stock_momentum >= 0.30:
+        return "Mid Trend"
+    elif 0.55 <= stock_score <= 0.75 and stock_momentum > 0:
+        return "Early Trend"
+    else:
+        return "Transition"
+
 df["Status"] = df["Trend Score"].apply(get_status)
 
 # Theme-Uebersicht bauen
@@ -172,6 +184,19 @@ def color_signal(val):
     elif val == "Take Profits":
         return "background-color: #6a3d00; color: white"
     elif val == "Avoid":
+        return "background-color: #5a1e1e; color: white"
+    return ""
+
+def color_trend_phase(val):
+    if val == "Early Trend":
+        return "background-color: #123524; color: white"
+    elif val == "Mid Trend":
+        return "background-color: #1f3c88; color: white"
+    elif val == "Late Trend":
+        return "background-color: #6a3d00; color: white"
+    elif val == "Transition":
+        return "background-color: #5c4b00; color: white"
+    elif val == "Weak":
         return "background-color: #5a1e1e; color: white"
     return ""
 
@@ -308,6 +333,11 @@ detail_df["Signal"] = detail_df.apply(
     axis=1
 )
 
+detail_df["Trendphase"] = detail_df.apply(
+    lambda row: get_trend_phase(row["Trend Score"], row["Momentum"]),
+    axis=1
+)
+
 selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
 
 st.write(f"**Main Theme:** {selected_main_theme}")
@@ -382,11 +412,11 @@ st.dataframe(
         "52W Low",
         "Trend Score",
         "Momentum",
-        "Status",
+        "Trendphase",
         "Signal"
     ]]
     .style
-    .map(color_status, subset=["Status"])
+    .map(color_trend_phase, subset=["Trendphase"])
     .map(color_signal, subset=["Signal"])
     .format({
         "Preis": "{:.2f}",
@@ -448,5 +478,34 @@ Signal-Logik
 
 Wichtig:
 Das Signal ist keine Finanzberatung, sondern eine regelbasierte technische Einordnung innerhalb des jeweiligen Themes.
+"""
+)
+
+st.info(
+    """
+Trendphase
+
+🟢 Early Trend:
+- Trend beginnt sich sauber aufzubauen
+- Momentum ist positiv
+- oft interessant fuer Watchlist oder fruehe Einstiege
+
+🔵 Mid Trend:
+- etablierter Aufwaertstrend
+- Aktie laeuft bereits gut, aber weiterhin gesund
+
+🟠 Late Trend:
+- Aktie ist weit gelaufen
+- Momentum flacht ab
+- Trend kann weiterlaufen, ist aber fortgeschrittener
+
+🟡 Transition:
+- uneinheitliches Bild zwischen Trend und Momentum
+- weder klar stark noch klar schwach
+
+🔴 Weak:
+- schwacher Trend
+- negatives Momentum
+- eher meiden oder eng beobachten
 """
 )
