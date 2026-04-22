@@ -55,16 +55,19 @@ stock_options["Label"] = stock_options["Name"] + " (" + stock_options["Ticker"] 
 
 query_ticker = st.query_params.get("ticker", None)
 
+labels = stock_options["Label"].tolist()
 default_index = 0
+
 if query_ticker is not None:
     matches = stock_options[stock_options["Ticker"] == query_ticker]
     if not matches.empty:
         default_label = matches.iloc[0]["Label"]
-        default_index = stock_options[stock_options["Label"] == default_label].index[0]
+        if default_label in labels:
+            default_index = int(labels.index(default_label))
 
 selected_label = st.selectbox(
     "Waehle eine Aktie",
-    stock_options["Label"].tolist(),
+    labels,
     index=default_index
 )
 
