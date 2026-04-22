@@ -2,6 +2,7 @@ import pandas as pd
 import yfinance as yf
 import wikipedia
 from datetime import datetime
+from deep_translator import GoogleTranslator
 
 INPUT_FILE = "theme_universe.csv"
 OUTPUT_FILE = "theme_scores.csv"
@@ -25,7 +26,7 @@ def fetch_data(ticker):
         # 1. Erst Yahoo versuchen
         description = info.get("longBusinessSummary") or ""
 
-        # 2. Wenn Yahoo nichts liefert -> Wikipedia Fallback
+                # 2. Wenn Yahoo nichts liefert -> Wikipedia Fallback
         if not description or len(description.strip()) < 50:
             try:
                 wikipedia.set_lang("en")
@@ -41,6 +42,13 @@ def fetch_data(ticker):
             except Exception as e:
                 print(f"Wikipedia-Fehler bei {ticker}: {e}")
                 description = ""
+
+        # 3. Wenn Beschreibung vorhanden ist -> ins Deutsche uebersetzen
+        if description and len(description.strip()) > 0:
+            try:
+                description = GoogleTranslator(source="auto", target="de").translate(description)
+            except Exception as e:
+                print(f"Uebersetzungsfehler bei {ticker}: {e}")
 
         return price, high, low, name, description
 
