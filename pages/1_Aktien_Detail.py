@@ -90,6 +90,18 @@ trend_score = stock_df.iloc[0]["Trend Score"]
 momentum = stock_df.iloc[0]["Momentum"]
 description = stock_df.iloc[0]["Description"] if "Description" in stock_df.columns else ""
 
+range_52 = high_52 - low_52
+
+weak_zone_max = low_52 + 0.35 * range_52
+
+watchlist_zone_min = low_52 + 0.55 * range_52
+watchlist_zone_max = low_52 + 0.70 * range_52
+
+hold_zone_min = low_52 + 0.70 * range_52
+hold_zone_max = low_52 + 0.85 * range_52
+
+take_profits_min = low_52 + 0.85 * range_52
+
 primary_sub_theme = stock_df.iloc[0]["Sub Theme"]
 
 theme_df = df[df["Sub Theme"] == primary_sub_theme].copy()
@@ -114,6 +126,28 @@ col5, col6, col7 = st.columns(3)
 col5.metric("Momentum", f"{momentum:.2f}")
 col6.metric("Signal", signal)
 col7.metric("Trendphase", trend_phase)
+
+st.markdown("### Preis-Zonen")
+
+zone1, zone2, zone3, zone4 = st.columns(4)
+
+zone1.metric("Weak Zone bis", f"{weak_zone_max:.2f}")
+zone2.metric("Watchlist Zone", f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}")
+zone3.metric("Hold Zone", f"{hold_zone_min:.2f} - {hold_zone_max:.2f}")
+zone4.metric("Take Profits ab", f"{take_profits_min:.2f}")
+
+if price < weak_zone_max:
+    zone_text = "Die Aktie liegt aktuell in der Weak Zone."
+elif watchlist_zone_min <= price <= watchlist_zone_max:
+    zone_text = "Die Aktie liegt aktuell in der Watchlist Zone."
+elif hold_zone_min <= price <= hold_zone_max:
+    zone_text = "Die Aktie liegt aktuell in der Hold Zone."
+elif price >= take_profits_min:
+    zone_text = "Die Aktie liegt aktuell in der Take Profits Zone."
+else:
+    zone_text = "Die Aktie liegt aktuell zwischen den definierten Zonen."
+
+st.info(zone_text)
 
 st.markdown("---")
 st.subheader("Warum dieses Signal?")
