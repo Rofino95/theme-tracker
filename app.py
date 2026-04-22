@@ -430,6 +430,16 @@ st.dataframe(
     height=height_detail
 )
 
+st.markdown("### Zur Aktien-Detailseite")
+
+for _, row in detail_filtered_df.iterrows():
+    st.page_link(
+        "pages/1_Aktien_Detail.py",
+        label=f"{row['Name']} ({row['Ticker']})",
+        icon="📈",
+        query_params={"ticker": row["Ticker"]}
+    )
+
 st.info(
     """
 Legende
