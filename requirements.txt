@@ -3,3 +3,4 @@ streamlit
 yfinance
 deep-translator
 wikipedia
+plotly
