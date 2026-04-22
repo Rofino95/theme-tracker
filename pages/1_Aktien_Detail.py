@@ -129,12 +129,6 @@ col7.metric("Trendphase", trend_phase)
 
 st.markdown("### Einordnung")
 
-info1, info2, info3 = st.columns(3)
-
-info1.metric("Position", position_label)
-info2.metric("Trend", trend_label)
-info3.metric("Interpretation", interpretation_label)
-
 if price < weak_zone_max:
     position_label = "Weak Zone"
 elif watchlist_zone_min <= price <= watchlist_zone_max:
@@ -169,6 +163,12 @@ elif position_label == "Weak Zone" and momentum < 0.00:
     interpretation_label = "Avoid"
 else:
     interpretation_label = "Review"
+
+info1, info2, info3 = st.columns(3)
+
+info1.metric("Position", position_label)
+info2.metric("Trend", trend_label)
+info3.metric("Interpretation", interpretation_label)
 
 st.info(
     f"""
