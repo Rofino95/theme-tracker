@@ -1,8 +1,11 @@
 import os
 import pandas as pd
 import streamlit as st
+import yfinance as yf
+import plotly.graph_objects as go
 
 st.set_page_config(page_title="Aktien Detail", layout="wide")
+
 
 def get_status(score):
     if score > 0.7:
@@ -11,6 +14,7 @@ def get_status(score):
         return "Neutral"
     else:
         return "Baerisch"
+
 
 def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
     if stock_score < 0.35 and stock_momentum < -0.20 and theme_status == "Baerisch":
@@ -25,6 +29,7 @@ def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
         return "Hold"
     return "Review"
 
+
 def get_trend_phase(stock_score, stock_momentum):
     if stock_score < 0.35 and stock_momentum < -0.20:
         return "Weak"
@@ -36,6 +41,16 @@ def get_trend_phase(stock_score, stock_momentum):
         return "Early Trend"
     else:
         return "Transition"
+
+
+@st.cache_data(ttl=3600)
+def load_price_history(ticker):
+    try:
+        hist = yf.Ticker(ticker).history(period="1y")
+        return hist
+    except Exception:
+        return pd.DataFrame()
+
 
 st.title("Aktien-Detailseite")
 
@@ -83,11 +98,11 @@ stock_name = stock_df.iloc[0]["Name"]
 ticker = stock_df.iloc[0]["Ticker"]
 main_themes = ", ".join(sorted(stock_df["Main Theme"].dropna().unique()))
 sub_themes = ", ".join(sorted(stock_df["Sub Theme"].dropna().unique()))
-price = stock_df.iloc[0]["Preis"]
-high_52 = stock_df.iloc[0]["52W High"]
-low_52 = stock_df.iloc[0]["52W Low"]
-trend_score = stock_df.iloc[0]["Trend Score"]
-momentum = stock_df.iloc[0]["Momentum"]
+price = float(stock_df.iloc[0]["Preis"])
+high_52 = float(stock_df.iloc[0]["52W High"])
+low_52 = float(stock_df.iloc[0]["52W Low"])
+trend_score = float(stock_df.iloc[0]["Trend Score"])
+momentum = float(stock_df.iloc[0]["Momentum"])
 description = stock_df.iloc[0]["Description"] if "Description" in stock_df.columns else ""
 
 range_52 = high_52 - low_52
@@ -100,7 +115,7 @@ watchlist_zone_max = low_52 + 0.70 * range_52
 hold_zone_min = low_52 + 0.70 * range_52
 hold_zone_max = low_52 + 0.85 * range_52
 
-take_profits_min = low_52 + 0.85 * range_52
+upper_range_min = low_52 + 0.85 * range_52
 
 primary_sub_theme = stock_df.iloc[0]["Sub Theme"]
 
@@ -127,6 +142,14 @@ col5.metric("Momentum", f"{momentum:.2f}")
 col6.metric("Signal", signal)
 col7.metric("Trendphase", trend_phase)
 
+st.markdown("### Preis-Zonen")
+
+zone1, zone2, zone3, zone4 = st.columns(4)
+zone1.metric("Weak Zone bis", f"{weak_zone_max:.2f}")
+zone2.metric("Watchlist Zone", f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}")
+zone3.metric("Hold Zone", f"{hold_zone_min:.2f} - {hold_zone_max:.2f}")
+zone4.metric("Upper Range ab", f"{upper_range_min:.2f}")
+
 st.markdown("### Einordnung")
 
 if price < weak_zone_max:
@@ -135,7 +158,7 @@ elif watchlist_zone_min <= price <= watchlist_zone_max:
     position_label = "Watchlist Zone"
 elif hold_zone_min <= price <= hold_zone_max:
     position_label = "Hold Zone"
-elif price >= take_profits_min:
+elif price >= upper_range_min:
     position_label = "Upper Range"
 else:
     position_label = "Transition Zone"
@@ -165,7 +188,6 @@ else:
     interpretation_label = "Review"
 
 info1, info2, info3 = st.columns(3)
-
 info1.metric("Position", position_label)
 info2.metric("Trend", trend_label)
 info3.metric("Interpretation", interpretation_label)
@@ -183,6 +205,74 @@ Diese Einordnung kombiniert die aktuelle Position innerhalb der 52W-Range mit de
 )
 
 st.markdown("---")
+st.subheader("Kurschart (1 Jahr)")
+
+hist = load_price_history(ticker)
+
+if not hist.empty:
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=hist.index,
+            y=hist["Close"],
+            mode="lines",
+            name="Kurs"
+        )
+    )
+
+    fig.add_hline(y=weak_zone_max, line_dash="dot", annotation_text="Weak Zone", annotation_position="top left")
+    fig.add_hline(y=watchlist_zone_min, line_dash="dot", annotation_text="Watchlist Start", annotation_position="top left")
+    fig.add_hline(y=watchlist_zone_max, line_dash="dot", annotation_text="Watchlist Ende", annotation_position="top left")
+    fig.add_hline(y=hold_zone_min, line_dash="dot", annotation_text="Hold Start", annotation_position="top left")
+    fig.add_hline(y=hold_zone_max, line_dash="dot", annotation_text="Hold Ende", annotation_position="top left")
+    fig.add_hline(y=upper_range_min, line_dash="dot", annotation_text="Upper Range", annotation_position="top left")
+
+    fig.add_hline(y=price, line_dash="solid", annotation_text="Aktueller Preis", annotation_position="bottom right")
+
+    fig.update_layout(
+        title=f"{stock_name} ({ticker})",
+        xaxis_title="Datum",
+        yaxis_title="Preis",
+        height=500
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.warning("Kein Kursverlauf verfuegbar.")
+
+st.markdown("### Zonen-Uebersicht")
+
+zones_df = pd.DataFrame([
+    {
+        "Zone": "Weak Zone",
+        "Preisbereich": f"Bis {weak_zone_max:.2f}",
+        "Bedeutung": "Schwach / eher meiden"
+    },
+    {
+        "Zone": "Watchlist Zone",
+        "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
+        "Bedeutung": "Interessant fuer Watchlist"
+    },
+    {
+        "Zone": "Hold Zone",
+        "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
+        "Bedeutung": "Gesunder Trendbereich"
+    },
+    {
+        "Zone": "Upper Range",
+        "Preisbereich": f"Ab {upper_range_min:.2f}",
+        "Bedeutung": "Weit gelaufen / Momentum pruefen"
+    }
+])
+
+st.table(zones_df)
+    zones_df,
+    use_container_width=True,
+    hide_index=True
+)
+
+st.markdown("---")
 st.subheader("Warum dieses Signal?")
 
 st.info(
@@ -194,6 +284,8 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 - Zugehoeriges Sub Theme: **{primary_sub_theme}**
 - Theme Status: **{theme_status}**
 - Bullisch-Anteil im Theme: **{theme_bullish_pct:.0f}%**
+- Position in der 52W-Range: **{position_label}**
+- Trendstaerke: **{trend_label}**
 """
 )
 
@@ -204,4 +296,3 @@ if description:
     st.write(description)
 else:
     st.info("Keine Beschreibung verfuegbar.")
-
