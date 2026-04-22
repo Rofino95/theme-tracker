@@ -54,25 +54,25 @@ def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
     df.columns = df.columns.str.strip()
 
-prices = []
-highs = []
-lows = []
-names = []
-descriptions = []
+    prices = []
+    highs = []
+    lows = []
+    names = []
+    descriptions = []
 
-for ticker in df["Ticker"]:
-    price, high, low, name, description = fetch_data(ticker)
-    prices.append(price)
-    highs.append(high)
-    lows.append(low)
-    names.append(name)
-    descriptions.append(description)
+    for ticker in df["Ticker"]:
+        price, high, low, name, description = fetch_data(ticker)
+        prices.append(price)
+        highs.append(high)
+        lows.append(low)
+        names.append(name)
+        descriptions.append(description)
 
-df["Preis"] = prices
-df["52W High"] = highs
-df["52W Low"] = lows
-df["Name"] = names
-df["Description"] = descriptions
+    df["Preis"] = prices
+    df["52W High"] = highs
+    df["52W Low"] = lows
+    df["Name"] = names
+    df["Description"] = descriptions
 
     df = df.dropna()
 
@@ -86,6 +86,9 @@ df["Description"] = descriptions
     df["Momentum"] = df["Momentum"].round(2)
 
     df.to_csv(OUTPUT_FILE, index=False)
+
+    with open("last_update.txt", "w") as f:
+        f.write(datetime.now().strftime("%Y-%m-%d %H:%M"))
 
     print("Fertig: theme_scores.csv erstellt")
 
