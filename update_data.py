@@ -54,25 +54,25 @@ def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
     df.columns = df.columns.str.strip()
 
-    prices = []
-    highs = []
-    lows = []
-    names = []
-    descriptions = []
+prices = []
+highs = []
+lows = []
+names = []
+descriptions = []
 
-    for ticker in df["Ticker"]:
+for ticker in df["Ticker"]:
     price, high, low, name, description = fetch_data(ticker)
     prices.append(price)
     highs.append(high)
     lows.append(low)
     names.append(name)
     descriptions.append(description)
-    
-    df["Preis"] = prices
-    df["52W High"] = highs
-    df["52W Low"] = lows
-    df["Name"] = names
-    df["Description"] = descriptions
+
+df["Preis"] = prices
+df["52W High"] = highs
+df["52W Low"] = lows
+df["Name"] = names
+df["Description"] = descriptions
 
     df = df.dropna()
 
