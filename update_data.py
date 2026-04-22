@@ -22,28 +22,47 @@ def fetch_data(ticker):
 
         name = info.get("shortName") or info.get("longName") or ticker
 
-        # 1. Erst Yahoo versuchen
-        description_en = info.get("longBusinessSummary") or ""
+# 1. Erst Yahoo versuchen
+description_en = info.get("longBusinessSummary") or ""
 
-        # 2. Wenn Yahoo nichts liefert -> Wikipedia Fallback
-        if not description_en or len(description_en.strip()) < 50:
+# 2. Wenn Yahoo nichts liefert -> Wikipedia robuster versuchen
+if not description_en or len(description_en.strip()) < 50:
+    wikipedia.set_lang("en")
+
+    search_terms = [
+        name,
+        f"{name} company",
+        f"{ticker} company",
+        ticker
+    ]
+
+    for term in search_terms:
+        try:
+            description_en = wikipedia.summary(term, sentences=3, auto_suggest=False)
+            if description_en and len(description_en.strip()) > 50:
+                break
+        except:
+            continue
+
+    # 3. Falls immer noch nichts gefunden -> Wikipedia-Suche nutzen
+    if not description_en or len(description_en.strip()) < 50:
+        for term in search_terms:
             try:
-                wikipedia.set_lang("de")
-                description_en = wikipedia.summary(name, sentences=3)
+                results = wikipedia.search(term)
+                if results:
+                    description_en = wikipedia.summary(results[0], sentences=3, auto_suggest=False)
+                    if description_en and len(description_en.strip()) > 50:
+                        break
             except:
-                try:
-                    wikipedia.set_lang("en")
-                    description_en = wikipedia.summary(name, sentences=3)
-                except:
-                    description_en = ""
+                continue
 
-        # 3. Falls Beschreibung nicht deutsch ist -> nach deutsch uebersetzen
+# 4. Nach Deutsch uebersetzen
+description = description_en
+if description_en:
+    try:
+        description = GoogleTranslator(source="auto", target="de").translate(description_en)
+    except:
         description = description_en
-        if description_en:
-            try:
-                description = GoogleTranslator(source="auto", target="de").translate(description_en)
-            except:
-                description = description_en
 
         return price, high, low, name, description
 
