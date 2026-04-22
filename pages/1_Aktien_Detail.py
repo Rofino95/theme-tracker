@@ -243,34 +243,43 @@ else:
 
 st.markdown("### Zonen-Uebersicht")
 
-zones_df = pd.DataFrame([
-    {
-        "Zone": "Weak Zone",
-        "Preisbereich": f"Bis {weak_zone_max:.2f}",
-        "Bedeutung": "Schwach / eher meiden"
-    },
-    {
-        "Zone": "Watchlist Zone",
-        "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
-        "Bedeutung": "Interessant fuer Watchlist"
-    },
-    {
-        "Zone": "Hold Zone",
-        "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
-        "Bedeutung": "Gesunder Trendbereich"
-    },
-    {
-        "Zone": "Upper Range",
-        "Preisbereich": f"Ab {upper_range_min:.2f}",
-        "Bedeutung": "Weit gelaufen / Momentum pruefen"
-    }
-])
+zones_data = []
+
+# Weak Zone
+zones_data.append({
+    "Zone": "Weak Zone",
+    "Preisbereich": f"Bis {weak_zone_max:.2f}",
+    "Bedeutung": "Schwach / eher meiden",
+    "Aktuell": "Hier" if price < weak_zone_max else ""
+})
+
+# Watchlist Zone
+zones_data.append({
+    "Zone": "Watchlist Zone",
+    "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
+    "Bedeutung": "Interessant fuer Watchlist",
+    "Aktuell": "Hier" if watchlist_zone_min <= price <= watchlist_zone_max else ""
+})
+
+# Hold Zone
+zones_data.append({
+    "Zone": "Hold Zone",
+    "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
+    "Bedeutung": "Gesunder Trendbereich",
+    "Aktuell": "Hier" if hold_zone_min <= price <= hold_zone_max else ""
+})
+
+# Upper Range
+zones_data.append({
+    "Zone": "Upper Range",
+    "Preisbereich": f"Ab {upper_range_min:.2f}",
+    "Bedeutung": "Weit gelaufen / Momentum pruefen",
+    "Aktuell": "Hier" if price >= upper_range_min else ""
+})
+
+zones_df = pd.DataFrame(zones_data)
 
 st.table(zones_df)
-    zones_df,
-    use_container_width=True,
-    hide_index=True
-)
 
 st.markdown("---")
 st.subheader("Warum dieses Signal?")
