@@ -1,11 +1,11 @@
 import pandas as pd
 import yfinance as yf
 import wikipedia
-from deep_translator import GoogleTranslator
 from datetime import datetime
 
 INPUT_FILE = "theme_universe.csv"
 OUTPUT_FILE = "theme_scores.csv"
+
 
 def fetch_data(ticker):
     try:
@@ -22,52 +22,32 @@ def fetch_data(ticker):
 
         name = info.get("shortName") or info.get("longName") or ticker
 
-# 1. Erst Yahoo versuchen
-description_en = info.get("longBusinessSummary") or ""
+        # 1. Erst Yahoo versuchen
+        description = info.get("longBusinessSummary") or ""
 
-# 2. Wenn Yahoo nichts liefert -> Wikipedia robuster versuchen
-if not description_en or len(description_en.strip()) < 50:
-    wikipedia.set_lang("en")
-
-    search_terms = [
-        name,
-        f"{name} company",
-        f"{ticker} company",
-        ticker
-    ]
-
-    for term in search_terms:
-        try:
-            description_en = wikipedia.summary(term, sentences=3, auto_suggest=False)
-            if description_en and len(description_en.strip()) > 50:
-                break
-        except:
-            continue
-
-    # 3. Falls immer noch nichts gefunden -> Wikipedia-Suche nutzen
-    if not description_en or len(description_en.strip()) < 50:
-        for term in search_terms:
+        # 2. Wenn Yahoo nichts liefert -> Wikipedia Fallback
+        if not description or len(description.strip()) < 50:
             try:
-                results = wikipedia.search(term)
-                if results:
-                    description_en = wikipedia.summary(results[0], sentences=3, auto_suggest=False)
-                    if description_en and len(description_en.strip()) > 50:
-                        break
-            except:
-                continue
+                wikipedia.set_lang("en")
+                results = wikipedia.search(name)
 
-# 4. Nach Deutsch uebersetzen
-description = description_en
-if description_en:
-    try:
-        description = GoogleTranslator(source="auto", target="de").translate(description_en)
-    except:
-        description = description_en
+                if not results:
+                    results = wikipedia.search(f"{ticker} company")
+
+                if results:
+                    description = wikipedia.summary(results[0], sentences=3, auto_suggest=False)
+                else:
+                    description = ""
+            except Exception as e:
+                print(f"Wikipedia-Fehler bei {ticker}: {e}")
+                description = ""
 
         return price, high, low, name, description
 
-    except:
+    except Exception as e:
+        print(f"Fehler bei {ticker}: {e}")
         return None, None, None, ticker, ""
+
 
 def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
@@ -93,12 +73,15 @@ def main():
     df["Name"] = names
     df["Description"] = descriptions
 
-    df = df.dropna()
+    df = df.dropna(subset=["Preis", "52W High", "52W Low"]).copy()
 
-    df["Trend Score"] = (df["Preis"] - df["52W Low"]) / (df["52W High"] - df["52W Low"])
+    df["Trend Score"] = (
+        (df["Preis"] - df["52W Low"]) / (df["52W High"] - df["52W Low"])
+    )
+
     df["Momentum"] = (
-        (df["Preis"] - ((df["52W High"] + df["52W Low"]) / 2)) /
-        ((df["52W High"] - df["52W Low"]) / 2)
+        (df["Preis"] - ((df["52W High"] + df["52W Low"]) / 2))
+        / ((df["52W High"] - df["52W Low"]) / 2)
     )
 
     df["Trend Score"] = df["Trend Score"].round(2)
@@ -110,6 +93,8 @@ def main():
         f.write(datetime.now().strftime("%Y-%m-%d %H:%M"))
 
     print("Fertig: theme_scores.csv erstellt")
+    print(df[df["Ticker"].isin(["META", "NVDA", "CVX"])][["Ticker", "Name", "Description"]])
+
 
 if __name__ == "__main__":
     main()
