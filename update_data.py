@@ -1,6 +1,8 @@
 import pandas as pd
 import yfinance as yf
+import wikipedia
 from deep_translator import GoogleTranslator
+from datetime import datetime
 
 INPUT_FILE = "theme_universe.csv"
 OUTPUT_FILE = "theme_scores.csv"
