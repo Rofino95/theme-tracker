@@ -320,8 +320,13 @@ selected_theme = st.selectbox(
 detail_df = filtered_df[filtered_df["Sub Theme"] == selected_theme].copy()
 detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
 
-theme_status_detail = filtered_grouped[filtered_grouped["Sub Theme"] == selected_theme]["Status"].iloc[0]
-theme_bullish_pct_detail = filtered_grouped[filtered_grouped["Sub Theme"] == selected_theme]["Bullisch %"].iloc[0]
+theme_status_detail = filtered_grouped[
+    filtered_grouped["Sub Theme"] == selected_theme
+]["Status"].iloc[0]
+
+theme_bullish_pct_detail = filtered_grouped[
+    filtered_grouped["Sub Theme"] == selected_theme
+]["Bullisch %"].iloc[0]
 
 detail_df["Signal"] = detail_df.apply(
     lambda row: get_signal(
@@ -338,7 +343,9 @@ detail_df["Trendphase"] = detail_df.apply(
     axis=1
 )
 
-selected_main_theme = df[df["Sub Theme"] == selected_theme]["Main Theme"].iloc[0]
+selected_main_theme = filtered_df[
+    filtered_df["Sub Theme"] == selected_theme
+]["Main Theme"].iloc[0]
 
 st.write(f"**Main Theme:** {selected_main_theme}")
 st.write(f"**Bestandteile von {selected_theme}**")
@@ -400,35 +407,6 @@ col_d.metric("Bullisch %", f"{bullish_pct_detail:.0f}%")
 
 col_a.caption(get_status(best_score))
 col_b.caption(get_status(weakest_score))
-
-height_detail = 50 + len(detail_df) * 35
-
-st.dataframe(
-    detail_df[[
-        "Name",
-        "Ticker",
-        "Preis",
-        "52W High",
-        "52W Low",
-        "Trend Score",
-        "Momentum",
-        "Trendphase",
-        "Signal"
-    ]]
-    .style
-    .map(color_trend_phase, subset=["Trendphase"])
-    .map(color_signal, subset=["Signal"])
-    .format({
-        "Preis": "{:.2f}",
-        "52W High": "{:.2f}",
-        "52W Low": "{:.2f}",
-        "Trend Score": "{:.2f}",
-        "Momentum": "{:.2f}"
-    }),
-    use_container_width=True,
-    hide_index=True,
-    height=height_detail
-)
 
 search_term_detail = st.text_input(
     "Suche innerhalb dieses Sub Themes nach Name oder Ticker",
