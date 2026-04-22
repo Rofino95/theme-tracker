@@ -430,15 +430,69 @@ st.dataframe(
     height=height_detail
 )
 
-st.markdown("### Zur Aktien-Detailseite")
+search_term_detail = st.text_input(
+    "Suche innerhalb dieses Sub Themes nach Name oder Ticker",
+    key="detail_search"
+)
 
-for _, row in detail_filtered_df.iterrows():
-    st.page_link(
-        "pages/1_Aktien_Detail.py",
-        label=f"{row['Name']} ({row['Ticker']})",
-        icon="📈",
-        query_params={"ticker": row["Ticker"]}
-    )
+detail_filtered_df = detail_df.copy()
+
+if search_term_detail:
+    detail_filtered_df = detail_filtered_df[
+        detail_filtered_df["Name"].str.contains(search_term_detail, case=False, na=False) |
+        detail_filtered_df["Ticker"].str.contains(search_term_detail, case=False, na=False)
+    ].copy()
+
+height_detail = min(900, 50 + len(detail_filtered_df) * 35)
+
+st.dataframe(
+    detail_filtered_df[[
+        "Name",
+        "Ticker",
+        "Preis",
+        "52W High",
+        "52W Low",
+        "Trend Score",
+        "Momentum",
+        "Trendphase",
+        "Signal"
+    ]]
+    .style
+    .map(color_trend_phase, subset=["Trendphase"])
+    .map(color_signal, subset=["Signal"])
+    .format({
+        "Preis": "{:.2f}",
+        "52W High": "{:.2f}",
+        "52W Low": "{:.2f}",
+        "Trend Score": "{:.2f}",
+        "Momentum": "{:.2f}"
+    }),
+    use_container_width=True,
+    hide_index=True,
+    height=height_detail
+)
+
+st.markdown("### Aktie direkt oeffnen")
+
+jump_options = detail_filtered_df[["Name", "Ticker"]].drop_duplicates().copy()
+jump_options["Label"] = jump_options["Name"] + " (" + jump_options["Ticker"] + ")"
+
+selected_jump_label = st.selectbox(
+    "Waehle eine Aktie fuer die Detailseite",
+    jump_options["Label"].tolist(),
+    key="jump_to_stock_detail"
+)
+
+selected_jump_ticker = jump_options.loc[
+    jump_options["Label"] == selected_jump_label, "Ticker"
+].iloc[0]
+
+st.page_link(
+    "pages/1_Aktien_Detail.py",
+    label=f"Zur Detailseite von {selected_jump_label}",
+    icon="📈",
+    query_params={"ticker": selected_jump_ticker}
+)
 
 st.info(
     """
