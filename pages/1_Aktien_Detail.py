@@ -322,16 +322,22 @@ zones_data = [
         "Aktuell": "Hier" if price < weak_zone_max else ""
     },
     {
+        "Zone": "Transition Zone",
+        "Preisbereich": f"{weak_zone_max:.2f} - {watchlist_zone_min:.2f}",
+        "Bedeutung": "Zwischen schwach und attraktiv",
+        "Aktuell": "Hier" if weak_zone_max <= price < watchlist_zone_min else ""
+    },
+    {
         "Zone": "Watchlist Zone",
         "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
         "Bedeutung": "Interessant fuer Watchlist",
-        "Aktuell": "Hier" if watchlist_zone_min <= price <= watchlist_zone_max else ""
+        "Aktuell": "Hier" if watchlist_zone_min <= price < hold_zone_min else ""
     },
     {
         "Zone": "Hold Zone",
         "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
         "Bedeutung": "Gesunder Trendbereich",
-        "Aktuell": "Hier" if hold_zone_min <= price <= hold_zone_max else ""
+        "Aktuell": "Hier" if hold_zone_min <= price < upper_range_min else ""
     },
     {
         "Zone": "Upper Range",
