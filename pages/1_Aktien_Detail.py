@@ -52,6 +52,70 @@ def load_price_history(ticker):
         return pd.DataFrame()
 
 
+def make_tag_html(items, bg="#1f2937", color="#f9fafb"):
+    tags = ""
+    for item in items:
+        tags += f"""
+        <span style="
+            display:inline-block;
+            background:{bg};
+            color:{color};
+            padding:6px 10px;
+            margin:4px 6px 0 0;
+            border-radius:999px;
+            font-size:14px;
+            font-weight:500;
+        ">{item}</span>
+        """
+    return tags
+
+
+def signal_badge(signal):
+    colors = {
+        "Attraktiv": ("#123524", "#ffffff"),
+        "Hold": ("#1f3c88", "#ffffff"),
+        "Review": ("#5c4b00", "#ffffff"),
+        "Take Profits": ("#6a3d00", "#ffffff"),
+        "Avoid": ("#5a1e1e", "#ffffff"),
+    }
+    bg, fg = colors.get(signal, ("#374151", "#ffffff"))
+    return f"""
+    <div style="
+        display:inline-block;
+        background:{bg};
+        color:{fg};
+        padding:8px 14px;
+        border-radius:12px;
+        font-weight:700;
+        font-size:16px;
+        margin-top:6px;
+    ">{signal}</div>
+    """
+
+
+def phase_badge(phase):
+    colors = {
+        "Early Trend": ("#123524", "#ffffff"),
+        "Mid Trend": ("#1f3c88", "#ffffff"),
+        "Late Trend": ("#6a3d00", "#ffffff"),
+        "Transition": ("#5c4b00", "#ffffff"),
+        "Weak": ("#5a1e1e", "#ffffff"),
+    }
+    bg, fg = colors.get(phase, ("#374151", "#ffffff"))
+    return f"""
+    <div style="
+        display:inline-block;
+        background:{bg};
+        color:{fg};
+        padding:8px 14px;
+        border-radius:12px;
+        font-weight:700;
+        font-size:16px;
+        margin-top:6px;
+    ">{phase}</div>
+    """
+
+
 st.title("Aktien-Detailseite")
 
 if not os.path.exists("theme_scores.csv"):
@@ -96,8 +160,9 @@ stock_df = df[df["Ticker"] == selected_ticker].copy()
 
 stock_name = stock_df.iloc[0]["Name"]
 ticker = stock_df.iloc[0]["Ticker"]
-main_themes = ", ".join(sorted(stock_df["Main Theme"].dropna().unique()))
-sub_themes = ", ".join(sorted(stock_df["Sub Theme"].dropna().unique()))
+main_theme_list = sorted(stock_df["Main Theme"].dropna().unique())
+sub_theme_list = sorted(stock_df["Sub Theme"].dropna().unique())
+
 price = float(stock_df.iloc[0]["Preis"])
 high_52 = float(stock_df.iloc[0]["52W High"])
 low_52 = float(stock_df.iloc[0]["52W Low"])
@@ -125,32 +190,6 @@ theme_bullish_pct = round((theme_df["Trend Score"].apply(get_status) == "Bullisc
 
 signal = get_signal(trend_score, momentum, theme_status, theme_bullish_pct)
 trend_phase = get_trend_phase(trend_score, momentum)
-
-st.subheader(stock_name)
-st.write(f"**Ticker:** {ticker}")
-st.write(f"**Main Theme(s):** {main_themes}")
-st.write(f"**Sub Theme(s):** {sub_themes}")
-
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Preis", f"{price:.2f}")
-col2.metric("52W High", f"{high_52:.2f}")
-col3.metric("52W Low", f"{low_52:.2f}")
-col4.metric("Trend Score", f"{trend_score:.2f}")
-
-col5, col6, col7 = st.columns(3)
-col5.metric("Momentum", f"{momentum:.2f}")
-col6.metric("Signal", signal)
-col7.metric("Trendphase", trend_phase)
-
-st.markdown("### Preis-Zonen")
-
-zone1, zone2, zone3, zone4 = st.columns(4)
-zone1.metric("Weak Zone bis", f"{weak_zone_max:.2f}")
-zone2.metric("Watchlist Zone", f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}")
-zone3.metric("Hold Zone", f"{hold_zone_min:.2f} - {hold_zone_max:.2f}")
-zone4.metric("Upper Range ab", f"{upper_range_min:.2f}")
-
-st.markdown("### Einordnung")
 
 if price < weak_zone_max:
     position_label = "Weak Zone"
@@ -187,6 +226,117 @@ elif position_label == "Weak Zone" and momentum < 0.00:
 else:
     interpretation_label = "Review"
 
+# HEADER
+st.markdown(f"## {stock_name}")
+st.markdown(f"**Ticker:** `{ticker}`")
+
+st.markdown("**Main Themes**")
+st.markdown(make_tag_html(main_theme_list, bg="#0f3d2e"), unsafe_allow_html=True)
+
+st.markdown("**Sub Themes**")
+st.markdown(make_tag_html(sub_theme_list, bg="#1e3a5f"), unsafe_allow_html=True)
+
+# KPI BEREICH
+st.markdown("---")
+st.markdown("### Kennzahlen")
+
+kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+kpi1.metric("Preis", f"{price:.2f}")
+kpi2.metric("52W High", f"{high_52:.2f}")
+kpi3.metric("52W Low", f"{low_52:.2f}")
+kpi4.metric("Trend Score", f"{trend_score:.2f}")
+
+kpi5, kpi6, kpi7 = st.columns(3)
+kpi5.metric("Momentum", f"{momentum:.2f}")
+
+with kpi6:
+    st.markdown("**Signal**")
+    st.markdown(signal_badge(signal), unsafe_allow_html=True)
+
+with kpi7:
+    st.markdown("**Trendphase**")
+    st.markdown(phase_badge(trend_phase), unsafe_allow_html=True)
+
+# CHART
+st.markdown("---")
+st.markdown("### Kurschart (1 Jahr)")
+
+hist = load_price_history(ticker)
+
+if not hist.empty:
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=hist.index,
+            y=hist["Close"],
+            mode="lines",
+            name="Kurs"
+        )
+    )
+
+    fig.add_hrect(y0=0, y1=weak_zone_max, fillcolor="rgba(180, 50, 50, 0.12)", line_width=0)
+    fig.add_hrect(y0=watchlist_zone_min, y1=watchlist_zone_max, fillcolor="rgba(220, 180, 50, 0.12)", line_width=0)
+    fig.add_hrect(y0=hold_zone_min, y1=hold_zone_max, fillcolor="rgba(50, 120, 220, 0.10)", line_width=0)
+    fig.add_hrect(y0=upper_range_min, y1=high_52 * 1.08, fillcolor="rgba(50, 180, 80, 0.10)", line_width=0)
+
+    fig.add_hline(y=weak_zone_max, line_dash="dot", annotation_text="Weak Zone", annotation_position="top left")
+    fig.add_hline(y=watchlist_zone_min, line_dash="dot", annotation_text="Watchlist Start", annotation_position="top left")
+    fig.add_hline(y=watchlist_zone_max, line_dash="dot", annotation_text="Watchlist Ende", annotation_position="top left")
+    fig.add_hline(y=hold_zone_min, line_dash="dot", annotation_text="Hold Start", annotation_position="top left")
+    fig.add_hline(y=hold_zone_max, line_dash="dot", annotation_text="Hold Ende", annotation_position="top left")
+    fig.add_hline(y=upper_range_min, line_dash="dot", annotation_text="Upper Range", annotation_position="top left")
+    fig.add_hline(y=price, line_dash="solid", annotation_text="Aktueller Preis", annotation_position="bottom right")
+
+    fig.update_layout(
+        title=f"{stock_name} ({ticker})",
+        xaxis_title="Datum",
+        yaxis_title="Preis",
+        height=520,
+        margin=dict(l=20, r=20, t=60, b=20)
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.warning("Kein Kursverlauf verfuegbar.")
+
+# ZONEN TABELLE
+st.markdown("### Zonen-Uebersicht")
+
+zones_data = [
+    {
+        "Zone": "Weak Zone",
+        "Preisbereich": f"Bis {weak_zone_max:.2f}",
+        "Bedeutung": "Schwach / eher meiden",
+        "Aktuell": "Hier" if price < weak_zone_max else ""
+    },
+    {
+        "Zone": "Watchlist Zone",
+        "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
+        "Bedeutung": "Interessant fuer Watchlist",
+        "Aktuell": "Hier" if watchlist_zone_min <= price <= watchlist_zone_max else ""
+    },
+    {
+        "Zone": "Hold Zone",
+        "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
+        "Bedeutung": "Gesunder Trendbereich",
+        "Aktuell": "Hier" if hold_zone_min <= price <= hold_zone_max else ""
+    },
+    {
+        "Zone": "Upper Range",
+        "Preisbereich": f"Ab {upper_range_min:.2f}",
+        "Bedeutung": "Weit gelaufen / Momentum pruefen",
+        "Aktuell": "Hier" if price >= upper_range_min else ""
+    }
+]
+
+zones_df = pd.DataFrame(zones_data)
+st.table(zones_df)
+
+# EINORDNUNG
+st.markdown("---")
+st.markdown("### Einordnung")
+
 info1, info2, info3 = st.columns(3)
 info1.metric("Position", position_label)
 info2.metric("Trend", trend_label)
@@ -204,85 +354,9 @@ Diese Einordnung kombiniert die aktuelle Position innerhalb der 52W-Range mit de
 """
 )
 
+# SIGNAL BEGRUENDUNG
 st.markdown("---")
-st.subheader("Kurschart (1 Jahr)")
-
-hist = load_price_history(ticker)
-
-if not hist.empty:
-    fig = go.Figure()
-
-    fig.add_trace(
-        go.Scatter(
-            x=hist.index,
-            y=hist["Close"],
-            mode="lines",
-            name="Kurs"
-        )
-    )
-
-    fig.add_hline(y=weak_zone_max, line_dash="dot", annotation_text="Weak Zone", annotation_position="top left")
-    fig.add_hline(y=watchlist_zone_min, line_dash="dot", annotation_text="Watchlist Start", annotation_position="top left")
-    fig.add_hline(y=watchlist_zone_max, line_dash="dot", annotation_text="Watchlist Ende", annotation_position="top left")
-    fig.add_hline(y=hold_zone_min, line_dash="dot", annotation_text="Hold Start", annotation_position="top left")
-    fig.add_hline(y=hold_zone_max, line_dash="dot", annotation_text="Hold Ende", annotation_position="top left")
-    fig.add_hline(y=upper_range_min, line_dash="dot", annotation_text="Upper Range", annotation_position="top left")
-
-    fig.add_hline(y=price, line_dash="solid", annotation_text="Aktueller Preis", annotation_position="bottom right")
-
-    fig.update_layout(
-        title=f"{stock_name} ({ticker})",
-        xaxis_title="Datum",
-        yaxis_title="Preis",
-        height=500
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.warning("Kein Kursverlauf verfuegbar.")
-
-st.markdown("### Zonen-Uebersicht")
-
-zones_data = []
-
-# Weak Zone
-zones_data.append({
-    "Zone": "Weak Zone",
-    "Preisbereich": f"Bis {weak_zone_max:.2f}",
-    "Bedeutung": "Schwach / eher meiden",
-    "Aktuell": "Hier" if price < weak_zone_max else ""
-})
-
-# Watchlist Zone
-zones_data.append({
-    "Zone": "Watchlist Zone",
-    "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
-    "Bedeutung": "Interessant fuer Watchlist",
-    "Aktuell": "Hier" if watchlist_zone_min <= price <= watchlist_zone_max else ""
-})
-
-# Hold Zone
-zones_data.append({
-    "Zone": "Hold Zone",
-    "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
-    "Bedeutung": "Gesunder Trendbereich",
-    "Aktuell": "Hier" if hold_zone_min <= price <= hold_zone_max else ""
-})
-
-# Upper Range
-zones_data.append({
-    "Zone": "Upper Range",
-    "Preisbereich": f"Ab {upper_range_min:.2f}",
-    "Bedeutung": "Weit gelaufen / Momentum pruefen",
-    "Aktuell": "Hier" if price >= upper_range_min else ""
-})
-
-zones_df = pd.DataFrame(zones_data)
-
-st.table(zones_df)
-
-st.markdown("---")
-st.subheader("Warum dieses Signal?")
+st.markdown("### Warum dieses Signal?")
 
 st.info(
     f"""
@@ -298,10 +372,11 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 """
 )
 
+# BESCHREIBUNG
 st.markdown("---")
-st.subheader("Unternehmensbeschreibung")
+st.markdown("### Unternehmensbeschreibung")
 
-if description:
+if description and str(description).strip():
     st.write(description)
 else:
     st.info("Keine Beschreibung verfuegbar.")
