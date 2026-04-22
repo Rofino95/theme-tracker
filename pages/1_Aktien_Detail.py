@@ -127,27 +127,60 @@ col5.metric("Momentum", f"{momentum:.2f}")
 col6.metric("Signal", signal)
 col7.metric("Trendphase", trend_phase)
 
-st.markdown("### Preis-Zonen")
+st.markdown("### Einordnung")
 
-zone1, zone2, zone3, zone4 = st.columns(4)
+info1, info2, info3 = st.columns(3)
 
-zone1.metric("Weak Zone bis", f"{weak_zone_max:.2f}")
-zone2.metric("Watchlist Zone", f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}")
-zone3.metric("Hold Zone", f"{hold_zone_min:.2f} - {hold_zone_max:.2f}")
-zone4.metric("Take Profits ab", f"{take_profits_min:.2f}")
+info1.metric("Position", position_label)
+info2.metric("Trend", trend_label)
+info3.metric("Interpretation", interpretation_label)
 
 if price < weak_zone_max:
-    zone_text = "Die Aktie liegt aktuell in der Weak Zone."
+    position_label = "Weak Zone"
 elif watchlist_zone_min <= price <= watchlist_zone_max:
-    zone_text = "Die Aktie liegt aktuell in der Watchlist Zone."
+    position_label = "Watchlist Zone"
 elif hold_zone_min <= price <= hold_zone_max:
-    zone_text = "Die Aktie liegt aktuell in der Hold Zone."
+    position_label = "Hold Zone"
 elif price >= take_profits_min:
-    zone_text = "Die Aktie liegt aktuell in der Take Profits Zone."
+    position_label = "Upper Range"
 else:
-    zone_text = "Die Aktie liegt aktuell zwischen den definierten Zonen."
+    position_label = "Transition Zone"
 
-st.info(zone_text)
+if momentum >= 0.50:
+    trend_label = "Very Strong"
+elif momentum >= 0.20:
+    trend_label = "Strong"
+elif momentum >= 0.00:
+    trend_label = "Positive"
+elif momentum >= -0.20:
+    trend_label = "Weakening"
+else:
+    trend_label = "Weak"
+
+if position_label == "Upper Range" and momentum > 0.30:
+    interpretation_label = "Hold"
+elif position_label == "Upper Range" and momentum <= 0.30:
+    interpretation_label = "Take Profits moeglich"
+elif position_label == "Hold Zone" and momentum >= 0.00:
+    interpretation_label = "Hold"
+elif position_label == "Watchlist Zone" and momentum > 0.00:
+    interpretation_label = "Attraktiv / Watchlist"
+elif position_label == "Weak Zone" and momentum < 0.00:
+    interpretation_label = "Avoid"
+else:
+    interpretation_label = "Review"
+
+st.info(
+    f"""
+Aktuelle Einordnung
+
+- Position: **{position_label}**
+- Trend: **{trend_label}**
+- Interpretation: **{interpretation_label}**
+
+Diese Einordnung kombiniert die aktuelle Position innerhalb der 52W-Range mit der Trenddynamik.
+"""
+)
 
 st.markdown("---")
 st.subheader("Warum dieses Signal?")
