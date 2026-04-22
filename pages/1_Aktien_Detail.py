@@ -266,34 +266,45 @@ hist = load_price_history(ticker)
 if not hist.empty:
     fig = go.Figure()
 
+    # Kurslinie
     fig.add_trace(
         go.Scatter(
             x=hist.index,
             y=hist["Close"],
             mode="lines",
-            name="Kurs"
+            name="Kurs",
+            line=dict(width=2)
         )
     )
 
-    fig.add_hrect(y0=0, y1=weak_zone_max, fillcolor="rgba(180, 50, 50, 0.12)", line_width=0)
-    fig.add_hrect(y0=watchlist_zone_min, y1=watchlist_zone_max, fillcolor="rgba(220, 180, 50, 0.12)", line_width=0)
-    fig.add_hrect(y0=hold_zone_min, y1=hold_zone_max, fillcolor="rgba(50, 120, 220, 0.10)", line_width=0)
-    fig.add_hrect(y0=upper_range_min, y1=high_52 * 1.08, fillcolor="rgba(50, 180, 80, 0.10)", line_width=0)
+    # Zonen (deutlich transparenter)
+    fig.add_hrect(y0=0, y1=weak_zone_max, fillcolor="rgba(180, 50, 50, 0.08)", line_width=0)
+    fig.add_hrect(y0=watchlist_zone_min, y1=watchlist_zone_max, fillcolor="rgba(220, 180, 50, 0.08)", line_width=0)
+    fig.add_hrect(y0=hold_zone_min, y1=hold_zone_max, fillcolor="rgba(50, 120, 220, 0.08)", line_width=0)
+    fig.add_hrect(y0=upper_range_min, y1=high_52 * 1.1, fillcolor="rgba(50, 180, 80, 0.08)", line_width=0)
 
-    fig.add_hline(y=weak_zone_max, line_dash="dot", annotation_text="Weak Zone", annotation_position="top left")
-    fig.add_hline(y=watchlist_zone_min, line_dash="dot", annotation_text="Watchlist Start", annotation_position="top left")
-    fig.add_hline(y=watchlist_zone_max, line_dash="dot", annotation_text="Watchlist Ende", annotation_position="top left")
-    fig.add_hline(y=hold_zone_min, line_dash="dot", annotation_text="Hold Start", annotation_position="top left")
-    fig.add_hline(y=hold_zone_max, line_dash="dot", annotation_text="Hold Ende", annotation_position="top left")
-    fig.add_hline(y=upper_range_min, line_dash="dot", annotation_text="Upper Range", annotation_position="top left")
-    fig.add_hline(y=price, line_dash="solid", annotation_text="Aktueller Preis", annotation_position="bottom right")
+    # Linien (OHNE Text → wichtig!)
+    fig.add_hline(y=weak_zone_max, line_dash="dot")
+    fig.add_hline(y=watchlist_zone_min, line_dash="dot")
+    fig.add_hline(y=watchlist_zone_max, line_dash="dot")
+    fig.add_hline(y=hold_zone_min, line_dash="dot")
+    fig.add_hline(y=hold_zone_max, line_dash="dot")
+    fig.add_hline(y=upper_range_min, line_dash="dot")
+
+    # aktueller Preis (einzige wichtige Linie)
+    fig.add_hline(
+        y=price,
+        line_dash="solid",
+        line=dict(width=2)
+    )
 
     fig.update_layout(
         title=f"{stock_name} ({ticker})",
         xaxis_title="Datum",
         yaxis_title="Preis",
         height=520,
-        margin=dict(l=20, r=20, t=60, b=20)
+        margin=dict(l=20, r=20, t=60, b=20),
+        showlegend=False
     )
 
     st.plotly_chart(fig, use_container_width=True)
