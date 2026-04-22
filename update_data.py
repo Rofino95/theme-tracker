@@ -21,12 +21,29 @@ def fetch_data(ticker):
         low = hist["Low"].min()
 
         name = info.get("shortName") or info.get("longName") or ticker
+
+        # 1. Erst Yahoo versuchen
         description_en = info.get("longBusinessSummary") or ""
 
-try:
-    description = GoogleTranslator(source="auto", target="de").translate(description_en)
-except:
-    description = description_en
+        # 2. Wenn Yahoo nichts liefert -> Wikipedia Fallback
+        if not description_en or len(description_en.strip()) < 50:
+            try:
+                wikipedia.set_lang("de")
+                description_en = wikipedia.summary(name, sentences=3)
+            except:
+                try:
+                    wikipedia.set_lang("en")
+                    description_en = wikipedia.summary(name, sentences=3)
+                except:
+                    description_en = ""
+
+        # 3. Falls Beschreibung nicht deutsch ist -> nach deutsch uebersetzen
+        description = description_en
+        if description_en:
+            try:
+                description = GoogleTranslator(source="auto", target="de").translate(description_en)
+            except:
+                description = description_en
 
         return price, high, low, name, description
 
