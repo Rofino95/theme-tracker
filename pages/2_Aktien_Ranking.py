@@ -161,6 +161,17 @@ ranking_df["Signal"] = ranking_df.apply(
     axis=1
 )
 
+# Ranking innerhalb Sub Theme
+ranking_df["Rank im Theme"] = ranking_df.groupby("Sub Theme")["Trend Score"] \
+    .rank(ascending=False, method="min")
+
+ranking_df["Anzahl im Theme"] = ranking_df.groupby("Sub Theme")["Ticker"] \
+    .transform("count")
+
+ranking_df["Top %"] = (
+    ranking_df["Rank im Theme"] / ranking_df["Anzahl im Theme"] * 100
+).round(0)
+
 # Filter
 filter_col1, filter_col2, filter_col3 = st.columns(3)
 
@@ -240,6 +251,8 @@ display_df = filtered_df[[
     "Preis",
     "Trend Score",
     "Momentum",
+    "Rank im Theme",
+    "Top %",
     "Zone",
     "Signal",
     "Trendphase"
@@ -256,7 +269,9 @@ st.dataframe(
     .format({
         "Preis": "{:.2f}",
         "Trend Score": "{:.2f}",
-        "Momentum": "{:.2f}"
+        "Momentum": "{:.2f}",
+        "Rank im Theme": "{:.0f}",
+        "Top %": "{:.0f}%"
     }),
     use_container_width=True,
     hide_index=True,
