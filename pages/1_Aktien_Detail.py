@@ -221,6 +221,10 @@ theme_bullish_pct = round((theme_df["Trend Score"].apply(get_status) == "Bullisc
 signal = get_signal(trend_score, momentum, theme_status, theme_bullish_pct)
 trend_phase = get_trend_phase(trend_score, momentum)
 
+# Kursdaten und Trendrichtung EINMAL hier berechnen
+hist = load_price_history(ticker)
+trend_direction = get_trend_direction(hist, price)
+
 if price < weak_zone_max:
     position_label = "Weak Zone"
 elif watchlist_zone_min <= price <= watchlist_zone_max:
@@ -255,9 +259,10 @@ elif position_label == "Weak Zone" and momentum < 0.00:
     interpretation_label = "Avoid"
 else:
     interpretation_label = "Review"
+
+# Zusatzlogik: wenn es eher ein frueher Turnaround ist
 if trend_direction == "Turnaround moeglich" and signal == "Attraktiv":
     interpretation_label = "Spekulativer Turnaround"
-
 
 # HEADER
 st.markdown(f"## {stock_name}")
@@ -296,9 +301,7 @@ kpi8.metric("Trendrichtung", trend_direction)
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
 
-hist = load_price_history(ticker)
-trend_direction = get_trend_direction(hist, price)
-
+# WICHTIG: hier hist NICHT nochmal laden
 if not hist.empty:
     fig = go.Figure()
 
