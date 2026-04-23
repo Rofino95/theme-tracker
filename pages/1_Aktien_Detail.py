@@ -60,11 +60,16 @@ def get_trend_direction(hist, price):
     above_ma50_days = (recent["Close"] > recent["MA50"]).sum()
 
     if ma200 is not None and not pd.isna(ma200):
-        if price > ma50 and ma50 > ma200:
-            if above_ma50_days >= 15:
-                return "Aufwaertstrend"
-            else:
-                return "Frischer Aufwaertstrend"
+    if price > ma50 and ma50 > ma200:
+        recent_60 = hist.tail(60)
+        above_ma50_60 = (recent_60["Close"] > recent_60["MA50"]).sum()
+
+        ma50_slope = hist["MA50"].iloc[-1] - hist["MA50"].iloc[-20]
+
+    if above_ma50_60 >= 45 and ma50_slope > 0:
+        return "Aufwaertstrend"
+    else:
+        return "Frischer Aufwaertstrend"
 
         elif price < ma50 and ma50 < ma200:
             return "Abwaertstrend"
@@ -83,6 +88,38 @@ def get_trend_direction(hist, price):
             return "Kurzfristig positiv"
         else:
             return "Kurzfristig negativ"
+
+def get_entry_quality(zone, trend_direction, momentum):
+    if zone in ["Watchlist Zone", "Transition Zone"] and momentum > 0 and trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
+        return "Sehr gut"
+    elif zone == "Hold Zone" and momentum > 0:
+        return "Gut"
+    elif zone == "Upper Range":
+        return "Zu spaet"
+    elif zone == "Weak Zone":
+        return "Riskant"
+    else:
+        return "Neutral"
+
+
+def get_exit_signal(zone, momentum, trend_direction):
+    if zone == "Upper Range" and momentum < 0.30:
+        return "Gewinne sichern"
+    elif trend_direction == "Trend schwaecht sich ab":
+        return "Vorsicht"
+    else:
+        return "Hold"
+
+
+def get_risk_score(zone, trend_direction):
+    if zone == "Weak Zone":
+        return "Sehr hoch"
+    elif trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
+        return "Hoch"
+    elif zone == "Upper Range":
+        return "Mittel"
+    else:
+        return "Niedrig"
 
 @st.cache_data(ttl=3600)
 def load_price_history(ticker):
@@ -275,6 +312,10 @@ else:
 if trend_direction == "Turnaround moeglich" and signal == "Attraktiv":
     interpretation_label = "Spekulativer Turnaround"
 
+entry_quality = get_entry_quality(position_label, trend_direction, momentum)
+exit_signal = get_exit_signal(position_label, momentum, trend_direction)
+risk_score = get_risk_score(position_label, trend_direction)
+
 # HEADER
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
@@ -360,6 +401,26 @@ if not hist.empty:
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.warning("Kein Kursverlauf verfuegbar.")
+
+st.markdown("### Trading-Fazit")
+
+fazit1, fazit2, fazit3 = st.columns(3)
+
+fazit1.metric("Entry Quality", entry_quality)
+fazit2.metric("Exit Signal", exit_signal)
+fazit3.metric("Risiko", risk_score)
+
+st.info(
+    f"""
+Fazit
+
+- Entry Quality: **{entry_quality}**
+- Exit Signal: **{exit_signal}**
+- Risiko: **{risk_score}**
+
+Diese Einschätzung kombiniert Zone, Trendrichtung und Momentum. Sie ist kein Kauf- oder Verkaufssignal, sondern ein Timing-Filter.
+"""
+)
 
 # ZONEN TABELLE
 st.markdown("### Zonen-Uebersicht")
