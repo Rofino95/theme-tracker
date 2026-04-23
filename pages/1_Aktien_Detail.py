@@ -56,17 +56,28 @@ def get_trend_direction(hist, price):
     if pd.isna(ma50):
         return "Unklar"
 
+    recent = hist.tail(20)
+    above_ma50_days = (recent["Close"] > recent["MA50"]).sum()
+
     if ma200 is not None and not pd.isna(ma200):
         if price > ma50 and ma50 > ma200:
-            return "Aufwaertstrend"
+            if above_ma50_days >= 15:
+                return "Aufwaertstrend"
+            else:
+                return "Frischer Aufwaertstrend"
+
         elif price < ma50 and ma50 < ma200:
             return "Abwaertstrend"
+
         elif price > ma50 and ma50 < ma200:
             return "Turnaround moeglich"
+
         elif price < ma50 and ma50 > ma200:
             return "Trend schwaecht sich ab"
+
         else:
             return "Seitwaerts / unklar"
+
     else:
         if price > ma50:
             return "Kurzfristig positiv"
