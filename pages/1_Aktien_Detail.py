@@ -255,7 +255,6 @@ elif position_label == "Weak Zone" and momentum < 0.00:
     interpretation_label = "Avoid"
 else:
     interpretation_label = "Review"
-
 if trend_direction == "Turnaround moeglich" and signal == "Attraktiv":
     interpretation_label = "Spekulativer Turnaround"
 
