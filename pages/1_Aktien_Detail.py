@@ -42,6 +42,36 @@ def get_trend_phase(stock_score, stock_momentum):
     else:
         return "Transition"
 
+def get_trend_direction(hist, price):
+    if hist.empty or len(hist) < 50:
+        return "Unklar"
+
+    hist = hist.copy()
+    hist["MA50"] = hist["Close"].rolling(50).mean()
+    hist["MA200"] = hist["Close"].rolling(200).mean()
+
+    ma50 = hist["MA50"].iloc[-1]
+    ma200 = hist["MA200"].iloc[-1] if len(hist) >= 200 else None
+
+    if pd.isna(ma50):
+        return "Unklar"
+
+    if ma200 is not None and not pd.isna(ma200):
+        if price > ma50 and ma50 > ma200:
+            return "Aufwaertstrend"
+        elif price < ma50 and ma50 < ma200:
+            return "Abwaertstrend"
+        elif price > ma50 and ma50 < ma200:
+            return "Turnaround moeglich"
+        elif price < ma50 and ma50 > ma200:
+            return "Trend schwaecht sich ab"
+        else:
+            return "Seitwaerts / unklar"
+    else:
+        if price > ma50:
+            return "Kurzfristig positiv"
+        else:
+            return "Kurzfristig negativ"
 
 @st.cache_data(ttl=3600)
 def load_price_history(ticker):
@@ -226,6 +256,10 @@ elif position_label == "Weak Zone" and momentum < 0.00:
 else:
     interpretation_label = "Review"
 
+if trend_direction == "Turnaround moeglich" and signal == "Attraktiv":
+    interpretation_label = "Spekulativer Turnaround"
+
+
 # HEADER
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
@@ -246,7 +280,7 @@ kpi2.metric("52W High", f"{high_52:.2f}")
 kpi3.metric("52W Low", f"{low_52:.2f}")
 kpi4.metric("Trend Score", f"{trend_score:.2f}")
 
-kpi5, kpi6, kpi7 = st.columns(3)
+kpi5, kpi6, kpi7, kpi8 = st.columns(4)
 kpi5.metric("Momentum", f"{momentum:.2f}")
 
 with kpi6:
@@ -257,11 +291,14 @@ with kpi7:
     st.markdown("**Trendphase**")
     st.markdown(phase_badge(trend_phase), unsafe_allow_html=True)
 
+kpi8.metric("Trendrichtung", trend_direction)
+
 # CHART
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
 
 hist = load_price_history(ticker)
+trend_direction = get_trend_direction(hist, price)
 
 if not hist.empty:
     fig = go.Figure()
