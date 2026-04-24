@@ -282,9 +282,29 @@ with filter_col5:
     )
 
 with filter_col6:
+    selected_entry_quality = st.selectbox(
+        "Entry Quality",
+        ["Alle", "Sehr gut", "Gut", "Neutral", "Zu spaet", "Riskant"]
+    )
+
+filter_col7, filter_col8, filter_col9 = st.columns(3)
+
+with filter_col7:
+    selected_risk = st.selectbox(
+        "Risiko",
+        ["Alle", "Niedrig", "Mittel", "Hoch", "Sehr hoch"]
+    )
+
+with filter_col8:
+    selected_exit_signal = st.selectbox(
+        "Exit Signal",
+        ["Alle", "Hold", "Vorsicht", "Gewinne sichern"]
+    )
+
+with filter_col9:
     sort_by = st.selectbox(
         "Sortieren nach",
-        ["Trend Score", "Momentum", "Preis", "Name"]
+        ["Trend Score", "Momentum", "Preis", "Name", "Top %"]
     )
 
 sort_ascending = st.checkbox("Aufsteigend sortieren", value=False)
@@ -307,6 +327,15 @@ if selected_signal != "Alle":
 if selected_trendphase != "Alle":
     filtered_df = filtered_df[filtered_df["Trendphase"] == selected_trendphase]
 
+if selected_entry_quality != "Alle":
+    filtered_df = filtered_df[filtered_df["Entry Quality"] == selected_entry_quality]
+
+if selected_risk != "Alle":
+    filtered_df = filtered_df[filtered_df["Risiko"] == selected_risk]
+
+if selected_exit_signal != "Alle":
+    filtered_df = filtered_df[filtered_df["Exit Signal"] == selected_exit_signal]
+
 filtered_df = filtered_df.sort_values(by=sort_by, ascending=sort_ascending)
 
 # Kleine Summary
@@ -325,9 +354,11 @@ display_df = filtered_df[[
     "Preis",
     "Trend Score",
     "Momentum",
-    "Rank im Theme",
     "Top %",
     "Zone",
+    "Entry Quality",
+    "Exit Signal",
+    "Risiko",
     "Signal",
     "Trendphase"
 ]].copy()
