@@ -389,22 +389,40 @@ if not hist.empty:
 else:
     st.warning("Kein Kursverlauf verfuegbar.")
 
-st.markdown("### Trading-Fazit")
+st.markdown("### Fazit")
 
-fazit1, fazit2, fazit3 = st.columns(3)
+fazit1, fazit2, fazit3, fazit4 = st.columns(4)
+
 fazit1.metric("Entry Quality", entry_quality)
 fazit2.metric("Exit Signal", exit_signal)
 fazit3.metric("Risiko", risk_score)
+fazit4.metric("Position", position_label)
+
+if entry_quality == "Sehr gut" and risk_score in ["Hoch", "Sehr hoch"]:
+    summary_text = "Interessanter, aber spekulativer Einstiegskandidat."
+elif entry_quality == "Sehr gut":
+    summary_text = "Interessanter Einstiegskandidat."
+elif entry_quality == "Gut":
+    summary_text = "Solider Kandidat, aber nicht mehr ganz frueh."
+elif entry_quality == "Zu spaet":
+    summary_text = "Technisch stark, aber fuer einen Neueinstieg eher spaet."
+elif entry_quality == "Riskant":
+    summary_text = "Riskanter Kandidat mit schwachem Setup."
+else:
+    summary_text = "Kein klares Timing-Signal."
 
 st.info(
     f"""
-Fazit
+**Kurzfazit:** {summary_text}
 
-- Entry Quality: **{entry_quality}**
-- Exit Signal: **{exit_signal}**
-- Risiko: **{risk_score}**
+- **Entry Quality:** {entry_quality}
+- **Exit Signal:** {exit_signal}
+- **Risiko:** {risk_score}
+- **Position:** {position_label}
+- **Trendrichtung:** {trend_direction}
+- **Trendphase:** {trend_phase}
 
-Diese Einschätzung kombiniert Zone, Trendrichtung und Momentum. Sie ist kein Kauf- oder Verkaufssignal, sondern ein Timing-Filter.
+Das Fazit kombiniert Preiszone, Trendrichtung und Momentum. Es ist kein Kauf- oder Verkaufssignal, sondern ein Timing-Filter.
 """
 )
 
