@@ -42,6 +42,7 @@ def get_trend_phase(stock_score, stock_momentum):
     else:
         return "Transition"
 
+
 def get_trend_direction(hist, price):
     if hist.empty or len(hist) < 50:
         return "Unklar"
@@ -56,20 +57,16 @@ def get_trend_direction(hist, price):
     if pd.isna(ma50):
         return "Unklar"
 
-    recent = hist.tail(20)
-    above_ma50_days = (recent["Close"] > recent["MA50"]).sum()
-
     if ma200 is not None and not pd.isna(ma200):
-    if price > ma50 and ma50 > ma200:
-        recent_60 = hist.tail(60)
-        above_ma50_60 = (recent_60["Close"] > recent_60["MA50"]).sum()
+        if price > ma50 and ma50 > ma200:
+            recent_60 = hist.tail(60)
+            above_ma50_60 = (recent_60["Close"] > recent_60["MA50"]).sum()
+            ma50_slope = hist["MA50"].iloc[-1] - hist["MA50"].iloc[-20]
 
-        ma50_slope = hist["MA50"].iloc[-1] - hist["MA50"].iloc[-20]
-
-    if above_ma50_60 >= 45 and ma50_slope > 0:
-        return "Aufwaertstrend"
-    else:
-        return "Frischer Aufwaertstrend"
+            if above_ma50_60 >= 45 and ma50_slope > 0:
+                return "Aufwaertstrend"
+            else:
+                return "Frischer Aufwaertstrend"
 
         elif price < ma50 and ma50 < ma200:
             return "Abwaertstrend"
@@ -88,6 +85,7 @@ def get_trend_direction(hist, price):
             return "Kurzfristig positiv"
         else:
             return "Kurzfristig negativ"
+
 
 def get_entry_quality(zone, trend_direction, momentum):
     if zone in ["Watchlist Zone", "Transition Zone"] and momentum > 0 and trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
@@ -120,6 +118,7 @@ def get_risk_score(zone, trend_direction):
         return "Mittel"
     else:
         return "Niedrig"
+
 
 @st.cache_data(ttl=3600)
 def load_price_history(ticker):
@@ -251,13 +250,10 @@ description = stock_df.iloc[0]["Description"] if "Description" in stock_df.colum
 range_52 = high_52 - low_52
 
 weak_zone_max = low_52 + 0.35 * range_52
-
 watchlist_zone_min = low_52 + 0.55 * range_52
 watchlist_zone_max = low_52 + 0.70 * range_52
-
 hold_zone_min = low_52 + 0.70 * range_52
 hold_zone_max = low_52 + 0.85 * range_52
-
 upper_range_min = low_52 + 0.85 * range_52
 
 primary_sub_theme = stock_df.iloc[0]["Sub Theme"]
@@ -269,20 +265,19 @@ theme_bullish_pct = round((theme_df["Trend Score"].apply(get_status) == "Bullisc
 signal = get_signal(trend_score, momentum, theme_status, theme_bullish_pct)
 trend_phase = get_trend_phase(trend_score, momentum)
 
-# Kursdaten und Trendrichtung EINMAL hier berechnen
 hist = load_price_history(ticker)
 trend_direction = get_trend_direction(hist, price)
 
 if price < weak_zone_max:
     position_label = "Weak Zone"
-elif watchlist_zone_min <= price <= watchlist_zone_max:
-    position_label = "Watchlist Zone"
-elif hold_zone_min <= price <= hold_zone_max:
-    position_label = "Hold Zone"
-elif price >= upper_range_min:
-    position_label = "Upper Range"
-else:
+elif weak_zone_max <= price < watchlist_zone_min:
     position_label = "Transition Zone"
+elif watchlist_zone_min <= price < hold_zone_min:
+    position_label = "Watchlist Zone"
+elif hold_zone_min <= price < upper_range_min:
+    position_label = "Hold Zone"
+else:
+    position_label = "Upper Range"
 
 if momentum >= 0.50:
     trend_label = "Very Strong"
@@ -308,7 +303,6 @@ elif position_label == "Weak Zone" and momentum < 0.00:
 else:
     interpretation_label = "Review"
 
-# Zusatzlogik: wenn es eher ein frueher Turnaround ist
 if trend_direction == "Turnaround moeglich" and signal == "Attraktiv":
     interpretation_label = "Spekulativer Turnaround"
 
@@ -316,7 +310,6 @@ entry_quality = get_entry_quality(position_label, trend_direction, momentum)
 exit_signal = get_exit_signal(position_label, momentum, trend_direction)
 risk_score = get_risk_score(position_label, trend_direction)
 
-# HEADER
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
 
@@ -326,7 +319,6 @@ st.markdown(make_tag_html(main_theme_list, bg="#0f3d2e"), unsafe_allow_html=True
 st.markdown("**Sub Themes**")
 st.markdown(make_tag_html(sub_theme_list, bg="#1e3a5f"), unsafe_allow_html=True)
 
-# KPI BEREICH
 st.markdown("---")
 st.markdown("### Kennzahlen")
 
@@ -349,15 +341,12 @@ with kpi7:
 
 kpi8.metric("Trendrichtung", trend_direction)
 
-# CHART
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
 
-# WICHTIG: hier hist NICHT nochmal laden
 if not hist.empty:
     fig = go.Figure()
 
-    # Kurslinie
     fig.add_trace(
         go.Scatter(
             x=hist.index,
@@ -368,13 +357,12 @@ if not hist.empty:
         )
     )
 
-    # Zonen (deutlich transparenter)
     fig.add_hrect(y0=0, y1=weak_zone_max, fillcolor="rgba(180, 50, 50, 0.08)", line_width=0)
+    fig.add_hrect(y0=weak_zone_max, y1=watchlist_zone_min, fillcolor="rgba(150, 110, 40, 0.08)", line_width=0)
     fig.add_hrect(y0=watchlist_zone_min, y1=watchlist_zone_max, fillcolor="rgba(220, 180, 50, 0.08)", line_width=0)
     fig.add_hrect(y0=hold_zone_min, y1=hold_zone_max, fillcolor="rgba(50, 120, 220, 0.08)", line_width=0)
     fig.add_hrect(y0=upper_range_min, y1=high_52 * 1.1, fillcolor="rgba(50, 180, 80, 0.08)", line_width=0)
 
-    # Linien (OHNE Text → wichtig!)
     fig.add_hline(y=weak_zone_max, line_dash="dot")
     fig.add_hline(y=watchlist_zone_min, line_dash="dot")
     fig.add_hline(y=watchlist_zone_max, line_dash="dot")
@@ -382,7 +370,6 @@ if not hist.empty:
     fig.add_hline(y=hold_zone_max, line_dash="dot")
     fig.add_hline(y=upper_range_min, line_dash="dot")
 
-    # aktueller Preis (einzige wichtige Linie)
     fig.add_hline(
         y=price,
         line_dash="solid",
@@ -405,7 +392,6 @@ else:
 st.markdown("### Trading-Fazit")
 
 fazit1, fazit2, fazit3 = st.columns(3)
-
 fazit1.metric("Entry Quality", entry_quality)
 fazit2.metric("Exit Signal", exit_signal)
 fazit3.metric("Risiko", risk_score)
@@ -422,7 +408,6 @@ Diese Einschätzung kombiniert Zone, Trendrichtung und Momentum. Sie ist kein Ka
 """
 )
 
-# ZONEN TABELLE
 st.markdown("### Zonen-Uebersicht")
 
 zones_data = [
@@ -461,7 +446,6 @@ zones_data = [
 zones_df = pd.DataFrame(zones_data)
 st.table(zones_df)
 
-# EINORDNUNG
 st.markdown("---")
 st.markdown("### Einordnung")
 
@@ -482,7 +466,6 @@ Diese Einordnung kombiniert die aktuelle Position innerhalb der 52W-Range mit de
 """
 )
 
-# SIGNAL BEGRUENDUNG
 st.markdown("---")
 st.markdown("### Warum dieses Signal?")
 
@@ -497,10 +480,12 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 - Bullisch-Anteil im Theme: **{theme_bullish_pct:.0f}%**
 - Position in der 52W-Range: **{position_label}**
 - Trendstaerke: **{trend_label}**
+- Trendrichtung: **{trend_direction}**
+- Entry Quality: **{entry_quality}**
+- Risiko: **{risk_score}**
 """
 )
 
-# BESCHREIBUNG
 st.markdown("---")
 st.markdown("### Unternehmensbeschreibung")
 
