@@ -120,6 +120,34 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
+def get_fazit_text(entry_quality, exit_signal, risk_score, position_label, trend_direction, trend_phase, signal):
+    if entry_quality == "Sehr gut" and risk_score in ["Niedrig", "Mittel"]:
+        return "Interessanter Einstiegskandidat. Das Setup wirkt attraktiv, weil Preiszone, Trendrichtung und Momentum zusammenpassen."
+
+    if entry_quality == "Sehr gut" and risk_score in ["Hoch", "Sehr hoch"]:
+        return "Interessanter, aber spekulativer Einstiegskandidat. Das Chance-Risiko-Profil ist erhoeht, deshalb waere ein gestaffelter Einstieg sinnvoller als ein voller Einstieg."
+
+    if entry_quality == "Gut":
+        return "Solider Kandidat. Ein Einstieg kann sinnvoll sein, allerdings ist die Aktie nicht mehr ganz frueh in der Bewegung."
+
+    if entry_quality == "Zu spaet":
+        return "Technisch stark, aber fuer einen Neueinstieg eher spaet. Die Aktie ist bereits weit gelaufen, deshalb waere ein Ruecksetzer interessanter."
+
+    if entry_quality == "Riskant":
+        return "Riskantes Setup. Aufgrund der schwachen Preiszone oder Trendstruktur waere ein Einstieg aktuell eher nicht sinnvoll."
+
+    if trend_direction == "Abwaertstrend":
+        return "Kein klares Timing-Signal. Aufgrund des Abwaertstrends waere ein Einstieg aktuell eher nicht sinnvoll, solange keine Trendwende bestaetigt ist."
+
+    if trend_direction == "Trend schwaecht sich ab":
+        return "Vorsicht. Der Trend schwaecht sich ab, deshalb waere ein Neueinstieg aktuell eher unattraktiv."
+
+    if position_label == "Transition Zone":
+        return "Kein klares Timing-Signal. Die Aktie befindet sich zwischen schwacher Zone und Watchlist-Zone, deshalb waere Abwarten aktuell sinnvoller."
+
+    return "Kein klares Timing-Signal. Die Faktoren liefern aktuell kein eindeutiges Einstiegs- oder Ausstiegssignal."
+
+
 @st.cache_data(ttl=3600)
 def load_price_history(ticker):
     try:
@@ -310,6 +338,16 @@ entry_quality = get_entry_quality(position_label, trend_direction, momentum)
 exit_signal = get_exit_signal(position_label, momentum, trend_direction)
 risk_score = get_risk_score(position_label, trend_direction)
 
+fazit_text = get_fazit_text(
+    entry_quality,
+    exit_signal,
+    risk_score,
+    position_label,
+    trend_direction,
+    trend_phase,
+    signal
+)
+
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
 
@@ -413,7 +451,7 @@ else:
 
 st.info(
     f"""
-**Kurzfazit:** {summary_text}
+**Kurzfazit:** {fazit_text}
 
 - **Entry Quality:** {entry_quality}
 - **Exit Signal:** {exit_signal}
