@@ -447,26 +447,6 @@ zones_df = pd.DataFrame(zones_data)
 st.table(zones_df)
 
 st.markdown("---")
-st.markdown("### Einordnung")
-
-info1, info2, info3 = st.columns(3)
-info1.metric("Position", position_label)
-info2.metric("Trend", trend_label)
-info3.metric("Interpretation", interpretation_label)
-
-st.info(
-    f"""
-Aktuelle Einordnung
-
-- Position: **{position_label}**
-- Trend: **{trend_label}**
-- Interpretation: **{interpretation_label}**
-
-Diese Einordnung kombiniert die aktuelle Position innerhalb der 52W-Range mit der Trenddynamik.
-"""
-)
-
-st.markdown("---")
 st.markdown("### Warum dieses Signal?")
 
 st.info(
