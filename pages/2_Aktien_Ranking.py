@@ -359,16 +359,11 @@ height_table = min(1000, 50 + len(display_df) * 35)
 st.dataframe(
     display_df
     .style
-    .map(color_zone, subset=["Zone"])
-    .map(color_signal, subset=["Signal"])
-    .map(color_trend_phase, subset=["Trendphase"])
-    .format({
-        "Preis": "{:.2f}",
-        "Trend Score": "{:.2f}",
-        "Momentum": "{:.2f}",
-        "Rank im Theme": "{:.0f}",
-        "Top %": "{:.0f}%"
-    }),
+    .map(color_zone, subset=["Zone"]),
+    use_container_width=True,
+    hide_index=True,
+    height=height_table
+)
     use_container_width=True,
     hide_index=True,
     height=height_table
