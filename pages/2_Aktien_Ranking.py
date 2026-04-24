@@ -364,10 +364,6 @@ st.dataframe(
     hide_index=True,
     height=height_table
 )
-    use_container_width=True,
-    hide_index=True,
-    height=height_table
-)
 
 # Direkt zur Detailseite
 st.markdown("### Aktie direkt oeffnen")
