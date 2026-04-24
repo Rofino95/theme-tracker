@@ -63,6 +63,39 @@ def get_zone(price, low_52, high_52):
         return "Upper Range"
 
 
+def get_entry_quality(zone, trend_direction, momentum):
+    if zone in ["Watchlist Zone", "Transition Zone"] and momentum > 0 and trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
+        return "Sehr gut"
+    elif zone == "Hold Zone" and momentum > 0:
+        return "Gut"
+    elif zone == "Upper Range":
+        return "Zu spaet"
+    elif zone == "Weak Zone":
+        return "Riskant"
+    else:
+        return "Neutral"
+
+
+def get_exit_signal(zone, momentum, trend_direction):
+    if zone == "Upper Range" and momentum < 0.30:
+        return "Gewinne sichern"
+    elif trend_direction == "Trend schwaecht sich ab":
+        return "Vorsicht"
+    else:
+        return "Hold"
+
+
+def get_risk_score(zone, trend_direction):
+    if zone == "Weak Zone":
+        return "Sehr hoch"
+    elif trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
+        return "Hoch"
+    elif zone == "Upper Range":
+        return "Mittel"
+    else:
+        return "Niedrig"
+
+
 def color_signal(val):
     if val == "Attraktiv":
         return "background-color: #123524; color: white"
@@ -157,6 +190,47 @@ ranking_df["Signal"] = ranking_df.apply(
         row["Momentum"],
         row["Theme Status"],
         row["Theme Bullisch %"]
+    ),
+    axis=1
+)
+
+# Vereinfachte Trendrichtung fuer Ranking-Seite
+# Hinweis: ohne MA50/MA200, nur auf Basis von Zone + Momentum
+ranking_df["Trendrichtung"] = ranking_df.apply(
+    lambda row: (
+        "Frischer Aufwaertstrend"
+        if row["Zone"] in ["Watchlist Zone", "Transition Zone"] and row["Momentum"] > 0
+        else "Trend schwaecht sich ab"
+        if row["Momentum"] < -0.20
+        else "Aufwaertstrend"
+        if row["Momentum"] > 0.50
+        else "Seitwaerts / unklar"
+    ),
+    axis=1
+)
+
+ranking_df["Entry Quality"] = ranking_df.apply(
+    lambda row: get_entry_quality(
+        row["Zone"],
+        row["Trendrichtung"],
+        row["Momentum"]
+    ),
+    axis=1
+)
+
+ranking_df["Exit Signal"] = ranking_df.apply(
+    lambda row: get_exit_signal(
+        row["Zone"],
+        row["Momentum"],
+        row["Trendrichtung"]
+    ),
+    axis=1
+)
+
+ranking_df["Risiko"] = ranking_df.apply(
+    lambda row: get_risk_score(
+        row["Zone"],
+        row["Trendrichtung"]
     ),
     axis=1
 )
