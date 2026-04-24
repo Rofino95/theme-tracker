@@ -349,18 +349,9 @@ sum4.metric("Avoid", int((filtered_df["Signal"] == "Avoid").sum()) if len(filter
 display_df = filtered_df[[
     "Name",
     "Ticker",
-    "Main Theme",
-    "Sub Theme",
-    "Preis",
-    "Trend Score",
-    "Momentum",
-    "Top %",
     "Zone",
     "Entry Quality",
-    "Exit Signal",
-    "Risiko",
-    "Signal",
-    "Trendphase"
+    "Risiko"
 ]].copy()
 
 height_table = min(1000, 50 + len(display_df) * 35)
