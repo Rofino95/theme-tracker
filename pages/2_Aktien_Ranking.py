@@ -351,6 +351,8 @@ display_df = filtered_df[[
     "Ticker",
     "Zone",
     "Entry Quality",
+    "Exit Signal",
+    "Signal",
     "Risiko"
 ]].copy()
 
@@ -359,7 +361,8 @@ height_table = min(1000, 50 + len(display_df) * 35)
 st.dataframe(
     display_df
     .style
-    .map(color_zone, subset=["Zone"]),
+    .map(color_zone, subset=["Zone"])
+    .map(color_signal, subset=["Signal"]),
     use_container_width=True,
     hide_index=True,
     height=height_table
