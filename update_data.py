@@ -148,3 +148,6 @@ def main():
         f.write(datetime.now().strftime("%Y-%m-%d %H:%M"))
 
     print("Fertig: theme_scores.csv erstellt")
+
+    if __name__ == "__main__":
+        main()
