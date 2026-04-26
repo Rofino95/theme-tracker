@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import yfinance as yf
 import wikipedia
@@ -8,14 +9,70 @@ INPUT_FILE = "theme_universe.csv"
 OUTPUT_FILE = "theme_scores.csv"
 
 
-def fetch_data(ticker):
+def get_existing_descriptions():
+    if not os.path.exists(OUTPUT_FILE):
+        return {}
+
+    try:
+        old_df = pd.read_csv(OUTPUT_FILE)
+
+        if "Ticker" not in old_df.columns or "Description" not in old_df.columns:
+            return {}
+
+        old_df["Description"] = old_df["Description"].fillna("")
+        return dict(zip(old_df["Ticker"], old_df["Description"]))
+
+    except Exception as e:
+        print(f"Konnte alte Beschreibungen nicht laden: {e}")
+        return {}
+
+
+def get_description(ticker, name, existing_description):
+    if existing_description and str(existing_description).strip():
+        return existing_description
+
+    description = ""
+
+    try:
+        data = yf.Ticker(ticker)
+        info = data.info
+        description = info.get("longBusinessSummary") or ""
+    except Exception as e:
+        print(f"Yahoo-Beschreibung Fehler bei {ticker}: {e}")
+
+    if not description or len(description.strip()) < 50:
+        try:
+            wikipedia.set_lang("en")
+            results = wikipedia.search(name)
+
+            if not results:
+                results = wikipedia.search(f"{ticker} company")
+
+            if results:
+                description = wikipedia.summary(results[0], sentences=3, auto_suggest=False)
+            else:
+                description = ""
+        except Exception as e:
+            print(f"Wikipedia-Fehler bei {ticker}: {e}")
+            description = ""
+
+    if description and len(description.strip()) > 0:
+        try:
+            description = GoogleTranslator(source="auto", target="de").translate(description)
+        except Exception as e:
+            print(f"Uebersetzungsfehler bei {ticker}: {e}")
+
+    return description
+
+
+def fetch_data(ticker, existing_description=""):
     try:
         data = yf.Ticker(ticker)
         info = data.info
         hist = data.history(period="1y")
 
         if hist.empty:
-            return None, None, None, ticker, "", None, None, None, None, None, None
+            return None, None, None, ticker, existing_description, None, None, None, None, None, None
 
         price = hist["Close"].iloc[-1]
         high = hist["High"].max()
@@ -23,29 +80,7 @@ def fetch_data(ticker):
 
         name = info.get("shortName") or info.get("longName") or ticker
 
-        description = info.get("longBusinessSummary") or ""
-
-        if not description or len(description.strip()) < 50:
-            try:
-                wikipedia.set_lang("en")
-                results = wikipedia.search(name)
-
-                if not results:
-                    results = wikipedia.search(f"{ticker} company")
-
-                if results:
-                    description = wikipedia.summary(results[0], sentences=3, auto_suggest=False)
-                else:
-                    description = ""
-            except Exception as e:
-                print(f"Wikipedia-Fehler bei {ticker}: {e}")
-                description = ""
-
-        if description and len(description.strip()) > 0:
-            try:
-                description = GoogleTranslator(source="auto", target="de").translate(description)
-            except Exception as e:
-                print(f"Uebersetzungsfehler bei {ticker}: {e}")
+        description = get_description(ticker, name, existing_description)
 
         pe = info.get("trailingPE")
         forward_pe = info.get("forwardPE")
@@ -70,12 +105,14 @@ def fetch_data(ticker):
 
     except Exception as e:
         print(f"Fehler bei {ticker}: {e}")
-        return None, None, None, ticker, "", None, None, None, None, None, None
+        return None, None, None, ticker, existing_description, None, None, None, None, None, None
 
 
 def main():
     df = pd.read_csv(INPUT_FILE, sep=None, engine="python")
     df.columns = df.columns.str.strip()
+
+    existing_descriptions = get_existing_descriptions()
 
     prices = []
     highs = []
@@ -91,6 +128,8 @@ def main():
     market_cap_list = []
 
     for ticker in df["Ticker"]:
+        existing_description = existing_descriptions.get(ticker, "")
+
         (
             price,
             high,
@@ -103,7 +142,7 @@ def main():
             earnings_growth,
             profit_margin,
             market_cap
-        ) = fetch_data(ticker)
+        ) = fetch_data(ticker, existing_description)
 
         prices.append(price)
         highs.append(high)
@@ -131,7 +170,7 @@ def main():
     df["Profit Margin"] = profit_margin_list
     df["Market Cap"] = market_cap_list
 
-    df = df.dropna(subset=["Preis", "52W High", "52W Low"])
+    df = df.dropna(subset=["Preis", "52W High", "52W Low"]).copy()
 
     df["Trend Score"] = (df["Preis"] - df["52W Low"]) / (df["52W High"] - df["52W Low"])
     df["Momentum"] = (
@@ -148,6 +187,7 @@ def main():
         f.write(datetime.now().strftime("%Y-%m-%d %H:%M"))
 
     print("Fertig: theme_scores.csv erstellt")
+
 
 if __name__ == "__main__":
     main()
