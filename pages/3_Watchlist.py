@@ -46,6 +46,28 @@ st.dataframe(
     hide_index=True
 )
 
+st.markdown("### Zur Aktien-Detailseite")
+
+detail_options = watch_df[["Name", "Ticker"]].drop_duplicates().copy()
+detail_options["Label"] = detail_options["Name"] + " (" + detail_options["Ticker"] + ")"
+
+selected_detail = st.selectbox(
+    "Aktie fuer Detailansicht auswaehlen",
+    detail_options["Label"].tolist(),
+    key="watchlist_detail_select"
+)
+
+selected_detail_ticker = detail_options.loc[
+    detail_options["Label"] == selected_detail, "Ticker"
+].iloc[0]
+
+st.page_link(
+    "pages/1_Aktien_Detail.py",
+    label=f"Zur Detailseite von {selected_detail}",
+    icon="📈",
+    query_params={"ticker": selected_detail_ticker}
+)
+
 st.markdown("### Entfernen")
 
 remove_options = watch_df["Name"] + " (" + watch_df["Ticker"] + ")"
