@@ -82,7 +82,7 @@ def main():
     lows = []
     names = []
     descriptions = []
-    
+
     pe_list = []
     forward_pe_list = []
     revenue_growth_list = []
@@ -90,39 +90,40 @@ def main():
     profit_margin_list = []
     market_cap_list = []
 
-   for ticker in df["Ticker"]:
-    (
-        price,
-        high,
-        low,
-        name,
-        description,
-        pe,
-        forward_pe,
-        revenue_growth,
-        earnings_growth,
-        profit_margin,
-        market_cap
-    ) = fetch_data(ticker)
+    for ticker in df["Ticker"]:
+        (
+            price,
+            high,
+            low,
+            name,
+            description,
+            pe,
+            forward_pe,
+            revenue_growth,
+            earnings_growth,
+            profit_margin,
+            market_cap
+        ) = fetch_data(ticker)
 
-    prices.append(price)
-    highs.append(high)
-    lows.append(low)
-    names.append(name)
-    descriptions.append(description)
+        prices.append(price)
+        highs.append(high)
+        lows.append(low)
+        names.append(name)
+        descriptions.append(description)
 
-    pe_list.append(pe)
-    forward_pe_list.append(forward_pe)
-    revenue_growth_list.append(revenue_growth)
-    earnings_growth_list.append(earnings_growth)
-    profit_margin_list.append(profit_margin)
-    market_cap_list.append(market_cap)
+        pe_list.append(pe)
+        forward_pe_list.append(forward_pe)
+        revenue_growth_list.append(revenue_growth)
+        earnings_growth_list.append(earnings_growth)
+        profit_margin_list.append(profit_margin)
+        market_cap_list.append(market_cap)
 
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
     df["Name"] = names
     df["Description"] = descriptions
+
     df["PE"] = pe_list
     df["Forward PE"] = forward_pe_list
     df["Revenue Growth"] = revenue_growth_list
@@ -130,15 +131,12 @@ def main():
     df["Profit Margin"] = profit_margin_list
     df["Market Cap"] = market_cap_list
 
-    df = df.dropna(subset=["Preis", "52W High", "52W Low"]).copy()
+    df = df.dropna(subset=["Preis", "52W High", "52W Low"])
 
-    df["Trend Score"] = (
-        (df["Preis"] - df["52W Low"]) / (df["52W High"] - df["52W Low"])
-    )
-
+    df["Trend Score"] = (df["Preis"] - df["52W Low"]) / (df["52W High"] - df["52W Low"])
     df["Momentum"] = (
-        (df["Preis"] - ((df["52W High"] + df["52W Low"]) / 2))
-        / ((df["52W High"] - df["52W Low"]) / 2)
+        (df["Preis"] - ((df["52W High"] + df["52W Low"]) / 2)) /
+        ((df["52W High"] - df["52W Low"]) / 2)
     )
 
     df["Trend Score"] = df["Trend Score"].round(2)
@@ -150,8 +148,3 @@ def main():
         f.write(datetime.now().strftime("%Y-%m-%d %H:%M"))
 
     print("Fertig: theme_scores.csv erstellt")
-    print(df[df["Ticker"].isin(["META", "NVDA", "CVX"])][["Ticker", "Name", "Description"]])
-
-
-if __name__ == "__main__":
-    main()
