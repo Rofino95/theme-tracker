@@ -149,5 +149,5 @@ def main():
 
     print("Fertig: theme_scores.csv erstellt")
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
