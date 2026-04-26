@@ -3,23 +3,7 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 import plotly.graph_objects as go
-import os
-import json
-import pandas as pd
-import streamlit as st
 
-WATCHLIST_FILE = "watchlist.json"
-
-def load_watchlist():
-    try:
-        with open(WATCHLIST_FILE, "r") as f:
-            return json.load(f)
-    except:
-        return []
-
-def save_watchlist(watchlist):
-    with open(WATCHLIST_FILE, "w") as f:
-        json.dump(watchlist, f)
 
 st.set_page_config(page_title="Aktien Detail", layout="wide")
 
