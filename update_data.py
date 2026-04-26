@@ -15,7 +15,7 @@ def fetch_data(ticker):
         hist = data.history(period="1y")
 
         if hist.empty:
-            return None, None, None, ticker, ""
+            return None, None, None, ticker, "", None, None, None, None, None, None
 
         price = hist["Close"].iloc[-1]
         high = hist["High"].max()
@@ -23,10 +23,8 @@ def fetch_data(ticker):
 
         name = info.get("shortName") or info.get("longName") or ticker
 
-        # 1. Erst Yahoo versuchen
         description = info.get("longBusinessSummary") or ""
 
-                # 2. Wenn Yahoo nichts liefert -> Wikipedia Fallback
         if not description or len(description.strip()) < 50:
             try:
                 wikipedia.set_lang("en")
@@ -43,18 +41,36 @@ def fetch_data(ticker):
                 print(f"Wikipedia-Fehler bei {ticker}: {e}")
                 description = ""
 
-        # 3. Wenn Beschreibung vorhanden ist -> ins Deutsche uebersetzen
         if description and len(description.strip()) > 0:
             try:
                 description = GoogleTranslator(source="auto", target="de").translate(description)
             except Exception as e:
                 print(f"Uebersetzungsfehler bei {ticker}: {e}")
 
-        return price, high, low, name, description
+        pe = info.get("trailingPE")
+        forward_pe = info.get("forwardPE")
+        revenue_growth = info.get("revenueGrowth")
+        earnings_growth = info.get("earningsGrowth")
+        profit_margin = info.get("profitMargins")
+        market_cap = info.get("marketCap")
+
+        return (
+            price,
+            high,
+            low,
+            name,
+            description,
+            pe,
+            forward_pe,
+            revenue_growth,
+            earnings_growth,
+            profit_margin,
+            market_cap
+        )
 
     except Exception as e:
         print(f"Fehler bei {ticker}: {e}")
-        return None, None, None, ticker, ""
+        return None, None, None, ticker, "", None, None, None, None, None, None
 
 
 def main():
@@ -66,20 +82,53 @@ def main():
     lows = []
     names = []
     descriptions = []
+    
+    pe_list = []
+    forward_pe_list = []
+    revenue_growth_list = []
+    earnings_growth_list = []
+    profit_margin_list = []
+    market_cap_list = []
 
-    for ticker in df["Ticker"]:
-        price, high, low, name, description = fetch_data(ticker)
-        prices.append(price)
-        highs.append(high)
-        lows.append(low)
-        names.append(name)
-        descriptions.append(description)
+   for ticker in df["Ticker"]:
+    (
+        price,
+        high,
+        low,
+        name,
+        description,
+        pe,
+        forward_pe,
+        revenue_growth,
+        earnings_growth,
+        profit_margin,
+        market_cap
+    ) = fetch_data(ticker)
+
+    prices.append(price)
+    highs.append(high)
+    lows.append(low)
+    names.append(name)
+    descriptions.append(description)
+
+    pe_list.append(pe)
+    forward_pe_list.append(forward_pe)
+    revenue_growth_list.append(revenue_growth)
+    earnings_growth_list.append(earnings_growth)
+    profit_margin_list.append(profit_margin)
+    market_cap_list.append(market_cap)
 
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
     df["Name"] = names
     df["Description"] = descriptions
+    df["PE"] = pe_list
+    df["Forward PE"] = forward_pe_list
+    df["Revenue Growth"] = revenue_growth_list
+    df["Earnings Growth"] = earnings_growth_list
+    df["Profit Margin"] = profit_margin_list
+    df["Market Cap"] = market_cap_list
 
     df = df.dropna(subset=["Preis", "52W High", "52W Low"]).copy()
 
