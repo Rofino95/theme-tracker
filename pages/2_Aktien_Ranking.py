@@ -385,6 +385,32 @@ st.dataframe(
     height=height_table
 )
 
+st.markdown("### ⭐ Zur Watchlist hinzufuegen")
+
+if len(display_df) > 0:
+    watch_options = display_df[["Name", "Ticker"]].drop_duplicates().copy()
+    watch_options["Label"] = watch_options["Name"] + " (" + watch_options["Ticker"] + ")"
+
+    selected_watch = st.selectbox(
+        "Aktie auswaehlen",
+        watch_options["Label"].tolist(),
+        key="watchlist_add"
+    )
+
+    selected_ticker = watch_options.loc[
+        watch_options["Label"] == selected_watch, "Ticker"
+    ].iloc[0]
+
+    if st.button("Zur Watchlist hinzufuegen ⭐"):
+        watchlist = load_watchlist()
+
+        if selected_ticker not in watchlist:
+            watchlist.append(selected_ticker)
+            save_watchlist(watchlist)
+            st.success("Hinzugefuegt")
+        else:
+            st.info("Schon in der Watchlist")
+
 # Direkt zur Detailseite
 st.markdown("### Aktie direkt oeffnen")
 
