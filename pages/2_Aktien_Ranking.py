@@ -64,17 +64,62 @@ def get_zone(price, low_52, high_52):
         return "Upper Range"
 
 
-def get_entry_quality(zone, trend_direction, momentum):
-    if zone in ["Watchlist Zone", "Transition Zone"] and momentum > 0 and trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
+def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+    score = 0
+
+    if zone == "Watchlist Zone":
+        score += 3
+    elif zone == "Transition Zone":
+        score += 2
+    elif zone == "Hold Zone":
+        score += 1
+
+    if trend_direction in ["Frischer Aufwaertstrend", "Turnaround moeglich"]:
+        score += 2
+    elif trend_direction == "Aufwaertstrend":
+        score += 1
+    elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab"]:
+        score -= 1
+
+    if momentum > 0:
+        score += 1
+    elif momentum < -0.20:
+        score -= 1
+
+    if fundamental_quality == "Hoch":
+        score += 2
+    elif fundamental_quality == "Mittel":
+        score += 1
+
+    if pd.notna(forward_pe):
+        if 0 < forward_pe < 20:
+            score += 1
+        elif forward_pe > 60:
+            score -= 1
+
+    growth_positive = False
+
+    if pd.notna(revenue_growth) and revenue_growth > 0.05:
+        growth_positive = True
+
+    if pd.notna(earnings_growth) and earnings_growth > 0.05:
+        growth_positive = True
+
+    if growth_positive:
+        score += 1
+
+    return max(0, min(score, 10))
+
+
+def get_entry_quality_from_score(score):
+    if score >= 8:
         return "Sehr gut"
-    elif zone == "Hold Zone" and momentum > 0:
+    elif score >= 6:
         return "Gut"
-    elif zone == "Upper Range":
-        return "Zu spaet"
-    elif zone == "Weak Zone":
-        return "Riskant"
-    else:
+    elif score >= 4:
         return "Neutral"
+    else:
+        return "Riskant"
 
 
 def get_exit_signal(zone, momentum, trend_direction):
@@ -267,14 +312,20 @@ ranking_df["Trendrichtung"] = ranking_df.apply(
     axis=1
 )
 
-ranking_df["Entry Quality"] = ranking_df.apply(
-    lambda row: get_entry_quality(
+ranking_df["Entry Score"] = ranking_df.apply(
+    lambda row: get_entry_score(
         row["Zone"],
         row["Trendrichtung"],
-        row["Momentum"]
+        row["Momentum"],
+        row["Fundamental Quality"],
+        row.get("Forward PE"),
+        row.get("Revenue Growth"),
+        row.get("Earnings Growth")
     ),
     axis=1
 )
+
+ranking_df["Entry Quality"] = ranking_df["Entry Score"].apply(get_entry_quality_from_score)
 
 ranking_df["Exit Signal"] = ranking_df.apply(
     lambda row: get_exit_signal(
@@ -434,6 +485,7 @@ display_df = filtered_df[[
     "Ticker",
     "Zone",
     "Entry Quality",
+    "Entry Score",
     "Exit Signal",
     "Signal",
     "Risiko",
