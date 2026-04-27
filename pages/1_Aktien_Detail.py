@@ -121,6 +121,49 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
+def get_fundamental_score(pe, forward_pe, revenue_growth, earnings_growth, profit_margin):
+    score = 0
+
+    if pd.notna(revenue_growth):
+        if revenue_growth > 0.20:
+            score += 2
+        elif revenue_growth > 0.05:
+            score += 1
+
+    if pd.notna(earnings_growth):
+        if earnings_growth > 0.20:
+            score += 2
+        elif earnings_growth > 0.05:
+            score += 1
+
+    if pd.notna(forward_pe):
+        if 0 < forward_pe < 20:
+            score += 2
+        elif 20 <= forward_pe < 35:
+            score += 1
+
+    if pd.notna(profit_margin):
+        if profit_margin > 0.20:
+            score += 2
+        elif profit_margin > 0.10:
+            score += 1
+
+    if pd.notna(revenue_growth) and pd.notna(earnings_growth) and pd.notna(profit_margin):
+        if revenue_growth > 0.15 and earnings_growth > 0.15 and profit_margin > 0.15:
+            score += 2
+
+    return score
+
+
+def get_fundamental_quality(score):
+    if score >= 8:
+        return "Hoch"
+    elif score >= 5:
+        return "Mittel"
+    else:
+        return "Niedrig"
+
+
 def get_fazit_text(entry_quality, exit_signal, risk_score, position_label, trend_direction, trend_phase, signal):
     if entry_quality == "Sehr gut" and risk_score in ["Niedrig", "Mittel"]:
         return "Interessanter Einstiegskandidat. Das Setup wirkt attraktiv, weil Preiszone, Trendrichtung und Momentum zusammenpassen."
@@ -275,6 +318,12 @@ low_52 = float(stock_df.iloc[0]["52W Low"])
 trend_score = float(stock_df.iloc[0]["Trend Score"])
 momentum = float(stock_df.iloc[0]["Momentum"])
 description = stock_df.iloc[0]["Description"] if "Description" in stock_df.columns else ""
+pe = stock_df.iloc[0]["PE"] if "PE" in stock_df.columns else None
+forward_pe = stock_df.iloc[0]["Forward PE"] if "Forward PE" in stock_df.columns else None
+revenue_growth = stock_df.iloc[0]["Revenue Growth"] if "Revenue Growth" in stock_df.columns else None
+earnings_growth = stock_df.iloc[0]["Earnings Growth"] if "Earnings Growth" in stock_df.columns else None
+profit_margin = stock_df.iloc[0]["Profit Margin"] if "Profit Margin" in stock_df.columns else None
+market_cap = stock_df.iloc[0]["Market Cap"] if "Market Cap" in stock_df.columns else None
 
 range_52 = high_52 - low_52
 
@@ -339,6 +388,16 @@ entry_quality = get_entry_quality(position_label, trend_direction, momentum)
 exit_signal = get_exit_signal(position_label, momentum, trend_direction)
 risk_score = get_risk_score(position_label, trend_direction)
 
+fundamental_score = get_fundamental_score(
+    pe,
+    forward_pe,
+    revenue_growth,
+    earnings_growth,
+    profit_margin
+)
+
+fundamental_quality = get_fundamental_quality(fundamental_score)
+
 fazit_text = get_fazit_text(
     entry_quality,
     exit_signal,
@@ -348,6 +407,15 @@ fazit_text = get_fazit_text(
     trend_phase,
     signal
 )
+
+if fundamental_quality == "Hoch" and entry_quality in ["Sehr gut", "Gut"]:
+    combined_text = "Technik und Fundamentaldaten passen gut zusammen."
+elif fundamental_quality == "Hoch" and entry_quality not in ["Sehr gut", "Gut"]:
+    combined_text = "Fundamental stark, aber der Einstieg wirkt technisch aktuell nicht ideal."
+elif fundamental_quality == "Mittel" and entry_quality in ["Sehr gut", "Gut"]:
+    combined_text = "Technisch interessant, fundamental aber nicht eindeutig stark."
+else:
+    combined_text = "Weder Technik noch Fundamentaldaten liefern aktuell ein besonders starkes Gesamtbild."
 
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
@@ -433,35 +501,79 @@ st.markdown("### Fazit")
 fazit1, fazit2, fazit3, fazit4 = st.columns(4)
 
 fazit1.metric("Entry Quality", entry_quality)
-fazit2.metric("Exit Signal", exit_signal)
+fazit2.metric("Fundamental Quality", fundamental_quality)
 fazit3.metric("Risiko", risk_score)
 fazit4.metric("Position", position_label)
-
-if entry_quality == "Sehr gut" and risk_score in ["Hoch", "Sehr hoch"]:
-    summary_text = "Interessanter, aber spekulativer Einstiegskandidat."
-elif entry_quality == "Sehr gut":
-    summary_text = "Interessanter Einstiegskandidat."
-elif entry_quality == "Gut":
-    summary_text = "Solider Kandidat, aber nicht mehr ganz frueh."
-elif entry_quality == "Zu spaet":
-    summary_text = "Technisch stark, aber fuer einen Neueinstieg eher spaet."
-elif entry_quality == "Riskant":
-    summary_text = "Riskanter Kandidat mit schwachem Setup."
-else:
-    summary_text = "Kein klares Timing-Signal."
 
 st.info(
     f"""
 **Kurzfazit:** {fazit_text}
 
+**Gesamtbild:** {combined_text}
+
 - **Entry Quality:** {entry_quality}
+- **Fundamental Quality:** {fundamental_quality}
+- **Fundamental Score:** {fundamental_score}/10
 - **Exit Signal:** {exit_signal}
 - **Risiko:** {risk_score}
 - **Position:** {position_label}
 - **Trendrichtung:** {trend_direction}
 - **Trendphase:** {trend_phase}
 
-Das Fazit kombiniert Preiszone, Trendrichtung und Momentum. Es ist kein Kauf- oder Verkaufssignal, sondern ein Timing-Filter.
+Das Fazit kombiniert technische Einstiegslage, Preiszone, Trendrichtung, Momentum und Fundamentaldaten.
+"""
+)
+
+st.markdown("### Fundamentale Einordnung")
+
+fund1, fund2, fund3 = st.columns(3)
+
+fund1.metric("Fundamental Score", f"{fundamental_score}/10")
+fund2.metric("Fundamental Quality", fundamental_quality)
+
+if pd.notna(market_cap):
+    fund3.metric("Market Cap", f"{market_cap:,.0f}")
+else:
+    fund3.metric("Market Cap", "n/a")
+
+fund_df = pd.DataFrame([
+    {
+        "Kennzahl": "PE",
+        "Wert": f"{pe:.2f}" if pd.notna(pe) else "n/a",
+        "Bedeutung": "aktuelle Bewertung auf Basis vergangener Gewinne"
+    },
+    {
+        "Kennzahl": "Forward PE",
+        "Wert": f"{forward_pe:.2f}" if pd.notna(forward_pe) else "n/a",
+        "Bedeutung": "erwartete Bewertung auf Basis zukuenftiger Gewinne"
+    },
+    {
+        "Kennzahl": "Revenue Growth",
+        "Wert": f"{revenue_growth * 100:.1f}%" if pd.notna(revenue_growth) else "n/a",
+        "Bedeutung": "Umsatzwachstum"
+    },
+    {
+        "Kennzahl": "Earnings Growth",
+        "Wert": f"{earnings_growth * 100:.1f}%" if pd.notna(earnings_growth) else "n/a",
+        "Bedeutung": "Gewinnwachstum"
+    },
+    {
+        "Kennzahl": "Profit Margin",
+        "Wert": f"{profit_margin * 100:.1f}%" if pd.notna(profit_margin) else "n/a",
+        "Bedeutung": "Profitabilitaet"
+    }
+])
+
+st.table(fund_df)
+
+st.info(
+    f"""
+Fundamentales Fazit
+
+- Fundamental Score: **{fundamental_score}/10**
+- Fundamental Quality: **{fundamental_quality}**
+
+Der Fundamental Score bewertet Wachstum, Bewertung und Profitabilitaet. Eine hohe Fundamental Quality bedeutet nicht automatisch einen guten Einstieg, sondern zeigt, dass das Unternehmen fundamental staerker wirkt.
 """
 )
 
@@ -519,6 +631,7 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 - Trendstaerke: **{trend_label}**
 - Trendrichtung: **{trend_direction}**
 - Entry Quality: **{entry_quality}**
+- Fundamental Quality: **{fundamental_quality}**
 - Risiko: **{risk_score}**
 """
 )
@@ -530,3 +643,4 @@ if description and str(description).strip():
     st.write(description)
 else:
     st.info("Keine Beschreibung verfuegbar.")
+    
