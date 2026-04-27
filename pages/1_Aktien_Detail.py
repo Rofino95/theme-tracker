@@ -88,17 +88,77 @@ def get_trend_direction(hist, price):
             return "Kurzfristig negativ"
 
 
-def get_entry_quality(zone, trend_direction, momentum):
-    if zone in ["Watchlist Zone", "Transition Zone"] and momentum > 0 and trend_direction in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
-        return "Sehr gut"
-    elif zone == "Hold Zone" and momentum > 0:
-        return "Gut"
+def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+    score = 0
+
+    # Preiszone
+    if zone == "Watchlist Zone":
+        score += 3
+    elif zone == "Transition Zone":
+        score += 2
+    elif zone == "Hold Zone":
+        score += 1
     elif zone == "Upper Range":
-        return "Zu spaet"
+        score += 0
     elif zone == "Weak Zone":
-        return "Riskant"
-    else:
+        score += 0
+
+    # Trendrichtung
+    if trend_direction in ["Frischer Aufwaertstrend", "Turnaround moeglich"]:
+        score += 2
+    elif trend_direction == "Aufwaertstrend":
+        score += 1
+    elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab"]:
+        score -= 1
+
+    # Momentum
+    if momentum > 0.50:
+        score += 1
+    elif momentum > 0:
+        score += 1
+    elif momentum < -0.20:
+        score -= 1
+
+    # Fundamentals
+    if fundamental_quality == "Hoch":
+        score += 2
+    elif fundamental_quality == "Mittel":
+        score += 1
+
+    # Bewertung
+    if pd.notna(forward_pe):
+        if 0 < forward_pe < 20:
+            score += 1
+        elif forward_pe > 60:
+            score -= 1
+
+    # Growth
+    growth_positive = False
+
+    if pd.notna(revenue_growth) and revenue_growth > 0.05:
+        growth_positive = True
+
+    if pd.notna(earnings_growth) and earnings_growth > 0.05:
+        growth_positive = True
+
+    if growth_positive:
+        score += 1
+
+    # Begrenzen auf 0 bis 10
+    score = max(0, min(score, 10))
+
+    return score
+
+
+def get_entry_quality_from_score(score):
+    if score >= 8:
+        return "Sehr gut"
+    elif score >= 6:
+        return "Gut"
+    elif score >= 4:
         return "Neutral"
+    else:
+        return "Riskant"
 
 
 def get_exit_signal(zone, momentum, trend_direction):
@@ -384,10 +444,6 @@ else:
 if trend_direction == "Turnaround moeglich" and signal == "Attraktiv":
     interpretation_label = "Spekulativer Turnaround"
 
-entry_quality = get_entry_quality(position_label, trend_direction, momentum)
-exit_signal = get_exit_signal(position_label, momentum, trend_direction)
-risk_score = get_risk_score(position_label, trend_direction)
-
 fundamental_score = get_fundamental_score(
     pe,
     forward_pe,
@@ -397,6 +453,20 @@ fundamental_score = get_fundamental_score(
 )
 
 fundamental_quality = get_fundamental_quality(fundamental_score)
+
+entry_score = get_entry_score(
+    position_label,
+    trend_direction,
+    momentum,
+    fundamental_quality,
+    forward_pe,
+    revenue_growth,
+    earnings_growth
+)
+
+entry_quality = get_entry_quality_from_score(entry_score)
+exit_signal = get_exit_signal(position_label, momentum, trend_direction)
+risk_score = get_risk_score(position_label, trend_direction)
 
 fazit_text = get_fazit_text(
     entry_quality,
@@ -512,6 +582,7 @@ st.info(
 **Gesamtbild:** {combined_text}
 
 - **Entry Quality:** {entry_quality}
+- **Entry Score:** {entry_score}/10
 - **Fundamental Quality:** {fundamental_quality}
 - **Fundamental Score:** {fundamental_score}/10
 - **Exit Signal:** {exit_signal}
