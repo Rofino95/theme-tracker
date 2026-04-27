@@ -10,7 +10,11 @@ if not os.path.exists("theme_scores.csv"):
 
 df = pd.read_csv("theme_scores.csv")
 
-# Status pro Aktie
+if "3M Momentum" not in df.columns:
+    st.error("Die Spalte '3M Momentum' fehlt noch. Bitte zuerst update_data.py ausfuehren.")
+    st.stop()
+
+
 def get_status(score):
     if score > 0.7:
         return "Bullisch"
@@ -18,56 +22,124 @@ def get_status(score):
         return "Neutral"
     else:
         return "Baerisch"
-        
-def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
 
-    # 1. Avoid (klar schwach)
-    if stock_score < 0.35 and stock_momentum < -0.20 and theme_status == "Baerisch":
+
+def get_signal(stock_score, range_momentum, momentum_3m, theme_status, theme_bullish_pct):
+    if stock_score < 0.35 and momentum_3m < 0 and theme_status == "Baerisch":
         return "Avoid"
 
-    # 2. Take Profits (stark, aber Momentum bricht)
-    if stock_score > 0.85 and stock_momentum < 0.30:
+    if stock_score > 0.85 and momentum_3m < 0:
         return "Take Profits"
 
-    # 3. Attraktiv (früher / gesunder Trend)
-    if 0.60 <= stock_score <= 0.85 and stock_momentum > 0 and theme_status in ["Bullisch", "Neutral"] and theme_bullish_pct >= 50:
+    if (
+        0.55 <= stock_score <= 0.85
+        and range_momentum > 0
+        and momentum_3m > 0
+        and theme_status in ["Bullisch", "Neutral"]
+        and theme_bullish_pct >= 50
+    ):
         return "Attraktiv"
 
-    # 4. Hold (stark + Momentum stark → laufen lassen)
-    if stock_score > 0.85 and stock_momentum >= 0.30:
+    if stock_score > 0.85 and momentum_3m > 0:
         return "Hold"
 
-    if stock_score >= 0.50 and stock_momentum >= -0.10 and theme_status != "Baerisch":
+    if stock_score >= 0.50 and range_momentum >= -0.10 and momentum_3m >= 0 and theme_status != "Baerisch":
         return "Hold"
 
-    # 5. Rest
     return "Review"
 
-def get_trend_phase(stock_score, stock_momentum):
-    if stock_score < 0.35 and stock_momentum < -0.20:
+
+def get_trend_phase(stock_score, range_momentum, momentum_3m):
+    if stock_score < 0.35 and momentum_3m < 0:
         return "Weak"
-    elif stock_score > 0.85 and stock_momentum < 0.30:
+    elif stock_score > 0.85 and momentum_3m < 0:
         return "Late Trend"
-    elif stock_score > 0.75 and stock_momentum >= 0.30:
+    elif stock_score > 0.75 and range_momentum >= 0.30 and momentum_3m > 0:
         return "Mid Trend"
-    elif 0.55 <= stock_score <= 0.75 and stock_momentum > 0:
+    elif 0.55 <= stock_score <= 0.75 and range_momentum > 0 and momentum_3m > 0:
         return "Early Trend"
     else:
         return "Transition"
 
+
+def color_status(val):
+    if val == "Bullisch":
+        return "background-color: #123524; color: white"
+    elif val == "Neutral":
+        return "background-color: #5c4b00; color: white"
+    else:
+        return "background-color: #5a1e1e; color: white"
+
+
+def color_signal(val):
+    if val == "Attraktiv":
+        return "background-color: #123524; color: white"
+    elif val == "Hold":
+        return "background-color: #1f3c88; color: white"
+    elif val == "Review":
+        return "background-color: #5c4b00; color: white"
+    elif val == "Take Profits":
+        return "background-color: #6a3d00; color: white"
+    elif val == "Avoid":
+        return "background-color: #5a1e1e; color: white"
+    return ""
+
+
+def color_trend_phase(val):
+    if val == "Early Trend":
+        return "background-color: #123524; color: white"
+    elif val == "Mid Trend":
+        return "background-color: #1f3c88; color: white"
+    elif val == "Late Trend":
+        return "background-color: #6a3d00; color: white"
+    elif val == "Transition":
+        return "background-color: #5c4b00; color: white"
+    elif val == "Weak":
+        return "background-color: #5a1e1e; color: white"
+    return ""
+
+
 df["Status"] = df["Trend Score"].apply(get_status)
 
-# Theme-Uebersicht bauen
+st.title("Theme Tracker")
+st.caption(
+    "Regelbasierter Markt- und Aktien-Screener nach Themes, Trend Score, Range Momentum, echtem 3M Momentum und Fundamentaldaten."
+)
+
+st.markdown("### Navigation")
+
+nav1, nav2, nav3, nav4, nav5 = st.columns(5)
+
+with nav1:
+    st.page_link("app.py", label="Startseite", icon="🏠")
+
+with nav2:
+    st.page_link("pages/1_Aktien_Detail.py", label="Aktien-Detail", icon="📈")
+
+with nav3:
+    st.page_link("pages/2_Aktien_Ranking.py", label="Ranking", icon="🔎")
+
+with nav4:
+    st.page_link("pages/3_Top_Opportunities.py", label="Top Opportunities", icon="🔥")
+
+with nav5:
+    st.page_link("pages/4_Erklaerungen.py", label="Erklaerungen", icon="ℹ️")
+
+st.markdown("---")
+st.subheader("Markt-Heatmap nach Themes")
+
 grouped = (
     df.groupby("Sub Theme", as_index=False)
     .agg({
         "Trend Score": "mean",
-        "Momentum": "mean"
+        "Momentum": "mean",
+        "3M Momentum": "mean"
     })
 )
 
 grouped["Trend Score"] = grouped["Trend Score"].round(2)
 grouped["Momentum"] = grouped["Momentum"].round(2)
+grouped["3M Momentum"] = grouped["3M Momentum"].round(2)
 grouped["Status"] = grouped["Trend Score"].apply(get_status)
 grouped = grouped.sort_values(by="Trend Score", ascending=False)
 
@@ -75,27 +147,39 @@ main_grouped = (
     df.groupby("Main Theme", as_index=False)
     .agg({
         "Trend Score": "mean",
-        "Momentum": "mean"
+        "Momentum": "mean",
+        "3M Momentum": "mean"
     })
 )
 
 main_grouped["Trend Score"] = main_grouped["Trend Score"].round(2)
 main_grouped["Momentum"] = main_grouped["Momentum"].round(2)
+main_grouped["3M Momentum"] = main_grouped["3M Momentum"].round(2)
 main_grouped["Status"] = main_grouped["Trend Score"].apply(get_status)
 main_grouped = main_grouped.sort_values(by="Trend Score", ascending=False)
 
-# Top / Flop
 top_theme = grouped.iloc[0]["Sub Theme"]
 top_score = grouped.iloc[0]["Trend Score"]
+top_3m = grouped.iloc[0]["3M Momentum"]
+
 flop_theme = grouped.iloc[-1]["Sub Theme"]
 flop_score = grouped.iloc[-1]["Trend Score"]
+flop_3m = grouped.iloc[-1]["3M Momentum"]
 
-st.title("Theme Tracker")
-st.subheader("Markt-Heatmap nach Themes")
+kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
-col1, col2 = st.columns(2)
-col1.metric("Top Theme", top_theme, top_score)
-col2.metric("Schwaechstes Theme", flop_theme, f"-{flop_score}")
+kpi1.metric("Top Theme", top_theme, f"{top_score:.2f}")
+kpi2.metric("Top Theme 3M Momentum", f"{top_3m * 100:.1f}%")
+kpi3.metric("Schwaechstes Theme", flop_theme, f"{flop_score:.2f}")
+kpi4.metric("Schwaechstes 3M Momentum", f"{flop_3m * 100:.1f}%")
+
+st.info(
+    """
+**Wichtig:**  
+Der alte Momentum-Wert ist jetzt als **Range Momentum** zu verstehen. Er zeigt, wo die Aktie relativ zur Mitte ihrer 52W-Spanne steht.  
+**3M Momentum** ist das echte Momentum und zeigt die Kursveraenderung der letzten ca. 3 Monate.
+"""
+)
 
 col_filter1, col_filter2 = st.columns(2)
 
@@ -121,6 +205,7 @@ filtered_grouped = (
     .agg({
         "Trend Score": "mean",
         "Momentum": "mean",
+        "3M Momentum": "mean",
         "Ticker": "count"
     })
     .rename(columns={"Ticker": "Anzahl Aktien"})
@@ -128,6 +213,7 @@ filtered_grouped = (
 
 filtered_grouped["Trend Score"] = filtered_grouped["Trend Score"].round(2)
 filtered_grouped["Momentum"] = filtered_grouped["Momentum"].round(2)
+filtered_grouped["3M Momentum"] = filtered_grouped["3M Momentum"].round(2)
 filtered_grouped["Status"] = filtered_grouped["Trend Score"].apply(get_status)
 
 bullish_pct = (
@@ -165,49 +251,19 @@ filtered_grouped = filtered_grouped.sort_values(by="Trend Score", ascending=Fals
 
 if filter_status != "Alle":
     filtered_grouped = filtered_grouped[filtered_grouped["Status"] == filter_status]
-    
-def color_status(val):
-    if val == "Bullisch":
-        return "background-color: #123524; color: white"
-    elif val == "Neutral":
-        return "background-color: #5c4b00; color: white"
-    else:
-        return "background-color: #5a1e1e; color: white"
-
-def color_signal(val):
-    if val == "Attraktiv":
-        return "background-color: #123524; color: white"
-    elif val == "Hold":
-        return "background-color: #1f3c88; color: white"
-    elif val == "Review":
-        return "background-color: #5c4b00; color: white"
-    elif val == "Take Profits":
-        return "background-color: #6a3d00; color: white"
-    elif val == "Avoid":
-        return "background-color: #5a1e1e; color: white"
-    return ""
-
-def color_trend_phase(val):
-    if val == "Early Trend":
-        return "background-color: #123524; color: white"
-    elif val == "Mid Trend":
-        return "background-color: #1f3c88; color: white"
-    elif val == "Late Trend":
-        return "background-color: #6a3d00; color: white"
-    elif val == "Transition":
-        return "background-color: #5c4b00; color: white"
-    elif val == "Weak":
-        return "background-color: #5a1e1e; color: white"
-    return ""
 
 styled = filtered_grouped.style.map(color_status, subset=["Status"])
 
 st.markdown("### Main Theme Uebersicht")
 
 st.dataframe(
-    main_grouped.style.map(color_status, subset=["Status"]).format({
+    main_grouped.rename(columns={"Momentum": "Range Momentum"})
+    .style
+    .map(color_status, subset=["Status"])
+    .format({
         "Trend Score": "{:.2f}",
-        "Momentum": "{:.2f}"
+        "Range Momentum": "{:.2f}",
+        "3M Momentum": "{:.2f}"
     }),
     use_container_width=True,
     hide_index=True
@@ -218,9 +274,13 @@ st.markdown("### Sub Theme Uebersicht")
 height = 50 + len(filtered_grouped) * 35
 
 st.dataframe(
-    styled.format({
+    filtered_grouped.rename(columns={"Momentum": "Range Momentum"})
+    .style
+    .map(color_status, subset=["Status"])
+    .format({
         "Trend Score": "{:.2f}",
-        "Momentum": "{:.2f}",
+        "Range Momentum": "{:.2f}",
+        "3M Momentum": "{:.2f}",
         "Bullisch %": "{:.0f}%",
         "Neutral %": "{:.0f}%",
         "Baerisch %": "{:.0f}%"
@@ -250,6 +310,7 @@ if search_term:
                 "Preis": "first",
                 "Trend Score": "mean",
                 "Momentum": "mean",
+                "3M Momentum": "mean",
                 "Status": "first"
             })
         )
@@ -271,11 +332,13 @@ if search_term:
 
         grouped_search["Trend Score"] = grouped_search["Trend Score"].round(2)
         grouped_search["Momentum"] = grouped_search["Momentum"].round(2)
+        grouped_search["3M Momentum"] = grouped_search["3M Momentum"].round(2)
 
         grouped_search["Signal"] = grouped_search.apply(
             lambda row: get_signal(
                 row["Trend Score"],
                 row["Momentum"],
+                row["3M Momentum"],
                 row["Status"],
                 50
             ),
@@ -283,14 +346,15 @@ if search_term:
         )
 
         st.dataframe(
-            grouped_search[[
+            grouped_search.rename(columns={"Momentum": "Range Momentum"})[[
                 "Name",
                 "Ticker",
                 "Main Themes",
                 "Sub Themes",
                 "Preis",
                 "Trend Score",
-                "Momentum",
+                "Range Momentum",
+                "3M Momentum",
                 "Status",
                 "Signal"
             ]]
@@ -300,7 +364,8 @@ if search_term:
             .format({
                 "Preis": "{:.2f}",
                 "Trend Score": "{:.2f}",
-                "Momentum": "{:.2f}"
+                "Range Momentum": "{:.2f}",
+                "3M Momentum": "{:.2f}"
             }),
             use_container_width=True,
             hide_index=True,
@@ -311,6 +376,10 @@ if search_term:
 
 st.markdown("---")
 st.subheader("Sub Theme im Detail")
+
+if filtered_grouped.empty:
+    st.warning("Keine Sub Themes fuer diese Filterkombination gefunden.")
+    st.stop()
 
 selected_theme = st.selectbox(
     "Waehle ein Sub Theme",
@@ -332,6 +401,7 @@ detail_df["Signal"] = detail_df.apply(
     lambda row: get_signal(
         row["Trend Score"],
         row["Momentum"],
+        row["3M Momentum"],
         theme_status_detail,
         theme_bullish_pct_detail
     ),
@@ -339,7 +409,11 @@ detail_df["Signal"] = detail_df.apply(
 )
 
 detail_df["Trendphase"] = detail_df.apply(
-    lambda row: get_trend_phase(row["Trend Score"], row["Momentum"]),
+    lambda row: get_trend_phase(
+        row["Trend Score"],
+        row["Momentum"],
+        row["3M Momentum"]
+    ),
     axis=1
 )
 
@@ -423,15 +497,18 @@ if search_term_detail:
 
 height_detail = min(900, 50 + len(detail_filtered_df) * 35)
 
+display_detail = detail_filtered_df.rename(columns={"Momentum": "Range Momentum"})
+
 st.dataframe(
-    detail_filtered_df[[
+    display_detail[[
         "Name",
         "Ticker",
         "Preis",
         "52W High",
         "52W Low",
         "Trend Score",
-        "Momentum",
+        "Range Momentum",
+        "3M Momentum",
         "Trendphase",
         "Signal"
     ]]
@@ -443,7 +520,8 @@ st.dataframe(
         "52W High": "{:.2f}",
         "52W Low": "{:.2f}",
         "Trend Score": "{:.2f}",
-        "Momentum": "{:.2f}"
+        "Range Momentum": "{:.2f}",
+        "3M Momentum": "{:.2f}"
     }),
     use_container_width=True,
     hide_index=True,
@@ -480,74 +558,13 @@ Legende
 🟡 Neutral: Trend Score ueber 0.50 bis 0.70  
 🔴 Baerisch: Trend Score 0.50 oder niedriger  
 
-Momentum:
-- ab 0.50 = stark positiv
-- 0.00 bis 0.49 = leicht positiv
-- -0.49 bis -0.01 = schwach
-- ab -0.50 = stark negativ
-"""
-)
+Range Momentum:
+- zeigt die Position relativ zur Mitte der 52W-Spanne
+- ist kein echtes Zeit-Momentum
 
-st.info(
-    """
-Signal-Logik
-
-🟢 Attraktiv:
-- Trend Score zwischen 0.60 und 0.85
-- Momentum positiv
-- Theme ist Bullisch oder Neutral
-- mindestens 50% der Aktien im Theme sind Bullisch
-
-🔵 Hold:
-- Aktie befindet sich in einem starken laufenden Trend
-- hoher Trend Score und Momentum weiterhin solide
-- kein unmittelbares Schwaechesignal
-
-🟡 Review:
-- Aktie ist weder klar attraktiv noch klar schwach
-- Trend oder Momentum sind uneindeutig
-- genauer beobachten
-
-🟠 Take Profits:
-- Aktie ist bereits sehr weit gelaufen
-- Trend Score hoch, aber Momentum flacht ab
-- Hinweis auf moegliche Gewinnsicherung, nicht automatisch Verkauf
-
-🔴 Avoid:
-- schwacher Trend Score
-- negatives Momentum
-- und das Theme selbst ist Baerisch
-
-Wichtig:
-Das Signal ist keine Finanzberatung, sondern eine regelbasierte technische Einordnung innerhalb des jeweiligen Themes.
-"""
-)
-
-st.info(
-    """
-Trendphase
-
-🟢 Early Trend:
-- Trend beginnt sich sauber aufzubauen
-- Momentum ist positiv
-- oft interessant fuer Watchlist oder fruehe Einstiege
-
-🔵 Mid Trend:
-- etablierter Aufwaertstrend
-- Aktie laeuft bereits gut, aber weiterhin gesund
-
-🟠 Late Trend:
-- Aktie ist weit gelaufen
-- Momentum flacht ab
-- Trend kann weiterlaufen, ist aber fortgeschrittener
-
-🟡 Transition:
-- uneinheitliches Bild zwischen Trend und Momentum
-- weder klar stark noch klar schwach
-
-🔴 Weak:
-- schwacher Trend
-- negatives Momentum
-- eher meiden oder eng beobachten
+3M Momentum:
+- echte Kursveraenderung der letzten ca. 3 Monate
+- positiver Wert = Aktie hat in den letzten 3 Monaten zugelegt
+- negativer Wert = Aktie hat in den letzten 3 Monaten verloren
 """
 )
