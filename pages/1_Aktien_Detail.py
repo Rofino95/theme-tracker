@@ -17,6 +17,37 @@ def get_status(score):
         return "Baerisch"
 
 
+def get_master_score(entry_score, fundamental_score, risk_score):
+    score = 0
+
+    # Entry (Timing ist am wichtigsten kurzfristig)
+    score += entry_score * 0.5
+
+    # Fundamentals (für Qualität)
+    score += fundamental_score * 0.3
+
+    # Risiko (negativ gewichtet)
+    if risk_score == "Sehr hoch":
+        score -= 2
+    elif risk_score == "Hoch":
+        score -= 1
+    elif risk_score == "Mittel":
+        score += 0
+    elif risk_score == "Niedrig":
+        score += 1
+
+    return round(score, 1)
+
+
+def get_master_signal(master_score):
+    if master_score >= 7:
+        return "🟢 Einstieg sinnvoll"
+    elif master_score >= 5:
+        return "🟡 Beobachten"
+    else:
+        return "🔴 Kein Einstieg"
+
+
 def get_signal(stock_score, stock_momentum, theme_status, theme_bullish_pct):
     if stock_score < 0.35 and stock_momentum < -0.20 and theme_status == "Baerisch":
         return "Avoid"
@@ -478,6 +509,14 @@ fazit_text = get_fazit_text(
     signal
 )
 
+master_score = get_master_score(
+    entry_score,
+    fundamental_score,
+    risk_score
+)
+
+master_signal = get_master_signal(master_score)
+
 if fundamental_quality == "Hoch" and entry_quality in ["Sehr gut", "Gut"]:
     combined_text = "Technik und Fundamentaldaten passen gut zusammen."
 elif fundamental_quality == "Hoch" and entry_quality not in ["Sehr gut", "Gut"]:
@@ -489,6 +528,23 @@ else:
 
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
+
+st.markdown("### 🧠 Handlung")
+
+st.markdown(
+    f"""
+<div style="
+    font-size:28px;
+    font-weight:700;
+    padding:12px;
+    border-radius:10px;
+    text-align:center;
+">
+{master_signal}
+</div>
+""",
+    unsafe_allow_html=True
+)
 
 st.markdown("**Main Themes**")
 st.markdown(make_tag_html(main_theme_list, bg="#0f3d2e"), unsafe_allow_html=True)
