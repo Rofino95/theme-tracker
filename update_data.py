@@ -72,14 +72,19 @@ def fetch_data(ticker, existing_description=""):
         hist = data.history(period="1y")
 
         if hist.empty:
-            return None, None, None, ticker, existing_description, None, None, None, None, None, None
+            return None, None, None, None, ticker, existing_description, None, None, None, None, None, None
 
         price = hist["Close"].iloc[-1]
         high = hist["High"].max()
         low = hist["Low"].min()
 
-        name = info.get("shortName") or info.get("longName") or ticker
+        if len(hist) >= 64:
+            price_3m_ago = hist["Close"].iloc[-64]
+            momentum_3m = (price / price_3m_ago) - 1
+        else:
+            momentum_3m = None
 
+        name = info.get("shortName") or info.get("longName") or ticker
         description = get_description(ticker, name, existing_description)
 
         pe = info.get("trailingPE")
@@ -93,6 +98,7 @@ def fetch_data(ticker, existing_description=""):
             price,
             high,
             low,
+            momentum_3m,
             name,
             description,
             pe,
@@ -105,7 +111,7 @@ def fetch_data(ticker, existing_description=""):
 
     except Exception as e:
         print(f"Fehler bei {ticker}: {e}")
-        return None, None, None, ticker, existing_description, None, None, None, None, None, None
+        return None, None, None, None, ticker, existing_description, None, None, None, None, None, None
 
 
 def main():
@@ -117,6 +123,7 @@ def main():
     prices = []
     highs = []
     lows = []
+    momentum_3m_list = []
     names = []
     descriptions = []
 
@@ -134,6 +141,7 @@ def main():
             price,
             high,
             low,
+            momentum_3m,
             name,
             description,
             pe,
@@ -147,6 +155,7 @@ def main():
         prices.append(price)
         highs.append(high)
         lows.append(low)
+        momentum_3m_list.append(momentum_3m)
         names.append(name)
         descriptions.append(description)
 
@@ -160,6 +169,7 @@ def main():
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
+    df["3M Momentum"] = momentum_3m_list
     df["Name"] = names
     df["Description"] = descriptions
 
@@ -180,6 +190,7 @@ def main():
 
     df["Trend Score"] = df["Trend Score"].round(2)
     df["Momentum"] = df["Momentum"].round(2)
+    df["3M Momentum"] = df["3M Momentum"].round(2)
 
     df.to_csv(OUTPUT_FILE, index=False)
 
@@ -191,3 +202,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
