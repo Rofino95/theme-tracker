@@ -97,6 +97,63 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
+def get_fundamental_score(pe, forward_pe, revenue_growth, earnings_growth, profit_margin):
+    score = 0
+
+    if revenue_growth is not None and pd.notna(revenue_growth):
+        if revenue_growth > 0.20:
+            score += 2
+        elif revenue_growth > 0.05:
+            score += 1
+
+    if earnings_growth is not None and pd.notna(earnings_growth):
+        if earnings_growth > 0.20:
+            score += 2
+        elif earnings_growth > 0.05:
+            score += 1
+
+    if forward_pe is not None and pd.notna(forward_pe):
+        if 0 < forward_pe < 20:
+            score += 2
+        elif 20 <= forward_pe < 35:
+            score += 1
+
+    if profit_margin is not None and pd.notna(profit_margin):
+        if profit_margin > 0.20:
+            score += 2
+        elif profit_margin > 0.10:
+            score += 1
+
+    if (
+        revenue_growth is not None and pd.notna(revenue_growth)
+        and earnings_growth is not None and pd.notna(earnings_growth)
+        and profit_margin is not None and pd.notna(profit_margin)
+    ):
+        if revenue_growth > 0.15 and earnings_growth > 0.15 and profit_margin > 0.15:
+            score += 2
+
+    return score
+
+
+def get_fundamental_quality(score):
+    if score >= 8:
+        return "Hoch"
+    elif score >= 5:
+        return "Mittel"
+    else:
+        return "Niedrig"
+
+
+def color_fundamental_quality(val):
+    if val == "Hoch":
+        return "background-color: #123524; color: white"
+    elif val == "Mittel":
+        return "background-color: #5c4b00; color: white"
+    elif val == "Niedrig":
+        return "background-color: #5a1e1e; color: white"
+    return ""
+
+
 def color_signal(val):
     if val == "Attraktiv":
         return "background-color: #123524; color: white"
@@ -236,6 +293,19 @@ ranking_df["Risiko"] = ranking_df.apply(
     axis=1
 )
 
+ranking_df["Fundamental Score"] = ranking_df.apply(
+    lambda row: get_fundamental_score(
+        row.get("PE"),
+        row.get("Forward PE"),
+        row.get("Revenue Growth"),
+        row.get("Earnings Growth"),
+        row.get("Profit Margin")
+    ),
+    axis=1
+)
+
+ranking_df["Fundamental Quality"] = ranking_df["Fundamental Score"].apply(get_fundamental_quality)
+
 # Ranking innerhalb Sub Theme
 ranking_df["Rank im Theme"] = ranking_df.groupby("Sub Theme")["Trend Score"] \
     .rank(ascending=False, method="min")
@@ -303,13 +373,22 @@ with filter_col8:
     )
 
 with filter_col9:
-    sort_by = st.selectbox(
-        "Sortieren nach",
-        ["Trend Score", "Momentum", "Preis", "Name", "Top %"]
+    selected_fundamental_quality = st.selectbox(
+        "Fundamental Quality",
+        ["Alle", "Hoch", "Mittel", "Niedrig"]
     )
 
-sort_ascending = st.checkbox("Aufsteigend sortieren", value=False)
+filter_col10, filter_col11 = st.columns(2)
 
+with filter_col10:
+    sort_by = st.selectbox(
+        "Sortieren nach",
+        ["Entry Quality", "Fundamental Score", "Trend Score", "Momentum", "Preis", "Name", "Top %"]
+    )
+
+with filter_col11:
+    sort_ascending = st.checkbox("Aufsteigend sortieren", value=False)
+    
 # Filter anwenden
 filtered_df = ranking_df.copy()
 
@@ -321,6 +400,9 @@ if selected_sub_theme != "Alle":
 
 if selected_zone != "Alle":
     filtered_df = filtered_df[filtered_df["Zone"] == selected_zone]
+
+if selected_fundamental_quality != "Alle":
+    filtered_df = filtered_df[filtered_df["Fundamental Quality"] == selected_fundamental_quality]
 
 if selected_signal != "Alle":
     filtered_df = filtered_df[filtered_df["Signal"] == selected_signal]
@@ -354,7 +436,9 @@ display_df = filtered_df[[
     "Entry Quality",
     "Exit Signal",
     "Signal",
-    "Risiko"
+    "Risiko",
+    "Fundamental Quality",
+    "Fundamental Score"
 ]].copy()
 
 height_table = min(1000, 50 + len(display_df) * 35)
@@ -363,7 +447,11 @@ st.dataframe(
     display_df
     .style
     .map(color_zone, subset=["Zone"])
-    .map(color_signal, subset=["Signal"]),
+    .map(color_signal, subset=["Signal"])
+    .map(color_fundamental_quality, subset=["Fundamental Quality"])
+    .format({
+        "Fundamental Score": "{:.0f}"
+    }),
     use_container_width=True,
     hide_index=True,
     height=height_table
