@@ -531,16 +531,29 @@ st.markdown(f"**Ticker:** `{ticker}`")
 
 st.markdown("### 🧠 Handlung")
 
+# Farbe je Signal
+if "🟢" in master_signal:
+    bg = "#123524"
+elif "🟡" in master_signal:
+    bg = "#5c4b00"
+else:
+    bg = "#5a1e1e"
+
 st.markdown(
     f"""
 <div style="
-    font-size:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    background:{bg};
+    padding:14px 20px;
+    border-radius:12px;
+    font-size:22px;
     font-weight:700;
-    padding:12px;
-    border-radius:10px;
-    text-align:center;
+    margin-top:10px;
 ">
-{master_signal}
+    {master_signal}
 </div>
 """,
     unsafe_allow_html=True
