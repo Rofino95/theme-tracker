@@ -312,6 +312,19 @@ ranking_df["Trendrichtung"] = ranking_df.apply(
     axis=1
 )
 
+ranking_df["Fundamental Score"] = ranking_df.apply(
+    lambda row: get_fundamental_score(
+        row.get("PE"),
+        row.get("Forward PE"),
+        row.get("Revenue Growth"),
+        row.get("Earnings Growth"),
+        row.get("Profit Margin")
+    ),
+    axis=1
+)
+
+ranking_df["Fundamental Quality"] = ranking_df["Fundamental Score"].apply(get_fundamental_quality)
+
 ranking_df["Entry Score"] = ranking_df.apply(
     lambda row: get_entry_score(
         row["Zone"],
@@ -343,19 +356,6 @@ ranking_df["Risiko"] = ranking_df.apply(
     ),
     axis=1
 )
-
-ranking_df["Fundamental Score"] = ranking_df.apply(
-    lambda row: get_fundamental_score(
-        row.get("PE"),
-        row.get("Forward PE"),
-        row.get("Revenue Growth"),
-        row.get("Earnings Growth"),
-        row.get("Profit Margin")
-    ),
-    axis=1
-)
-
-ranking_df["Fundamental Quality"] = ranking_df["Fundamental Score"].apply(get_fundamental_quality)
 
 # Ranking innerhalb Sub Theme
 ranking_df["Rank im Theme"] = ranking_df.groupby("Sub Theme")["Trend Score"] \
@@ -406,7 +406,7 @@ with filter_col5:
 with filter_col6:
     selected_entry_quality = st.selectbox(
         "Entry Quality",
-        ["Alle", "Sehr gut", "Gut", "Neutral", "Zu spaet", "Riskant"]
+        ["Alle", "Sehr gut", "Gut", "Neutral", "Riskant"]
     )
 
 filter_col7, filter_col8, filter_col9 = st.columns(3)
