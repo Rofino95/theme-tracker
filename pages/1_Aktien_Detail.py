@@ -565,17 +565,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("**Main Themes**")
-    st.markdown(
-        f'<div style="display:flex; flex-wrap:wrap;">{make_tag_html(main_theme_list)}</div>',
-        unsafe_allow_html=True
-    )
+    st.markdown(make_tag_html(main_theme_list, bg="#0f3d2e"), unsafe_allow_html=True)
 
 with col2:
     st.markdown("**Sub Themes**")
-    st.markdown(
-        f'<div style="display:flex; flex-wrap:wrap;">{make_tag_html(sub_theme_list)}</div>',
-        unsafe_allow_html=True
-    )
+    st.markdown(make_tag_html(sub_theme_list, bg="#1e3a5f"), unsafe_allow_html=True)
     
 st.markdown("---")
 st.markdown("### Kennzahlen")
