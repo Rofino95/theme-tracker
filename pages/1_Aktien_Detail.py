@@ -119,7 +119,7 @@ def get_trend_direction(hist, price):
             return "Kurzfristig negativ"
 
 
-def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+def get_entry_score(zone, trend_direction, momentum, momentum_3m, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
     score = 0
 
     # Preiszone
@@ -142,7 +142,7 @@ def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forwar
     elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab"]:
         score -= 1
 
-    # Momentum
+    # Range Momentum
     if momentum > 0.50:
         score += 1
     elif momentum > 0:
@@ -150,6 +150,16 @@ def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forwar
     elif momentum < -0.20:
         score -= 1
 
+    # Echtes 3M Momentum
+    if momentum_3m > 0.10:
+        score += 2
+    elif momentum_3m > 0:
+        score += 1
+    elif momentum_3m < -0.10:
+        score -= 2
+    elif momentum_3m < 0:
+        score -= 1
+    
     # Fundamentals
     if fundamental_quality == "Hoch":
         score += 2
@@ -436,7 +446,8 @@ price = float(stock_df.iloc[0]["Preis"])
 high_52 = float(stock_df.iloc[0]["52W High"])
 low_52 = float(stock_df.iloc[0]["52W Low"])
 trend_score = float(stock_df.iloc[0]["Trend Score"])
-momentum = float(stock_df.iloc[0]["Momentum"])
+momentum = float(stock_df.iloc[0]["Momentum"])  # Range Momentum
+momentum_3m = float(stock_df.iloc[0]["3M Momentum"]) if "3M Momentum" in stock_df.columns and pd.notna(stock_df.iloc[0]["3M Momentum"]) else 0
 description = stock_df.iloc[0]["Description"] if "Description" in stock_df.columns else ""
 pe = stock_df.iloc[0]["PE"] if "PE" in stock_df.columns else None
 forward_pe = stock_df.iloc[0]["Forward PE"] if "Forward PE" in stock_df.columns else None
@@ -518,6 +529,7 @@ entry_score = get_entry_score(
     position_label,
     trend_direction,
     momentum,
+    momentum_3m,
     fundamental_quality,
     forward_pe,
     revenue_growth,
@@ -610,7 +622,7 @@ kpi3.metric("52W Low", f"{low_52:.2f}")
 kpi4.metric("Trend Score", f"{trend_score:.2f}")
 
 kpi5, kpi6, kpi7, kpi8 = st.columns(4)
-kpi5.metric("Momentum", f"{momentum:.2f}")
+kpi5.metric("Range Momentum", f"{momentum:.2f}")
 
 with kpi6:
     st.markdown("**Signal**")
@@ -623,6 +635,12 @@ with kpi7:
 with kpi8:
     st.markdown("**Trendrichtung**")
     st.markdown(direction_badge(trend_direction), unsafe_allow_html=True)
+
+kpi9, kpi10, kpi11, kpi12 = st.columns(4)
+kpi9.metric("3M Momentum", f"{momentum_3m * 100:.1f}%")
+kpi10.metric("Entry Score", f"{entry_score}/10")
+kpi11.metric("Fundamental Score", f"{fundamental_score}/10")
+kpi12.metric("Master Score", f"{master_score}")
 
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
@@ -697,9 +715,39 @@ st.info(
 - **Trendrichtung:** {trend_direction}
 - **Trendphase:** {trend_phase}
 
-Das Fazit kombiniert technische Einstiegslage, Preiszone, Trendrichtung, Momentum und Fundamentaldaten.
+- **Range Momentum:** {momentum:.2f}
+- **3M Momentum:** {momentum_3m * 100:.1f}%
+
+Das Fazit kombiniert Preiszone, Trendstruktur, echtes Momentum (3M) und Fundamentaldaten.
 """
 )
+
+# -------------------------
+# NEU: Momentum Einordnung
+# -------------------------
+
+st.markdown("### Momentum Einordnung")
+
+mom1, mom2 = st.columns(2)
+
+mom1.metric("Range Momentum", f"{momentum:.2f}")
+mom2.metric("3M Momentum", f"{momentum_3m * 100:.1f}%")
+
+st.info(
+    """
+**Range Momentum** zeigt, wo die Aktie innerhalb ihrer 52W-Spanne steht.  
+→ gut für Einordnung der Preisposition  
+
+**3M Momentum** zeigt die echte Kursentwicklung der letzten Monate.  
+→ wichtig für Timing & Dynamik  
+
+👉 Idealfall: beide positiv = starke Bewegung + guter Einstieg
+"""
+)
+
+# -------------------------
+# Fundamentals
+# -------------------------
 
 st.markdown("### Fundamentale Einordnung")
 
@@ -722,7 +770,7 @@ fund_df = pd.DataFrame([
     {
         "Kennzahl": "Forward PE",
         "Wert": f"{forward_pe:.2f}" if pd.notna(forward_pe) else "n/a",
-        "Bedeutung": "erwartete Bewertung auf Basis zukuenftiger Gewinne"
+        "Bedeutung": "erwartete Bewertung"
     },
     {
         "Kennzahl": "Revenue Growth",
@@ -750,9 +798,14 @@ Fundamentales Fazit
 - Fundamental Score: **{fundamental_score}/10**
 - Fundamental Quality: **{fundamental_quality}**
 
-Der Fundamental Score bewertet Wachstum, Bewertung und Profitabilitaet. Eine hohe Fundamental Quality bedeutet nicht automatisch einen guten Einstieg, sondern zeigt, dass das Unternehmen fundamental staerker wirkt.
+👉 Gute Fundamentals ≠ guter Einstieg  
+👉 Aber: Gute Fundamentals + gutes Momentum = sehr starke Kombination
 """
 )
+
+# -------------------------
+# Zonen
+# -------------------------
 
 st.markdown("### Zonen-Uebersicht")
 
@@ -766,31 +819,34 @@ zones_data = [
     {
         "Zone": "Transition Zone",
         "Preisbereich": f"{weak_zone_max:.2f} - {watchlist_zone_min:.2f}",
-        "Bedeutung": "Zwischen schwach und attraktiv",
+        "Bedeutung": "Zwischenphase",
         "Aktuell": "Hier" if weak_zone_max <= price < watchlist_zone_min else ""
     },
     {
         "Zone": "Watchlist Zone",
         "Preisbereich": f"{watchlist_zone_min:.2f} - {watchlist_zone_max:.2f}",
-        "Bedeutung": "Interessant fuer Watchlist",
+        "Bedeutung": "Interessant",
         "Aktuell": "Hier" if watchlist_zone_min <= price < hold_zone_min else ""
     },
     {
         "Zone": "Hold Zone",
         "Preisbereich": f"{hold_zone_min:.2f} - {hold_zone_max:.2f}",
-        "Bedeutung": "Gesunder Trendbereich",
+        "Bedeutung": "Trend stabil",
         "Aktuell": "Hier" if hold_zone_min <= price < upper_range_min else ""
     },
     {
         "Zone": "Upper Range",
         "Preisbereich": f"Ab {upper_range_min:.2f}",
-        "Bedeutung": "Weit gelaufen / Momentum pruefen",
+        "Bedeutung": "Weit gelaufen",
         "Aktuell": "Hier" if price >= upper_range_min else ""
     }
 ]
 
-zones_df = pd.DataFrame(zones_data)
-st.table(zones_df)
+st.table(pd.DataFrame(zones_data))
+
+# -------------------------
+# Signal Erklärung
+# -------------------------
 
 st.markdown("---")
 st.markdown("### Warum dieses Signal?")
@@ -800,18 +856,21 @@ st.info(
 Diese Aktie wird aktuell als **{signal}** eingestuft.
 
 - Trend Score: **{trend_score:.2f}**
-- Momentum: **{momentum:.2f}**
-- Zugehoeriges Sub Theme: **{primary_sub_theme}**
+- Range Momentum: **{momentum:.2f}**
+- 3M Momentum: **{momentum_3m * 100:.1f}%**
 - Theme Status: **{theme_status}**
-- Bullisch-Anteil im Theme: **{theme_bullish_pct:.0f}%**
-- Position in der 52W-Range: **{position_label}**
-- Trendstaerke: **{trend_label}**
+- Bullisch-Anteil: **{theme_bullish_pct:.0f}%**
+- Position: **{position_label}**
 - Trendrichtung: **{trend_direction}**
 - Entry Quality: **{entry_quality}**
 - Fundamental Quality: **{fundamental_quality}**
 - Risiko: **{risk_score}**
 """
 )
+
+# -------------------------
+# Beschreibung
+# -------------------------
 
 st.markdown("---")
 st.markdown("### Unternehmensbeschreibung")
