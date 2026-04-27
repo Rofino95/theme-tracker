@@ -310,6 +310,15 @@ df["Risiko"] = df.apply(
 df["Short Score"] = df.apply(short_score, axis=1)
 df["Long Score"] = df.apply(long_score, axis=1)
 
+# Duplikate entfernen: pro Ticker nur die beste Zeile behalten
+df = (
+    df.sort_values(
+        by=["Long Score", "Short Score", "Entry Score", "Fundamental Score"],
+        ascending=[False, False, False, False]
+    )
+    .drop_duplicates(subset=["Ticker"], keep="first")
+)
+
 short_df = (
     df.sort_values(
         by=["Short Score", "Entry Score", "Momentum", "Fundamental Score"],
