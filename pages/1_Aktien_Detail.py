@@ -356,6 +356,35 @@ def phase_badge(phase):
     """
 
 
+def direction_badge(direction):
+    colors = {
+        "Aufwaertstrend": ("#123524", "#ffffff"),
+        "Frischer Aufwaertstrend": ("#1f3c88", "#ffffff"),
+        "Turnaround moeglich": ("#5c4b00", "#ffffff"),
+        "Seitwaerts / unklar": ("#374151", "#ffffff"),
+        "Trend schwaecht sich ab": ("#6a3d00", "#ffffff"),
+        "Abwaertstrend": ("#5a1e1e", "#ffffff"),
+        "Kurzfristig positiv": ("#123524", "#ffffff"),
+        "Kurzfristig negativ": ("#5a1e1e", "#ffffff"),
+        "Unklar": ("#374151", "#ffffff"),
+    }
+
+    bg, fg = colors.get(direction, ("#374151", "#ffffff"))
+
+    return f"""
+    <div style="
+        display:inline-block;
+        background:{bg};
+        color:{fg};
+        padding:8px 14px;
+        border-radius:12px;
+        font-weight:700;
+        font-size:16px;
+        margin-top:6px;
+        white-space:normal;
+    ">{direction}</div>
+    """
+
 st.title("Aktien-Detailseite")
 
 if not os.path.exists("theme_scores.csv"):
@@ -591,7 +620,9 @@ with kpi7:
     st.markdown("**Trendphase**")
     st.markdown(phase_badge(trend_phase), unsafe_allow_html=True)
 
-kpi8.metric("Trendrichtung", trend_direction)
+with kpi8:
+    st.markdown("**Trendrichtung**")
+    st.markdown(direction_badge(trend_direction), unsafe_allow_html=True)
 
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
