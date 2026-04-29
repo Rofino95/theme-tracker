@@ -6,10 +6,28 @@ import yfinance as yf
 st.set_page_config(page_title="Top Opportunities", layout="wide")
 
 st.title("🔥 Top Opportunities")
+st.caption("Top-Kandidaten nach Entry Score, 3M Momentum, Risiko und Fundamentaldaten.")
+
+st.markdown("### Navigation")
+
+nav1, nav2, nav3, nav4, nav5 = st.columns(5)
+
+with nav1:
+    st.page_link("app.py", label="Startseite", icon="🏠")
+with nav2:
+    st.page_link("pages/1_Aktien_Detail.py", label="Aktien-Detail", icon="📈")
+with nav3:
+    st.page_link("pages/2_Aktien_Ranking.py", label="Ranking", icon="🔎")
+with nav4:
+    st.page_link("pages/3_Top_Opportunities.py", label="Top Opportunities", icon="🔥")
+with nav5:
+    st.page_link("pages/4_Erklaerungen.py", label="Erklaerungen", icon="ℹ️")
+
+st.markdown("---")
 
 st.markdown("""
 **Short Term (2 Wochen – 3 Monate)**  
-Fokus: Entry Score, Momentum, Zone und Risiko.
+Fokus: Entry Score, echtes 3M Momentum, Zone und Risiko.
 
 **Long Term (6+ Monate bis mehrere Jahre)**  
 Fokus: Fundamentaldaten, Qualität und stabile technische Lage.
@@ -20,6 +38,10 @@ if not os.path.exists("theme_scores.csv"):
     st.stop()
 
 df = pd.read_csv("theme_scores.csv")
+
+if "3M Momentum" not in df.columns:
+    st.error("Die Spalte '3M Momentum' fehlt. Bitte zuerst update_data.py ausführen.")
+    st.stop()
 
 
 @st.cache_data(ttl=3600)
@@ -145,7 +167,7 @@ def get_fundamental_quality(score):
         return "Niedrig"
 
 
-def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+def get_entry_score(zone, trend_direction, range_momentum, momentum_3m, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
     score = 0
 
     if zone == "Watchlist Zone":
@@ -162,9 +184,18 @@ def get_entry_score(zone, trend_direction, momentum, fundamental_quality, forwar
     elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab"]:
         score -= 1
 
-    if momentum > 0:
+    if range_momentum > 0:
         score += 1
-    elif momentum < -0.20:
+    elif range_momentum < -0.20:
+        score -= 1
+
+    if momentum_3m > 0.10:
+        score += 2
+    elif momentum_3m > 0:
+        score += 1
+    elif momentum_3m < -0.10:
+        score -= 2
+    elif momentum_3m < 0:
         score -= 1
 
     if fundamental_quality == "Hoch":
@@ -219,8 +250,17 @@ def short_score(row):
 
     score += row["Entry Score"] * 1.5
 
+    if row["3M Momentum"] > 0.10:
+        score += 2
+    elif row["3M Momentum"] > 0:
+        score += 1
+    elif row["3M Momentum"] < -0.10:
+        score -= 2
+    elif row["3M Momentum"] < 0:
+        score -= 1
+
     if row["Momentum"] > 0:
-        score += row["Momentum"] * 2
+        score += row["Momentum"] * 1.5
 
     if row["Risiko"] == "Niedrig":
         score += 2
@@ -241,7 +281,6 @@ def long_score(row):
     score = 0
 
     score += row["Fundamental Score"] * 2
-
     score += row["Trend Score"] * 2
 
     if row["Entry Score"] >= 6:
@@ -249,12 +288,14 @@ def long_score(row):
     elif row["Entry Score"] >= 4:
         score += 1
 
+    if row["3M Momentum"] > 0:
+        score += 1
+    elif row["3M Momentum"] < -0.10:
+        score -= 1
+
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
-        score += 1
-
-    if row["Momentum"] > 0:
         score += 1
 
     return score
@@ -292,6 +333,7 @@ df["Entry Score"] = df.apply(
         row["Zone"],
         row["Trendrichtung"],
         row["Momentum"],
+        row["3M Momentum"],
         row["Fundamental Quality"],
         row.get("Forward PE"),
         row.get("Revenue Growth"),
@@ -310,7 +352,6 @@ df["Risiko"] = df.apply(
 df["Short Score"] = df.apply(short_score, axis=1)
 df["Long Score"] = df.apply(long_score, axis=1)
 
-# Duplikate entfernen: pro Ticker nur die beste Zeile behalten
 df = (
     df.sort_values(
         by=["Long Score", "Short Score", "Entry Score", "Fundamental Score"],
@@ -321,7 +362,7 @@ df = (
 
 short_df = (
     df.sort_values(
-        by=["Short Score", "Entry Score", "Momentum", "Fundamental Score"],
+        by=["Short Score", "Entry Score", "3M Momentum", "Fundamental Score"],
         ascending=[False, False, False, False]
     )
     .head(8)
@@ -347,14 +388,14 @@ st.dataframe(
         "Ticker",
         "Entry Quality",
         "Entry Score",
+        "3M Momentum",
         "Zone",
         "Risiko",
-        "Momentum",
         "Fundamental Quality",
         "Short Score"
     ]].style.format({
         "Entry Score": "{:.0f}",
-        "Momentum": "{:.2f}",
+        "3M Momentum": "{:.1%}",
         "Short Score": "{:.1f}"
     }),
     use_container_width=True,
@@ -396,12 +437,14 @@ st.dataframe(
         "Fundamental Score",
         "Entry Quality",
         "Entry Score",
+        "3M Momentum",
         "Risiko",
         "Trend Score",
         "Long Score"
     ]].style.format({
         "Fundamental Score": "{:.0f}",
         "Entry Score": "{:.0f}",
+        "3M Momentum": "{:.1%}",
         "Trend Score": "{:.2f}",
         "Long Score": "{:.1f}"
     }),
