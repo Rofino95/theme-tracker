@@ -27,10 +27,8 @@ def get_status(score):
 def get_signal(stock_score, range_momentum, momentum_3m, theme_status, theme_bullish_pct):
     if stock_score < 0.35 and momentum_3m < 0 and theme_status == "Baerisch":
         return "Avoid"
-
     if stock_score > 0.85 and momentum_3m < 0:
         return "Take Profits"
-
     if (
         0.55 <= stock_score <= 0.85
         and range_momentum > 0
@@ -39,13 +37,10 @@ def get_signal(stock_score, range_momentum, momentum_3m, theme_status, theme_bul
         and theme_bullish_pct >= 50
     ):
         return "Attraktiv"
-
     if stock_score > 0.85 and momentum_3m > 0:
         return "Hold"
-
     if stock_score >= 0.50 and range_momentum >= -0.10 and momentum_3m >= 0 and theme_status != "Baerisch":
         return "Hold"
-
     return "Review"
 
 
@@ -102,39 +97,33 @@ def color_trend_phase(val):
 df["Status"] = df["Trend Score"].apply(get_status)
 
 st.title("Theme Tracker")
-st.caption(
-    "Regelbasierter Markt- und Aktien-Screener nach Themes, Trend Score, Range Momentum, echtem 3M Momentum und Fundamentaldaten."
-)
-
-st.markdown("### Navigation")
+st.caption("Regelbasierter Markt- und Aktien-Screener nach Themes, Trend Score, Range Momentum, 3M Momentum und Fundamentaldaten.")
 
 nav1, nav2, nav3, nav4, nav5 = st.columns(5)
 
 with nav1:
     st.page_link("app.py", label="Startseite", icon="🏠")
-
 with nav2:
     st.page_link("pages/1_Aktien_Detail.py", label="Aktien-Detail", icon="📈")
-
 with nav3:
     st.page_link("pages/2_Aktien_Ranking.py", label="Ranking", icon="🔎")
-
 with nav4:
     st.page_link("pages/3_Top_Opportunities.py", label="Top Opportunities", icon="🔥")
-
 with nav5:
     st.page_link("pages/4_Erklaerungen.py", label="Erklaerungen", icon="ℹ️")
 
 st.markdown("---")
-st.subheader("Markt-Heatmap nach Themes")
 
+# Gruppierungen
 grouped = (
     df.groupby("Sub Theme", as_index=False)
     .agg({
         "Trend Score": "mean",
         "Momentum": "mean",
-        "3M Momentum": "mean"
+        "3M Momentum": "mean",
+        "Ticker": "count"
     })
+    .rename(columns={"Ticker": "Anzahl Aktien"})
 )
 
 grouped["Trend Score"] = grouped["Trend Score"].round(2)
@@ -166,30 +155,29 @@ flop_theme = grouped.iloc[-1]["Sub Theme"]
 flop_score = grouped.iloc[-1]["Trend Score"]
 flop_3m = grouped.iloc[-1]["3M Momentum"]
 
+st.subheader("Marktueberblick")
+
 kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
 kpi1.metric("Top Theme", top_theme, f"{top_score:.2f}")
-kpi2.metric("Top Theme 3M Momentum", f"{top_3m * 100:.1f}%")
+kpi2.metric("3M Momentum Top Theme", f"{top_3m * 100:.1f}%")
 kpi3.metric("Schwaechstes Theme", flop_theme, f"{flop_score:.2f}")
-kpi4.metric("Schwaechstes 3M Momentum", f"{flop_3m * 100:.1f}%")
+kpi4.metric("3M Momentum schwach", f"{flop_3m * 100:.1f}%")
 
-st.info(
-    """
-**Wichtig:**  
-Der alte Momentum-Wert ist jetzt als **Range Momentum** zu verstehen. Er zeigt, wo die Aktie relativ zur Mitte ihrer 52W-Spanne steht.  
-**3M Momentum** ist das echte Momentum und zeigt die Kursveraenderung der letzten ca. 3 Monate.
-"""
-)
+st.caption("Range Momentum = Position in der 52W-Spanne | 3M Momentum = echte Kursveraenderung der letzten ca. 3 Monate")
 
-col_filter1, col_filter2 = st.columns(2)
+st.markdown("---")
 
-with col_filter1:
+# Filter
+filter_col1, filter_col2 = st.columns(2)
+
+with filter_col1:
     filter_status = st.selectbox(
         "Status filtern",
         ["Alle", "Bullisch", "Neutral", "Baerisch"]
     )
 
-with col_filter2:
+with filter_col2:
     filter_main_theme = st.selectbox(
         "Main Theme filtern",
         ["Alle"] + sorted(df["Main Theme"].dropna().unique().tolist())
@@ -252,12 +240,19 @@ filtered_grouped = filtered_grouped.sort_values(by="Trend Score", ascending=Fals
 if filter_status != "Alle":
     filtered_grouped = filtered_grouped[filtered_grouped["Status"] == filter_status]
 
-styled = filtered_grouped.style.map(color_status, subset=["Status"])
+show_details = st.toggle("Mehr Details anzeigen", value=False)
 
 st.markdown("### Main Theme Uebersicht")
 
+main_display = main_grouped.rename(columns={"Momentum": "Range Momentum"})
+
+if show_details:
+    main_columns = ["Main Theme", "Trend Score", "Range Momentum", "3M Momentum", "Status"]
+else:
+    main_columns = ["Main Theme", "Trend Score", "3M Momentum", "Status"]
+
 st.dataframe(
-    main_grouped.rename(columns={"Momentum": "Range Momentum"})
+    main_display[main_columns]
     .style
     .map(color_status, subset=["Status"])
     .format({
@@ -271,10 +266,33 @@ st.dataframe(
 
 st.markdown("### Sub Theme Uebersicht")
 
-height = 50 + len(filtered_grouped) * 35
+sub_display = filtered_grouped.rename(columns={"Momentum": "Range Momentum"})
+
+if show_details:
+    sub_columns = [
+        "Sub Theme",
+        "Trend Score",
+        "Range Momentum",
+        "3M Momentum",
+        "Anzahl Aktien",
+        "Status",
+        "Bullisch %",
+        "Neutral %",
+        "Baerisch %"
+    ]
+else:
+    sub_columns = [
+        "Sub Theme",
+        "Trend Score",
+        "3M Momentum",
+        "Anzahl Aktien",
+        "Status"
+    ]
+
+height = min(900, 50 + len(sub_display) * 35)
 
 st.dataframe(
-    filtered_grouped.rename(columns={"Momentum": "Range Momentum"})
+    sub_display[sub_columns]
     .style
     .map(color_status, subset=["Status"])
     .format({
@@ -291,16 +309,16 @@ st.dataframe(
 )
 
 st.markdown("---")
+
+# Suche
 st.subheader("Aktiensuche")
 
 search_term = st.text_input("Suche nach Aktienname oder Ticker", key="global_search")
 
 if search_term:
-    search_df = df.copy()
-
-    result_df = search_df[
-        search_df["Name"].str.contains(search_term, case=False, na=False) |
-        search_df["Ticker"].str.contains(search_term, case=False, na=False)
+    result_df = df[
+        df["Name"].str.contains(search_term, case=False, na=False) |
+        df["Ticker"].str.contains(search_term, case=False, na=False)
     ].copy()
 
     if len(result_df) > 0:
@@ -330,10 +348,6 @@ if search_term:
         grouped_search = grouped_search.merge(theme_map, on=["Name", "Ticker"], how="left")
         grouped_search = grouped_search.merge(main_theme_map, on=["Name", "Ticker"], how="left")
 
-        grouped_search["Trend Score"] = grouped_search["Trend Score"].round(2)
-        grouped_search["Momentum"] = grouped_search["Momentum"].round(2)
-        grouped_search["3M Momentum"] = grouped_search["3M Momentum"].round(2)
-
         grouped_search["Signal"] = grouped_search.apply(
             lambda row: get_signal(
                 row["Trend Score"],
@@ -345,15 +359,14 @@ if search_term:
             axis=1
         )
 
+        search_display = grouped_search.rename(columns={"Momentum": "Range Momentum"})
+
         st.dataframe(
-            grouped_search.rename(columns={"Momentum": "Range Momentum"})[[
+            search_display[[
                 "Name",
                 "Ticker",
-                "Main Themes",
-                "Sub Themes",
                 "Preis",
                 "Trend Score",
-                "Range Momentum",
                 "3M Momentum",
                 "Status",
                 "Signal"
@@ -364,207 +377,157 @@ if search_term:
             .format({
                 "Preis": "{:.2f}",
                 "Trend Score": "{:.2f}",
-                "Range Momentum": "{:.2f}",
                 "3M Momentum": "{:.2f}"
             }),
             use_container_width=True,
             hide_index=True,
-            height=min(900, 50 + len(grouped_search) * 35)
+            height=min(600, 50 + len(search_display) * 35)
         )
     else:
         st.warning("Keine passende Aktie gefunden.")
 
 st.markdown("---")
-st.subheader("Sub Theme im Detail")
 
-if filtered_grouped.empty:
-    st.warning("Keine Sub Themes fuer diese Filterkombination gefunden.")
-    st.stop()
+# Detailbereich einklappbar
+with st.expander("Sub Theme im Detail anzeigen", expanded=False):
+    if filtered_grouped.empty:
+        st.warning("Keine Sub Themes fuer diese Filterkombination gefunden.")
+        st.stop()
 
-selected_theme = st.selectbox(
-    "Waehle ein Sub Theme",
-    filtered_grouped["Sub Theme"].tolist()
-)
+    selected_theme = st.selectbox(
+        "Waehle ein Sub Theme",
+        filtered_grouped["Sub Theme"].tolist()
+    )
 
-detail_df = filtered_df[filtered_df["Sub Theme"] == selected_theme].copy()
-detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
+    detail_df = filtered_df[filtered_df["Sub Theme"] == selected_theme].copy()
+    detail_df = detail_df.sort_values(by="Trend Score", ascending=False)
 
-theme_status_detail = filtered_grouped[
-    filtered_grouped["Sub Theme"] == selected_theme
-]["Status"].iloc[0]
+    theme_status_detail = filtered_grouped[
+        filtered_grouped["Sub Theme"] == selected_theme
+    ]["Status"].iloc[0]
 
-theme_bullish_pct_detail = filtered_grouped[
-    filtered_grouped["Sub Theme"] == selected_theme
-]["Bullisch %"].iloc[0]
+    theme_bullish_pct_detail = filtered_grouped[
+        filtered_grouped["Sub Theme"] == selected_theme
+    ]["Bullisch %"].iloc[0]
 
-detail_df["Signal"] = detail_df.apply(
-    lambda row: get_signal(
-        row["Trend Score"],
-        row["Momentum"],
-        row["3M Momentum"],
-        theme_status_detail,
-        theme_bullish_pct_detail
-    ),
-    axis=1
-)
+    detail_df["Signal"] = detail_df.apply(
+        lambda row: get_signal(
+            row["Trend Score"],
+            row["Momentum"],
+            row["3M Momentum"],
+            theme_status_detail,
+            theme_bullish_pct_detail
+        ),
+        axis=1
+    )
 
-detail_df["Trendphase"] = detail_df.apply(
-    lambda row: get_trend_phase(
-        row["Trend Score"],
-        row["Momentum"],
-        row["3M Momentum"]
-    ),
-    axis=1
-)
+    detail_df["Trendphase"] = detail_df.apply(
+        lambda row: get_trend_phase(
+            row["Trend Score"],
+            row["Momentum"],
+            row["3M Momentum"]
+        ),
+        axis=1
+    )
 
-selected_main_theme = filtered_df[
-    filtered_df["Sub Theme"] == selected_theme
-]["Main Theme"].iloc[0]
+    selected_main_theme = filtered_df[
+        filtered_df["Sub Theme"] == selected_theme
+    ]["Main Theme"].iloc[0]
 
-st.write(f"**Main Theme:** {selected_main_theme}")
-st.write(f"**Bestandteile von {selected_theme}**")
+    st.write(f"**Main Theme:** {selected_main_theme}")
 
-best_stock = detail_df.iloc[0]["Name"]
-best_score = detail_df.iloc[0]["Trend Score"]
+    best_stock = detail_df.iloc[0]["Name"]
+    best_score = detail_df.iloc[0]["Trend Score"]
+    weakest_stock = detail_df.iloc[-1]["Name"]
+    weakest_score = detail_df.iloc[-1]["Trend Score"]
+    stock_count = len(detail_df)
+    bullish_pct_detail = round((detail_df["Status"] == "Bullisch").mean() * 100, 0)
 
-weakest_stock = detail_df.iloc[-1]["Name"]
-weakest_score = detail_df.iloc[-1]["Trend Score"]
+    col_a, col_b, col_c, col_d = st.columns(4)
+    col_a.metric("Staerkste Aktie", best_stock, f"{best_score:.2f}")
+    col_b.metric("Relativ schwaechste Aktie", weakest_stock, f"{weakest_score:.2f}")
+    col_c.metric("Anzahl Aktien", stock_count)
+    col_d.metric("Bullisch %", f"{bullish_pct_detail:.0f}%")
 
-stock_count = len(detail_df)
-bullish_pct_detail = round((detail_df["Status"] == "Bullisch").mean() * 100, 0)
+    search_term_detail = st.text_input(
+        "Suche innerhalb dieses Sub Themes nach Name oder Ticker",
+        key="detail_search"
+    )
 
-def metric_delta_by_status(score):
-    status = get_status(score)
+    detail_filtered_df = detail_df.copy()
 
-    if status == "Bullisch":
-        return {
-            "delta": f"{score:.2f}",
-            "delta_color": "normal",
-            "delta_arrow": "up"
-        }
-    elif status == "Neutral":
-        return {
-            "delta": f"→ {score:.2f}",
-            "delta_color": "off",
-            "delta_arrow": "off"
-        }
-    else:
-        return {
-            "delta": f"{score:.2f}",
-            "delta_color": "inverse",
-            "delta_arrow": "down"
-        }
+    if search_term_detail:
+        detail_filtered_df = detail_filtered_df[
+            detail_filtered_df["Name"].str.contains(search_term_detail, case=False, na=False) |
+            detail_filtered_df["Ticker"].str.contains(search_term_detail, case=False, na=False)
+        ].copy()
 
-best_metric = metric_delta_by_status(best_score)
-weakest_metric = metric_delta_by_status(weakest_score)
+    display_detail = detail_filtered_df.rename(columns={"Momentum": "Range Momentum"})
 
-col_a, col_b, col_c, col_d = st.columns(4)
+    st.dataframe(
+        display_detail[[
+            "Name",
+            "Ticker",
+            "Preis",
+            "Trend Score",
+            "Range Momentum",
+            "3M Momentum",
+            "Trendphase",
+            "Signal"
+        ]]
+        .style
+        .map(color_trend_phase, subset=["Trendphase"])
+        .map(color_signal, subset=["Signal"])
+        .format({
+            "Preis": "{:.2f}",
+            "Trend Score": "{:.2f}",
+            "Range Momentum": "{:.2f}",
+            "3M Momentum": "{:.2f}"
+        }),
+        use_container_width=True,
+        hide_index=True,
+        height=min(700, 50 + len(display_detail) * 35)
+    )
 
-col_a.metric(
-    "Staerkste Aktie",
-    best_stock,
-    best_metric["delta"],
-    delta_color=best_metric["delta_color"],
-    delta_arrow=best_metric["delta_arrow"]
-)
+    st.markdown("### Aktie direkt oeffnen")
 
-col_b.metric(
-    "Relativ schwaechste Aktie",
-    weakest_stock,
-    weakest_metric["delta"],
-    delta_color=weakest_metric["delta_color"],
-    delta_arrow=weakest_metric["delta_arrow"]
-)
+    if len(detail_filtered_df) > 0:
+        jump_options = detail_filtered_df[["Name", "Ticker"]].drop_duplicates().copy()
+        jump_options["Label"] = jump_options["Name"] + " (" + jump_options["Ticker"] + ")"
 
-col_c.metric("Anzahl Aktien", stock_count)
-col_d.metric("Bullisch %", f"{bullish_pct_detail:.0f}%")
+        selected_jump_label = st.selectbox(
+            "Waehle eine Aktie fuer die Detailseite",
+            jump_options["Label"].tolist(),
+            key="jump_to_stock_detail"
+        )
 
-col_a.caption(get_status(best_score))
-col_b.caption(get_status(weakest_score))
+        selected_jump_ticker = jump_options.loc[
+            jump_options["Label"] == selected_jump_label, "Ticker"
+        ].iloc[0]
 
-search_term_detail = st.text_input(
-    "Suche innerhalb dieses Sub Themes nach Name oder Ticker",
-    key="detail_search"
-)
+        st.page_link(
+            "pages/1_Aktien_Detail.py",
+            label=f"Zur Detailseite von {selected_jump_label}",
+            icon="📈",
+            query_params={"ticker": selected_jump_ticker}
+        )
 
-detail_filtered_df = detail_df.copy()
+with st.expander("Legende anzeigen", expanded=False):
+    st.write(
+        """
+**Status**
 
-if search_term_detail:
-    detail_filtered_df = detail_filtered_df[
-        detail_filtered_df["Name"].str.contains(search_term_detail, case=False, na=False) |
-        detail_filtered_df["Ticker"].str.contains(search_term_detail, case=False, na=False)
-    ].copy()
+- Bullisch: Trend Score ueber 0.70
+- Neutral: Trend Score ueber 0.50 bis 0.70
+- Baerisch: Trend Score 0.50 oder niedriger
 
-height_detail = min(900, 50 + len(detail_filtered_df) * 35)
+**Range Momentum**
 
-display_detail = detail_filtered_df.rename(columns={"Momentum": "Range Momentum"})
+Zeigt die Position relativ zur Mitte der 52W-Spanne. Es ist kein echtes Zeit-Momentum.
 
-st.dataframe(
-    display_detail[[
-        "Name",
-        "Ticker",
-        "Preis",
-        "52W High",
-        "52W Low",
-        "Trend Score",
-        "Range Momentum",
-        "3M Momentum",
-        "Trendphase",
-        "Signal"
-    ]]
-    .style
-    .map(color_trend_phase, subset=["Trendphase"])
-    .map(color_signal, subset=["Signal"])
-    .format({
-        "Preis": "{:.2f}",
-        "52W High": "{:.2f}",
-        "52W Low": "{:.2f}",
-        "Trend Score": "{:.2f}",
-        "Range Momentum": "{:.2f}",
-        "3M Momentum": "{:.2f}"
-    }),
-    use_container_width=True,
-    hide_index=True,
-    height=height_detail
-)
+**3M Momentum**
 
-st.markdown("### Aktie direkt oeffnen")
-
-jump_options = detail_filtered_df[["Name", "Ticker"]].drop_duplicates().copy()
-jump_options["Label"] = jump_options["Name"] + " (" + jump_options["Ticker"] + ")"
-
-selected_jump_label = st.selectbox(
-    "Waehle eine Aktie fuer die Detailseite",
-    jump_options["Label"].tolist(),
-    key="jump_to_stock_detail"
-)
-
-selected_jump_ticker = jump_options.loc[
-    jump_options["Label"] == selected_jump_label, "Ticker"
-].iloc[0]
-
-st.page_link(
-    "pages/1_Aktien_Detail.py",
-    label=f"Zur Detailseite von {selected_jump_label}",
-    icon="📈",
-    query_params={"ticker": selected_jump_ticker}
-)
-
-st.info(
-    """
-Legende
-
-🟢 Bullisch: Trend Score ueber 0.70  
-🟡 Neutral: Trend Score ueber 0.50 bis 0.70  
-🔴 Baerisch: Trend Score 0.50 oder niedriger  
-
-Range Momentum:
-- zeigt die Position relativ zur Mitte der 52W-Spanne
-- ist kein echtes Zeit-Momentum
-
-3M Momentum:
-- echte Kursveraenderung der letzten ca. 3 Monate
-- positiver Wert = Aktie hat in den letzten 3 Monaten zugelegt
-- negativer Wert = Aktie hat in den letzten 3 Monaten verloren
+Zeigt die echte Kursveraenderung der letzten ca. 3 Monate.
 """
-)
+    )
+    
