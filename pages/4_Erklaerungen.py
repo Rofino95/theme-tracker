@@ -3,266 +3,495 @@ import streamlit as st
 st.set_page_config(page_title="Erklaerungen", layout="wide")
 
 st.title("Erklaerungen & Transparenz")
+st.caption("Wie der Theme Tracker Scores, Signale und Rankings berechnet.")
+
+st.markdown("### Navigation")
+
+nav1, nav2, nav3, nav4, nav5 = st.columns(5)
+
+with nav1:
+    st.page_link("app.py", label="Startseite", icon="🏠")
+
+with nav2:
+    st.page_link("pages/1_Aktien_Detail.py", label="Aktien-Detail", icon="📈")
+
+with nav3:
+    st.page_link("pages/2_Aktien_Ranking.py", label="Ranking", icon="🔎")
+
+with nav4:
+    st.page_link("pages/3_Top_Opportunities.py", label="Top Opportunities", icon="🔥")
+
+with nav5:
+    st.page_link("pages/4_Erklaerungen.py", label="Erklaerungen", icon="ℹ️")
+
+st.markdown("---")
 
 st.info(
     """
-Diese Seite erklaert, wie die Scores, Zonen und Signale im Theme Tracker berechnet werden.
+Der Theme Tracker ist ein regelbasiertes Analyse-Tool.  
+Er bewertet Aktien nicht nach Bauchgefühl, sondern nach klaren technischen und fundamentalen Regeln.
 
-Wichtig:
-Das Tool ist keine Finanzberatung. Es nutzt regelbasierte technische und fundamentale Kennzahlen, um Aktien besser vergleichbar zu machen.
+Wichtig: Das ist keine Finanzberatung und keine Kauf- oder Verkaufsempfehlung.
 """
 )
 
-st.markdown("## 1. Trend Score")
+st.markdown("## 1. Datenbasis")
+
+st.write(
+    """
+Die App nutzt Daten aus `theme_universe.csv` und `theme_scores.csv`.
+
+Für jede Aktie werden unter anderem gespeichert:
+
+- Preis
+- 52W High
+- 52W Low
+- Trend Score
+- Range Momentum
+- 3M Momentum
+- Fundamentaldaten wie Forward PE, Revenue Growth, Earnings Growth und Profit Margin
+"""
+)
+
+st.markdown("---")
+
+st.markdown("## 2. Trend Score")
 
 st.info(
     """
-Der Trend Score zeigt, wo der aktuelle Kurs innerhalb seiner 52-Wochen-Spanne liegt.
+Der Trend Score zeigt, wo eine Aktie innerhalb ihrer 52-Wochen-Spanne steht.
 
 Formel:
 
-Trend Score = (Preis - 52W Low) / (52W High - 52W Low)
+`Trend Score = (Preis - 52W Low) / (52W High - 52W Low)`
 
 Interpretation:
-- 0.00 = nahe 52W Low
-- 0.50 = Mitte der 52W-Spanne
-- 1.00 = nahe 52W High
 
-Beispiel:
-Ein Trend Score von 0.80 bedeutet, dass die Aktie relativ weit oben in ihrer 52-Wochen-Spanne steht.
+- 0.00 = nahe am 52W Low
+- 0.50 = Mitte der 52W-Spanne
+- 1.00 = nahe am 52W High
+
+Der Trend Score ist kein Momentum im eigentlichen Sinn. Er zeigt die Position innerhalb der Range.
 """
 )
 
-st.markdown("## 2. Momentum")
+st.markdown("## 3. Range Momentum")
 
 st.info(
     """
-Momentum zeigt, ob der aktuelle Preis eher oberhalb oder unterhalb der Mitte der 52-Wochen-Spanne liegt.
+Range Momentum ist der alte Momentum-Wert der App.
 
-Vereinfacht:
-- positives Momentum = Aktie steht ueber der Mitte ihrer 52W-Spanne
-- negatives Momentum = Aktie steht unter der Mitte ihrer 52W-Spanne
+Er zeigt, ob der aktuelle Preis über oder unter der Mitte der 52W-Spanne liegt.
+
+Formel vereinfacht:
+
+`Range Momentum = (Preis - Mitte der 52W-Spanne) / halbe 52W-Spanne`
 
 Interpretation:
-- ab 0.50 = stark positiv
-- 0.00 bis 0.49 = leicht positiv
-- -0.49 bis -0.01 = schwach
-- ab -0.50 = stark negativ
+
+- positiv = Aktie steht über der Mitte ihrer 52W-Spanne
+- negativ = Aktie steht unter der Mitte ihrer 52W-Spanne
+
+Wichtig:
+Range Momentum misst keine echte Kursentwicklung über Zeit.
 """
 )
 
-st.markdown("## 3. Status")
+st.markdown("## 4. 3M Momentum")
+
+st.info(
+    """
+3M Momentum ist das echte zeitliche Momentum.
+
+Formel:
+
+`3M Momentum = (aktueller Preis / Preis vor ca. 63 Handelstagen) - 1`
+
+Interpretation:
+
+- positiv = Aktie ist in den letzten ca. 3 Monaten gestiegen
+- negativ = Aktie ist in den letzten ca. 3 Monaten gefallen
+
+Warum wichtig:
+Eine Aktie kann gut in ihrer 52W-Spanne stehen, aber trotzdem seit Monaten seitwärts laufen.  
+3M Momentum zeigt, ob wirklich Bewegung im Kurs ist.
+"""
+)
+
+st.markdown("---")
+
+st.markdown("## 5. Status")
 
 st.info(
     """
 Der Status basiert auf dem Trend Score.
 
 Regeln:
-- Bullisch: Trend Score ueber 0.70
-- Neutral: Trend Score ueber 0.50 bis 0.70
-- Baerisch: Trend Score 0.50 oder niedriger
 
-Der Status wird vor allem fuer Main Themes und Sub Themes genutzt.
+- Bullisch: Trend Score > 0.70
+- Neutral: Trend Score > 0.50 bis 0.70
+- Baerisch: Trend Score <= 0.50
+
+Der Status wird vor allem für Main Themes und Sub Themes genutzt.
 """
 )
 
-st.markdown("## 4. Preis-Zonen")
+st.markdown("## 6. Preis-Zonen")
 
 st.info(
     """
-Die Preis-Zonen werden aus der 52-Wochen-Spanne berechnet.
+Die Preis-Zonen basieren auf der 52W-Spanne.
 
-Zonen:
+Regeln:
+
 - Weak Zone: unter 35% der 52W-Spanne
 - Transition Zone: 35% bis 55%
 - Watchlist Zone: 55% bis 70%
 - Hold Zone: 70% bis 85%
 - Upper Range: ab 85%
 
-Wichtig:
-Upper Range bedeutet nicht automatisch verkaufen. Es bedeutet nur, dass die Aktie bereits weit oben in ihrer 52W-Spanne steht.
+Interpretation:
+
+- Weak Zone = schwach oder früh riskant
+- Transition Zone = mögliche Bodenbildung / Übergang
+- Watchlist Zone = interessanter Bereich für Beobachtung
+- Hold Zone = gesunder Trendbereich
+- Upper Range = weit gelaufen, Momentum prüfen
 """
 )
 
-st.markdown("## 5. Signal")
-
-st.info(
-    """
-Das Signal kombiniert Aktie, Momentum und Theme-Kontext.
-
-Regeln:
-- Avoid: sehr schwacher Trend Score, negatives Momentum und baerisches Theme
-- Take Profits: hoher Trend Score, aber Momentum flacht ab
-- Attraktiv: gesunder Trend Score, positives Momentum, Theme nicht baerisch und ausreichend viele bullische Aktien im Theme
-- Hold: starker Trend oder solide Lage ohne klares Schwaechesignal
-- Review: alles, was nicht eindeutig in die anderen Kategorien faellt
-
-Das Signal ist keine Kauf- oder Verkaufsempfehlung.
-"""
-)
-
-st.markdown("## 6. Trendphase")
-
-st.info(
-    """
-Die Trendphase beschreibt, wo sich eine Aktie innerhalb ihres Bewegungszyklus befindet.
-
-Regeln:
-- Early Trend: fruehe positive Bewegung
-- Mid Trend: etablierter Aufwaertstrend
-- Late Trend: weit gelaufen, Momentum flacht ab
-- Transition: uneindeutige Lage
-- Weak: schwacher Trend mit negativem Momentum
-
-Trendphase beschreibt nicht automatisch die Richtung des Charts. Dafuer gibt es die Trendrichtung.
-"""
-)
+st.markdown("---")
 
 st.markdown("## 7. Trendrichtung")
 
 st.info(
     """
-Die Trendrichtung basiert auf gleitenden Durchschnitten.
+Die Trendrichtung basiert auf gleitenden Durchschnitten aus dem 1-Jahres-Chart.
 
 Genutzt werden:
-- MA50: Durchschnitt der letzten 50 Handelstage
-- MA200: Durchschnitt der letzten 200 Handelstage
+
+- MA50 = Durchschnitt der letzten 50 Handelstage
+- MA200 = Durchschnitt der letzten 200 Handelstage
 
 Regeln:
-- Aufwaertstrend: Preis ueber MA50, MA50 ueber MA200 und Trend bereits laenger bestaetigt
-- Frischer Aufwaertstrend: Preis ueber MA50 und MA50 ueber MA200, aber noch nicht lange genug bestaetigt
-- Abwaertstrend: Preis unter MA50 und MA50 unter MA200
-- Turnaround moeglich: Preis ueber MA50, aber MA50 noch unter MA200
-- Trend schwaecht sich ab: Preis unter MA50, aber MA50 noch ueber MA200
-- Seitwaerts / unklar: keine klare Richtung
 
-Diese Logik hilft dabei, Bounce-Bewegungen von stabileren Trends zu unterscheiden.
+- Aufwaertstrend: Preis > MA50 und MA50 > MA200, stabil bestätigt
+- Frischer Aufwaertstrend: Preis > MA50 und MA50 > MA200, aber noch nicht lange bestätigt
+- Abwaertstrend: Preis < MA50 und MA50 < MA200
+- Turnaround moeglich: Preis > MA50, aber MA50 noch < MA200
+- Trend schwaecht sich ab: Preis < MA50, aber MA50 noch > MA200
+- Seitwaerts / unklar: kein klares Bild
 """
 )
 
-st.markdown("## 8. Entry Quality")
+st.markdown("## 8. Trendphase")
 
 st.info(
     """
-Entry Quality bewertet, ob der aktuelle Zeitpunkt fuer einen Einstieg technisch interessant wirkt.
+Die Trendphase kombiniert Trend Score, Range Momentum und 3M Momentum.
 
 Regeln:
-- Sehr gut: Watchlist oder Transition Zone, positives Momentum und Turnaround/frischer Aufwaertstrend
-- Gut: Hold Zone und positives Momentum
-- Zu spaet: Upper Range
-- Riskant: Weak Zone
-- Neutral: keine klare Einstiegsqualitaet
 
-Je strenger die Kriterien, desto seltener erscheinen sehr gute Setups.
+- Weak: niedriger Trend Score und negatives 3M Momentum
+- Late Trend: sehr hoher Trend Score, aber negatives 3M Momentum
+- Mid Trend: hoher Trend Score, starkes Range Momentum und positives 3M Momentum
+- Early Trend: mittlerer Trend Score, positives Range Momentum und positives 3M Momentum
+- Transition: keine klare Zuordnung
+
+Wichtig:
+Trendphase beschreibt die Phase einer Bewegung, nicht automatisch ein Kauf- oder Verkaufssignal.
 """
 )
 
-st.markdown("## 9. Exit Signal")
+st.markdown("---")
+
+st.markdown("## 9. Signal")
 
 st.info(
     """
-Das Exit Signal bewertet, ob eher Halten, Vorsicht oder Gewinnsicherung naheliegt.
+Das Signal ist eine technische Einordnung.
 
-Regeln:
-- Gewinne sichern: Upper Range und Momentum flacht ab
-- Vorsicht: Trend schwaecht sich ab
-- Hold: kein klares Ausstiegssignal
+Es nutzt:
 
-Auch hier gilt:
-Das ist keine Verkaufsaufforderung, sondern ein Risikohinweis.
+- Trend Score
+- Range Momentum
+- 3M Momentum
+- Theme Status
+- Bullisch-Anteil im Sub Theme
+
+Regeln vereinfacht:
+
+Avoid:
+- Trend Score schwach
+- 3M Momentum negativ
+- Theme baerisch
+
+Take Profits:
+- Trend Score sehr hoch
+- 3M Momentum negativ
+
+Attraktiv:
+- Trend Score im gesunden Bereich
+- Range Momentum positiv
+- 3M Momentum positiv
+- Theme bullisch oder neutral
+- mindestens 50% der Aktien im Theme sind bullisch
+
+Hold:
+- Aktie ist stark und 3M Momentum bleibt positiv
+- oder solides Setup ohne Schwächesignal
+
+Review:
+- keine eindeutige Einordnung
 """
 )
 
-st.markdown("## 10. Risiko")
+st.markdown("---")
+
+st.markdown("## 10. Fundamental Score")
 
 st.info(
     """
-Das Risiko basiert auf Preiszone und Trendrichtung.
+Der Fundamental Score bewertet die Unternehmensqualität auf Basis fundamentaler Kennzahlen.
+
+Maximalwert: 10 Punkte
+
+Bewertete Faktoren:
+
+Revenue Growth:
+- > 20% = 2 Punkte
+- > 5% = 1 Punkt
+
+Earnings Growth:
+- > 20% = 2 Punkte
+- > 5% = 1 Punkt
+
+Forward PE:
+- 0 bis 20 = 2 Punkte
+- 20 bis 35 = 1 Punkt
+
+Profit Margin:
+- > 20% = 2 Punkte
+- > 10% = 1 Punkt
+
+Bonus:
+- Revenue Growth > 15%
+- Earnings Growth > 15%
+- Profit Margin > 15%
+→ zusätzlich 2 Punkte
+"""
+)
+
+st.markdown("## 11. Fundamental Quality")
+
+st.info(
+    """
+Fundamental Quality ist die vereinfachte Kategorie aus dem Fundamental Score.
 
 Regeln:
+
+- Hoch: Score >= 8
+- Mittel: Score >= 5
+- Niedrig: Score < 5
+
+Der Score ist zum Sortieren gedacht.  
+Die Quality ist für schnelle Interpretation gedacht.
+"""
+)
+
+st.markdown("---")
+
+st.markdown("## 12. Entry Score")
+
+st.info(
+    """
+Der Entry Score ist einer der wichtigsten Scores der App.
+
+Er bewertet, ob der aktuelle Einstieg technisch und fundamental interessant wirkt.
+
+Maximalwert: 10 Punkte
+
+Einbezogene Faktoren:
+
+1. Preiszone:
+- Watchlist Zone = +3
+- Transition Zone = +2
+- Hold Zone = +1
+- Upper Range = 0
+- Weak Zone = 0
+
+2. Trendrichtung:
+- Frischer Aufwaertstrend / Turnaround moeglich = +2
+- Aufwaertstrend = +1
+- Abwaertstrend / Trend schwaecht sich ab = -1
+
+3. Range Momentum:
+- positiv = +1
+- stark negativ = -1
+
+4. 3M Momentum:
+- > 10% = +2
+- > 0% = +1
+- < -10% = -2
+- < 0% = -1
+
+5. Fundamentals:
+- Fundamental Quality Hoch = +2
+- Fundamental Quality Mittel = +1
+
+6. Bewertung:
+- Forward PE unter 20 = +1
+- Forward PE über 60 = -1
+
+7. Growth:
+- Umsatz- oder Gewinnwachstum über 5% = +1
+
+Der Entry Score wird auf 0 bis 10 begrenzt.
+"""
+)
+
+st.markdown("## 13. Entry Quality")
+
+st.info(
+    """
+Entry Quality ist die Kategorie aus dem Entry Score.
+
+Regeln:
+
+- Sehr gut: Entry Score >= 8
+- Gut: Entry Score >= 6
+- Neutral: Entry Score >= 4
+- Riskant: Entry Score < 4
+
+Wichtig:
+Ein hoher Entry Score bedeutet nicht automatisch Gewinn.  
+Er bedeutet nur, dass mehrere Faktoren gleichzeitig positiv sind.
+"""
+)
+
+st.markdown("---")
+
+st.markdown("## 14. Risiko")
+
+st.info(
+    """
+Das Risiko basiert auf Zone und Trendrichtung.
+
+Regeln:
+
 - Sehr hoch: Weak Zone
 - Hoch: Turnaround moeglich oder frischer Aufwaertstrend
 - Mittel: Upper Range
 - Niedrig: stabile Lage ohne klare Risikowarnung
 
-Ein hoher Score kann trotzdem hohes Risiko haben, wenn die Aktie gerade erst dreht.
+Wichtig:
+Ein frischer Aufwärtstrend kann attraktiv sein, ist aber oft noch nicht bestätigt. Deshalb wird er als höheres Risiko gewertet.
 """
 )
 
-st.markdown("## 11. Fundamental Score")
+st.markdown("## 15. Exit Signal")
 
 st.info(
     """
-Der Fundamental Score bewertet die Qualitaet des Unternehmens anhand fundamentaler Kennzahlen.
-
-Genutzt werden:
-- Revenue Growth
-- Earnings Growth
-- Forward PE
-- Profit Margin
-
-Punkte:
-- starkes Umsatzwachstum: bis zu 2 Punkte
-- starkes Gewinnwachstum: bis zu 2 Punkte
-- akzeptables Forward PE: bis zu 2 Punkte
-- hohe Profit Margin: bis zu 2 Punkte
-- Bonus fuer Kombination aus Wachstum und Profitabilitaet: bis zu 2 Punkte
-
-Maximalwert: 10 Punkte
-"""
-)
-
-st.markdown("## 12. Fundamental Quality")
-
-st.info(
-    """
-Fundamental Quality ist die vereinfachte Kategorie des Fundamental Scores.
+Das Exit Signal zeigt, ob eher Halten, Vorsicht oder Gewinnsicherung naheliegt.
 
 Regeln:
-- Hoch: Score 8 bis 10
-- Mittel: Score 5 bis 7
-- Niedrig: Score 0 bis 4
 
-Der Score ist zum Sortieren gedacht.
-Die Quality ist fuer schnelle Interpretation gedacht.
+- Gewinne sichern: Upper Range und Range Momentum schwächt sich ab
+- Vorsicht: Trend schwaecht sich ab
+- Hold: kein klares Ausstiegssignal
+
+Das ist keine Verkaufsaufforderung, sondern ein Warnhinweis.
 """
 )
 
-st.markdown("## 13. Opportunity Score")
+st.markdown("---")
+
+st.markdown("## 16. Master Score")
 
 st.info(
     """
-Der Opportunity Score kombiniert technische Einstiegslage, Fundamentaldaten und Risiko.
+Der Master Score kombiniert Entry Score, Fundamental Score und Risiko.
 
-Grundidee:
-- gute Entry Quality gibt Pluspunkte
-- hohe Fundamental Quality gibt Pluspunkte
-- niedriges Risiko gibt Pluspunkte
-- positives Momentum gibt Pluspunkte
+Formel vereinfacht:
+
+`Master Score = Entry Score * 0.5 + Fundamental Score * 0.3 + Risiko-Anpassung`
+
+Risiko-Anpassung:
+
+- Niedrig = +1
+- Mittel = 0
+- Hoch = -1
+- Sehr hoch = -2
+
+Interpretation:
+Der Master Score ist die verdichtete Gesamtbewertung einer Aktie.
+"""
+)
+
+st.markdown("## 17. Master Signal")
+
+st.info(
+    """
+Das Master Signal ist die einfache Handlungseinordnung.
+
+Regeln:
+
+- 🟢 Einstieg sinnvoll: Master Score >= 7
+- 🟡 Beobachten: Master Score >= 5
+- 🔴 Kein Einstieg: Master Score < 5
+
+Wichtig:
+Das Master Signal soll Orientierung geben, ersetzt aber keine eigene Analyse.
+"""
+)
+
+st.markdown("---")
+
+st.markdown("## 18. Short Term Ranking")
+
+st.info(
+    """
+Short Term bedeutet in dieser App:
+
+ca. 2 Wochen bis 3 Monate
+
+Das Short-Term-Ranking gewichtet stärker:
+
+- Entry Score
+- 3M Momentum
+- Risiko
+- Fundamental Quality als Bonus
 
 Ziel:
-Nicht die perfekte Aktie vorherzusagen, sondern die besten Kandidaten aus dem aktuellen Universum hervorzuheben.
+Aktien finden, die kurzfristig bis mittelfristig ein interessantes technisches Setup zeigen.
 """
 )
 
-st.markdown("## 14. Short Term vs. Long Term")
+st.markdown("## 19. Long Term Ranking")
 
 st.info(
     """
-Short Term:
-- Zeitraum: ca. 2 Wochen bis 3 Monate
-- Fokus: Momentum, Entry Quality, Zone, Trendrichtung
+Long Term bedeutet in dieser App:
 
-Long Term:
-- Zeitraum: ca. 6 Monate bis mehrere Jahre
-- Fokus: Fundamentaldaten, strukturelle Themes, stabile Trends
+ca. 6 Monate bis mehrere Jahre
 
-Eine Aktie kann kurzfristig interessant sein, aber langfristig schwach.
-Umgekehrt kann ein starkes Unternehmen langfristig interessant sein, aber kurzfristig kein guter Einstieg sein.
+Das Long-Term-Ranking gewichtet stärker:
+
+- Fundamental Score
+- Trend Score
+- Entry Score als Zusatz
+- Risiko
+- 3M Momentum nur leicht
+
+Ziel:
+Aktien finden, die langfristig qualitativ interessant wirken und technisch nicht komplett schwach sind.
 """
 )
 
-st.markdown("## 15. Grenzen des Modells")
+st.markdown("---")
+
+st.markdown("## 20. Grenzen des Modells")
 
 st.warning(
     """
@@ -270,10 +499,24 @@ Das Modell hat klare Grenzen:
 
 - Es garantiert keine Gewinne.
 - Es kann Fake Breakouts nicht sicher verhindern.
-- Fundamentaldaten von Yahoo Finance koennen fehlen oder veraltet sein.
-- Das Modell beruecksichtigt keine Nachrichten, Bilanzdetails, Managementqualitaet oder politische Risiken.
-- Ein gutes Signal bedeutet nicht, dass die Aktie nicht trotzdem fallen kann.
+- Es berücksichtigt keine Nachrichtenlage.
+- Es bewertet Managementqualität nur indirekt.
+- Fundamentaldaten können fehlen oder veraltet sein.
+- Yahoo-Finance-Daten können unvollständig sein.
+- Ein gutes Signal bedeutet nicht, dass die Aktie nicht trotzdem fällt.
+- Ein schlechtes Signal bedeutet nicht, dass die Aktie nicht steigen kann.
 
-Das Tool soll helfen, Aktien strukturierter zu vergleichen, ersetzt aber keine eigene Analyse.
+Das Tool ist ein Screening- und Strukturierungstool, keine Finanzberatung.
+"""
+)
+
+st.markdown("## 21. Warum Transparenz wichtig ist")
+
+st.success(
+    """
+Alle Scores sind regelbasiert.  
+Es gibt keine bezahlten Platzierungen, keine manuelle Bevorzugung einzelner Aktien und keine versteckten Gewichtungen.
+
+Wenn eine Aktie gut rankt, dann weil sie nach den definierten Regeln gut abschneidet.
 """
 )
