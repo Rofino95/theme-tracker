@@ -159,10 +159,23 @@ st.subheader("Marktueberblick")
 
 kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
-kpi1.metric("Top Theme", top_theme, f"{top_score:.2f}")
-kpi2.metric("3M Momentum Top Theme", f"{top_3m * 100:.1f}%")
-kpi3.metric("Schwaechstes Theme", flop_theme, f"{flop_score:.2f}")
-kpi4.metric("3M Momentum schwach", f"{flop_3m * 100:.1f}%")
+with kpi1:
+    st.caption("Top Theme")
+    st.markdown(f"### {top_theme}")
+    st.caption(f"Trend Score: {top_score:.2f}")
+
+with kpi2:
+    st.caption("3M Momentum Top Theme")
+    st.markdown(f"### {top_3m * 100:.1f}%")
+
+with kpi3:
+    st.caption("Schwaechstes Theme")
+    st.markdown(f"### {flop_theme}")
+    st.caption(f"Trend Score: {flop_score:.2f}")
+
+with kpi4:
+    st.caption("3M Momentum schwach")
+    st.markdown(f"### {flop_3m * 100:.1f}%")
 
 st.caption("Range Momentum = Position in der 52W-Spanne | 3M Momentum = echte Kursveraenderung der letzten ca. 3 Monate")
 
