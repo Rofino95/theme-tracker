@@ -358,6 +358,25 @@ def direction_badge(direction):
 
 st.title("Aktien-Detailseite")
 
+st.caption("Screening nach Entry Score, 3M Momentum, Zonen, Risiko und Fundamentaldaten.")
+
+st.markdown("### Navigation")
+
+nav1, nav2, nav3, nav4, nav5 = st.columns(5)
+
+with nav1:
+    st.page_link("app.py", label="Startseite", icon="🏠")
+with nav2:
+    st.page_link("pages/1_Aktien_Detail.py", label="Aktien-Detail", icon="📈")
+with nav3:
+    st.page_link("pages/2_Aktien_Ranking.py", label="Ranking", icon="🔎")
+with nav4:
+    st.page_link("pages/3_Top_Opportunities.py", label="Top Opportunities", icon="🔥")
+with nav5:
+    st.page_link("pages/4_Erklaerungen.py", label="Erklaerungen", icon="ℹ️")
+
+st.markdown("---")
+
 if not os.path.exists("theme_scores.csv"):
     st.warning("theme_scores.csv wurde nicht gefunden.")
     st.stop()
