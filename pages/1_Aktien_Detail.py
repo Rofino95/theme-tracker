@@ -5,7 +5,11 @@ import yfinance as yf
 import plotly.graph_objects as go
 
 
-st.set_page_config(page_title="Aktien Detail", layout="wide")
+st.set_page_config(
+    page_title="Aktien Detail",
+    page_icon="assets/logo.png",
+    layout="wide"
+)
 
 
 def get_status(score):
