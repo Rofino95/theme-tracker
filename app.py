@@ -2,7 +2,11 @@ import os
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(page_title="Theme Tracker", layout="wide")
+st.set_page_config(
+    page_title="Theme Tracker",
+    page_icon="assets/logo.png",
+    layout="wide"
+)
 
 if not os.path.exists("theme_scores.csv"):
     st.warning("Noch keine Daten vorhanden – bitte warten oder update ausfuehren.")
