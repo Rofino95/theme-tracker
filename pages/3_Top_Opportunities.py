@@ -3,7 +3,11 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 
-st.set_page_config(page_title="Top Opportunities", layout="wide")
+st.set_page_config(
+    page_title="Top Opportunities",
+    page_icon="assets/logo.png",
+    layout="wide"
+)
 
 st.title("🔥 Top Opportunities")
 st.caption("Top-Kandidaten nach Entry Score, 3M Momentum, Risiko und Fundamentaldaten.")
