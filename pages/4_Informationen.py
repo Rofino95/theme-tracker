@@ -1,6 +1,10 @@
 import streamlit as st
 
-st.set_page_config(page_title="Erklaerungen", layout="wide")
+st.set_page_config(
+    page_title="Informationen",
+    page_icon="assets/logo.png",
+    layout="wide"
+)
 
 st.title("Erklaerungen & Transparenz")
 st.caption("Wie der Theme Tracker Scores, Signale und Rankings berechnet.")
