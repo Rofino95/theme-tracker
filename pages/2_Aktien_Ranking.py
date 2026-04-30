@@ -2,7 +2,11 @@ import os
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(page_title="Aktien Ranking", layout="wide")
+st.set_page_config(
+    page_title="Aktien Ranking",
+    page_icon="assets/logo.png",
+    layout="wide"
+)
 
 if not os.path.exists("theme_scores.csv"):
     st.warning("theme_scores.csv wurde nicht gefunden.")
