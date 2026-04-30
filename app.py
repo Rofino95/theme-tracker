@@ -100,9 +100,15 @@ def color_trend_phase(val):
 
 df["Status"] = df["Trend Score"].apply(get_status)
 
-st.title("Theme Tracker")
-st.caption("Regelbasierter Markt- und Aktien-Screener nach Themes, Trend Score, Range Momentum, 3M Momentum und Fundamentaldaten.")
+logo_col, title_col = st.columns([1, 8])
 
+with logo_col:
+    st.image("assets/logo.png", width=70)
+
+with title_col:
+    st.title("Theme Tracker")
+    st.caption("Regelbasierter Markt- und Aktien-Screener nach Themes, Trend Score, Range Momentum, 3M Momentum und Fundamentaldaten.")
+    
 nav1, nav2, nav3, nav4, nav5 = st.columns(5)
 
 with nav1:
