@@ -557,7 +557,8 @@ st.page_link(
 
 st.markdown("---")
 
-st.markdown("## 🟣 Top 8 Early Plays")
+st.markdown("## 🟣 Early Plays")
+st.caption("Gefilterte Top-Kandidaten für frühe Trends – nur wenn saubere Setups vorhanden sind.")
 
 st.dataframe(
     early_display[[
