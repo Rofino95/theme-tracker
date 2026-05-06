@@ -305,6 +305,46 @@ def long_score(row):
     return score
 
 
+def early_score(row):
+    score = 0
+
+    score += row["Fundamental Score"] * 1.5
+
+    if row["Trend Score"] < 0.6:
+        score += 3
+    elif row["Trend Score"] < 0.75:
+        score += 1
+    else:
+        score -= 2
+
+    if row["3M Momentum"] > 0.05:
+        score += 3
+    elif row["3M Momentum"] > 0:
+        score += 2
+    elif row["3M Momentum"] < -0.10:
+        score -= 2
+
+    if row["Momentum"] > 0:
+        score += 2
+
+    if row["Trendrichtung"] in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
+        score += 2
+
+    if row["Risiko"] == "Sehr hoch":
+        score -= 2
+
+    # Smart Money
+    if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")):
+        if row["Volume"] > 2 * row["Avg Volume"]:
+            score += 5
+        elif row["Volume"] > 1.5 * row["Avg Volume"]:
+            score += 3
+        elif row["Volume"] > 1.2 * row["Avg Volume"]:
+            score += 1
+
+    return score
+
+
 def add_rank(df_to_rank):
     ranked = df_to_rank.copy().reset_index(drop=True)
     medals = ["🏆 1.", "🥈 2.", "🥉 3."]
@@ -355,6 +395,13 @@ df["Risiko"] = df.apply(
 
 df["Short Score"] = df.apply(short_score, axis=1)
 df["Long Score"] = df.apply(long_score, axis=1)
+df["Early Score"] = df.apply(early_score, axis=1)
+
+df["High Conviction"] = (
+    (df["Early Score"] >= 8) &
+    (df["Fundamental Quality"] == "Hoch") &
+    (df["3M Momentum"] > 0)
+)
 
 df = (
     df.sort_values(
@@ -380,6 +427,19 @@ long_df = (
     .head(8)
 )
 
+early_df = (
+    df[
+        (df["3M Momentum"] > 0) &
+        (df["Trend Score"] < 0.75)
+    ]
+    .sort_values(
+        by=["Early Score", "Fundamental Score", "3M Momentum"],
+        ascending=[False, False, False]
+    )
+    .head(8)
+)
+
+early_display = add_rank(early_df)
 short_display = add_rank(short_df)
 long_display = add_rank(long_df)
 
@@ -476,4 +536,50 @@ st.page_link(
     label=f"Zur Detailseite von {selected_long}",
     icon="📈",
     query_params={"ticker": selected_long_ticker}
+)
+
+st.markdown("---")
+
+st.markdown("## 🟣 Top 8 Early Plays")
+
+st.dataframe(
+    early_display[[
+        "Rang",
+        "Name",
+        "Ticker",
+        "Fundamental Quality",
+        "Trendrichtung",
+        "Trend Score",
+        "3M Momentum",
+        "Early Score",
+        "High Conviction"
+    ]].style.format({
+        "Trend Score": "{:.2f}",
+        "3M Momentum": "{:.1%}",
+        "Early Score": "{:.1f}"
+    }),
+    use_container_width=True,
+    hide_index=True
+)
+
+st.markdown("### Early Play oeffnen")
+
+early_options = early_display[["Name", "Ticker"]].drop_duplicates().copy()
+early_options["Label"] = early_options["Name"] + " (" + early_options["Ticker"] + ")"
+
+selected_early = st.selectbox(
+    "Early Play fuer Detailseite auswaehlen",
+    early_options["Label"].tolist(),
+    key="early_detail_select"
+)
+
+selected_early_ticker = early_options.loc[
+    early_options["Label"] == selected_early, "Ticker"
+].iloc[0]
+
+st.page_link(
+    "pages/1_Aktien_Detail.py",
+    label=f"Zur Detailseite von {selected_early}",
+    icon="📈",
+    query_params={"ticker": selected_early_ticker}
 )
