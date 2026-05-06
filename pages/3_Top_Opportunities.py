@@ -308,39 +308,53 @@ def long_score(row):
 def early_score(row):
     score = 0
 
-    score += row["Fundamental Score"] * 1.5
+    # Fundament
+    score += row["Fundamental Score"] * 2
 
-    if row["Trend Score"] < 0.6:
+    # Früh im Move (wichtigster Faktor)
+    if row["Trend Score"] < 0.4:
+        score += 5
+    elif row["Trend Score"] < 0.6:
         score += 3
-    elif row["Trend Score"] < 0.75:
-        score += 1
     else:
         score -= 2
 
-    if row["3M Momentum"] > 0.05:
-        score += 3
+    # Momentum Sweet Spot (NICHT zu hoch!)
+    if 0.03 < row["3M Momentum"] < 0.25:
+        score += 5
+    elif row["3M Momentum"] >= 0.25:
+        score -= 3
     elif row["3M Momentum"] > 0:
         score += 2
-    elif row["3M Momentum"] < -0.10:
-        score -= 2
 
+    # Frischer Trend ist Pflicht
+    if row["Trendrichtung"] == "Frischer Aufwaertstrend":
+        score += 4
+    elif row["Trendrichtung"] == "Turnaround moeglich":
+        score += 1
+    else:
+        score -= 3
+
+    # Smart Money (EXTREM wichtig)
+    if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")):
+        vol_ratio = row["Volume"] / row["Avg Volume"]
+
+        if vol_ratio > 2:
+            score += 6
+        elif vol_ratio > 1.5:
+            score += 4
+        elif vol_ratio > 1.2:
+            score += 2
+        else:
+            score -= 1
+
+    # Momentum intern
     if row["Momentum"] > 0:
         score += 2
 
-    if row["Trendrichtung"] in ["Turnaround moeglich", "Frischer Aufwaertstrend"]:
-        score += 2
-
+    # Risiko rausfiltern
     if row["Risiko"] == "Sehr hoch":
-        score -= 2
-
-    # Smart Money
-    if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")):
-        if row["Volume"] > 2 * row["Avg Volume"]:
-            score += 5
-        elif row["Volume"] > 1.5 * row["Avg Volume"]:
-            score += 3
-        elif row["Volume"] > 1.2 * row["Avg Volume"]:
-            score += 1
+        score -= 4
 
     return score
 
@@ -430,7 +444,7 @@ long_df = (
 early_df = (
     df[
         (df["3M Momentum"] > 0) &
-        (df["Trend Score"] < 0.75) &
+        (df["Trend Score"] < 0.65) &
         (df["Trendrichtung"].isin([
             "Turnaround moeglich",
             "Frischer Aufwaertstrend"
@@ -440,6 +454,7 @@ early_df = (
         by=["Early Score", "Fundamental Score", "3M Momentum"],
         ascending=[False, False, False]
     )
+    .query("`Early Score` >= 12")
     .head(8)
 )
 
