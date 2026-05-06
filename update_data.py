@@ -72,7 +72,7 @@ def fetch_data(ticker, existing_description=""):
         hist = data.history(period="1y")
 
         if hist.empty:
-            return None, None, None, None, ticker, existing_description, None, None, None, None, None, None
+            return None, None, None, None, ticker, existing_description, None, None, None, None, None, None, None, None
 
         price = hist["Close"].iloc[-1]
         high = hist["High"].max()
@@ -83,6 +83,10 @@ def fetch_data(ticker, existing_description=""):
             momentum_3m = (price / price_3m_ago) - 1
         else:
             momentum_3m = None
+
+        # 🔥 NEU: Volume Daten
+        current_volume = hist["Volume"].iloc[-1]
+        avg_volume = hist["Volume"].tail(30).mean()
 
         name = info.get("shortName") or info.get("longName") or ticker
         description = get_description(ticker, name, existing_description)
@@ -106,12 +110,14 @@ def fetch_data(ticker, existing_description=""):
             revenue_growth,
             earnings_growth,
             profit_margin,
-            market_cap
+            market_cap,
+            current_volume,   # 🔥 neu
+            avg_volume        # 🔥 neu
         )
 
     except Exception as e:
         print(f"Fehler bei {ticker}: {e}")
-        return None, None, None, None, ticker, existing_description, None, None, None, None, None, None
+        return None, None, None, None, ticker, existing_description, None, None, None, None, None, None, None, None
 
 
 def main():
@@ -134,6 +140,10 @@ def main():
     profit_margin_list = []
     market_cap_list = []
 
+    # 🔥 neu
+    volume_list = []
+    avg_volume_list = []
+
     for ticker in df["Ticker"]:
         existing_description = existing_descriptions.get(ticker, "")
 
@@ -149,7 +159,9 @@ def main():
             revenue_growth,
             earnings_growth,
             profit_margin,
-            market_cap
+            market_cap,
+            volume,
+            avg_volume
         ) = fetch_data(ticker, existing_description)
 
         prices.append(price)
@@ -166,6 +178,10 @@ def main():
         profit_margin_list.append(profit_margin)
         market_cap_list.append(market_cap)
 
+        # 🔥 neu
+        volume_list.append(volume)
+        avg_volume_list.append(avg_volume)
+
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
@@ -179,6 +195,10 @@ def main():
     df["Earnings Growth"] = earnings_growth_list
     df["Profit Margin"] = profit_margin_list
     df["Market Cap"] = market_cap_list
+
+    # 🔥 neu
+    df["Volume"] = volume_list
+    df["Avg Volume"] = avg_volume_list
 
     df = df.dropna(subset=["Preis", "52W High", "52W Low"]).copy()
 
@@ -202,4 +222,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
