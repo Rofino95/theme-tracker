@@ -430,7 +430,11 @@ long_df = (
 early_df = (
     df[
         (df["3M Momentum"] > 0) &
-        (df["Trend Score"] < 0.75)
+        (df["Trend Score"] < 0.75) &
+        (df["Trendrichtung"].isin([
+            "Turnaround moeglich",
+            "Frischer Aufwaertstrend"
+        ]))
     ]
     .sort_values(
         by=["Early Score", "Fundamental Score", "3M Momentum"],
