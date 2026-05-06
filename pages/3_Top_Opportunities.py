@@ -443,20 +443,18 @@ long_df = (
 
 early_df = (
     df[
-        (df["3M Momentum"] > 0) &
         (df["Trend Score"] < 0.65) &
-        (df["Trendrichtung"].isin([
-            "Turnaround moeglich",
-            "Frischer Aufwaertstrend"
-        ]))
+        (df["Trend Score"] > 0.25) &
+        (df["3M Momentum"] > 0.03) &
+        (df["3M Momentum"] < 0.20) &
+        (df["Trendrichtung"] == "Frischer Aufwaertstrend") &
+        (df["Volume"] > 1.2 * df["Avg Volume"])
     ]
-    .sort_values(
-        by=["Early Score", "Fundamental Score", "3M Momentum"],
-        ascending=[False, False, False]
-    )
-    .query("`Early Score` >= 12")
-    .head(8)
+    .sort_values(by="Early Score", ascending=False)
 )
+
+early_df = early_df[early_df["Early Score"] >= 12]
+early_df = early_df.head(8)
 
 early_display = add_rank(early_df)
 short_display = add_rank(short_df)
