@@ -495,7 +495,163 @@ Aktien finden, die langfristig qualitativ interessant wirken und technisch nicht
 
 st.markdown("---")
 
-st.markdown("## 20. Grenzen des Modells")
+st.markdown("## 20. Early Plays")
+
+st.info(
+    """
+Early Plays sind ein zusätzlicher Screening-Bereich der App.
+
+Ziel:
+Aktien identifizieren, die sich noch früh in einer möglichen Aufwärtsbewegung befinden.
+
+Wichtig:
+Early Plays sind keine fertigen Trends, sondern potenzielle Anfangsphasen.
+
+Filterbedingungen:
+
+- Trend Score unter 0.65  
+→ Aktie ist noch nicht weit in der 52W-Spanne gelaufen
+
+- Positives 3M Momentum  
+→ erste Aufwärtsbewegung vorhanden
+
+- Trendrichtung:
+  - Frischer Aufwaertstrend oder
+  - Turnaround moeglich
+
+Interpretation:
+
+- Early Plays sind oft volatiler
+- Signale können häufiger fehlschlagen
+- bieten aber potenziell höhere Upside
+
+Der Bereich ist bewusst strenger gefiltert als das normale Ranking.
+"""
+)
+
+st.markdown("## 21. Early Score")
+
+st.info(
+    """
+Der Early Score bewertet die Qualität eines möglichen frühen Trends.
+
+Er kombiniert mehrere Faktoren:
+
+1. Fundamentaldaten:
+- Fundamental Score wird stärker gewichtet als im Short Term Bereich
+
+2. Position in der Range:
+- niedriger Trend Score wird belohnt (früh im Move)
+
+3. 3M Momentum:
+- leicht positives Momentum ist ideal
+- zu starkes Momentum wird teilweise negativ bewertet (zu spät)
+
+4. Trendrichtung:
+- Frischer Aufwaertstrend wird stark belohnt
+- Turnaround moeglich leicht positiv
+- schwache Trends werden abgewertet
+
+5. Range Momentum:
+- bestätigt interne Stärke
+
+6. Risiko:
+- sehr hohes Risiko wird bestraft
+
+Wichtig:
+
+Der Early Score ist bewusst aggressiver als andere Scores.  
+Er soll Unterschiede zwischen wenigen starken Kandidaten klar sichtbar machen.
+"""
+)
+
+st.markdown("## 22. Smart Money (Volume)")
+
+st.info(
+    """
+Smart Money ist ein zusätzlicher Faktor im Early Score.
+
+Er basiert auf Handelsvolumen.
+
+Verglichen wird:
+
+aktuelles Volumen vs. durchschnittliches Volumen (30 Tage)
+
+Regeln:
+
+- Volumen > 2x Durchschnitt → sehr starkes Signal
+- Volumen > 1.5x Durchschnitt → starkes Signal
+- Volumen > 1.2x Durchschnitt → leicht positiv
+
+Interpretation:
+
+- steigendes Volumen kann auf institutionelle Käufe hinweisen
+- bestätigt häufig den Beginn eines Trends
+
+Wichtig:
+
+Volumen allein ist kein Kaufsignal.  
+Es verstärkt nur bestehende technische Signale.
+"""
+)
+
+st.markdown("## 23. High Conviction")
+
+st.info(
+    """
+High Conviction ist eine zusätzliche Kennzeichnung für besonders starke Early Plays.
+
+Bedingungen:
+
+- hoher Early Score (>= 8)
+- Fundamental Quality = Hoch
+- positives 3M Momentum
+
+Interpretation:
+
+- mehrere starke Faktoren treffen gleichzeitig zusammen
+- höhere Wahrscheinlichkeit für ein sauberes Setup
+
+Wichtig:
+
+High Conviction bedeutet nicht garantiert Erfolg.  
+Es zeigt nur, dass viele Kriterien gleichzeitig erfüllt sind.
+"""
+)
+
+st.markdown("## 24. Unterschiede der Rankings")
+
+st.info(
+    """
+Die App unterscheidet drei Perspektiven:
+
+Short Term:
+- Fokus auf Momentum und Entry Timing
+- Zeitraum: Wochen bis wenige Monate
+
+Long Term:
+- Fokus auf Fundamentaldaten und Stabilität
+- Zeitraum: Monate bis Jahre
+
+Early Plays:
+- Fokus auf frühe Trends und mögliche Breakouts
+- Kombination aus Technik, Momentum und Volumen
+
+Wichtig:
+
+Eine Aktie kann:
+
+- im Long Term gut sein, aber kein Early Play
+- im Early Bereich interessant sein, aber fundamental schwach
+- im Short Term stark sein, aber schon weit gelaufen
+
+Deshalb sollten die Rankings immer im Kontext betrachtet werden.
+"""
+)
+
+st.markdown("---")
+
+st.markdown("## 25. Grenzen des Modells")
 
 st.warning(
     """
@@ -514,7 +670,7 @@ Das Tool ist ein Screening- und Strukturierungstool, keine Finanzberatung.
 """
 )
 
-st.markdown("## 21. Warum Transparenz wichtig ist")
+st.markdown("## 26. Warum Transparenz wichtig ist")
 
 st.success(
     """
