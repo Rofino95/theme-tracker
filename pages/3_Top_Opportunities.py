@@ -558,7 +558,11 @@ st.page_link(
 st.markdown("---")
 
 st.markdown("## 🟣 Early Plays")
-st.caption("Gefilterte Top-Kandidaten für frühe Trends – nur wenn saubere Setups vorhanden sind.")
+
+if len(early_df) < 8:
+    st.caption(f"Aktuell nur {len(early_df)} valide Early Plays im Markt gefunden.")
+else:
+    st.caption("Gefilterte Top-Kandidaten für frühe Trends.")
 
 st.dataframe(
     early_display[[
