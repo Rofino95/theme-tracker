@@ -610,10 +610,3 @@ if not early_display.empty:
 
 else:
     st.warning("Aktuell keine Early Plays im Markt gefunden.")
-
-st.page_link(
-    "pages/1_Aktien_Detail.py",
-    label=f"Zur Detailseite von {selected_early}",
-    icon="📈",
-    query_params={"ticker": selected_early_ticker}
-)
