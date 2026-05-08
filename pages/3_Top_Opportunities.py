@@ -584,20 +584,32 @@ st.dataframe(
     hide_index=True
 )
 
-st.markdown("### Early Play oeffnen")
+if not early_display.empty:
 
-early_options = early_display[["Name", "Ticker"]].drop_duplicates().copy()
-early_options["Label"] = early_options["Name"] + " (" + early_options["Ticker"] + ")"
+    st.markdown("### Early Play oeffnen")
 
-selected_early = st.selectbox(
-    "Early Play fuer Detailseite auswaehlen",
-    early_options["Label"].tolist(),
-    key="early_detail_select"
-)
+    early_options = early_display[["Name", "Ticker"]].drop_duplicates().copy()
+    early_options["Label"] = early_options["Name"] + " (" + early_options["Ticker"] + ")"
 
-selected_early_ticker = early_options.loc[
-    early_options["Label"] == selected_early, "Ticker"
-].iloc[0]
+    selected_early = st.selectbox(
+        "Early Play fuer Detailseite auswaehlen",
+        early_options["Label"].tolist(),
+        key="early_detail_select"
+    )
+
+    selected_early_ticker = early_options.loc[
+        early_options["Label"] == selected_early, "Ticker"
+    ].iloc[0]
+
+    st.page_link(
+        "pages/1_Aktien_Detail.py",
+        label=f"Zur Detailseite von {selected_early}",
+        icon="📈",
+        query_params={"ticker": selected_early_ticker}
+    )
+
+else:
+    st.warning("Aktuell keine Early Plays im Markt gefunden.")
 
 st.page_link(
     "pages/1_Aktien_Detail.py",
