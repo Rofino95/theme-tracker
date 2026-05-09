@@ -33,8 +33,11 @@ st.markdown("""
 **Short Term (2 Wochen – 3 Monate)**  
 Fokus: Entry Score, echtes 3M Momentum, Zone und Risiko.
 
-**Long Term (6+ Monate bis mehrere Jahre)**  
-Fokus: Fundamentaldaten, Qualität und stabile technische Lage.
+**Long Term Core (6+ Monate bis mehrere Jahre)**  
+Fokus: Unternehmensqualität, strukturelle Stärke und langfristige Robustheit.
+
+**Long Term Entry**  
+Fokus: gute langfristige Werte mit sinnvollerem Einstiegsbereich.
 
 **Early Plays**  
 Gefilterte Kandidaten für frühe Trends mit zusätzlichem Smart-Money-Check.
@@ -159,7 +162,11 @@ def get_fundamental_score(row):
         and pd.notna(row.get("Earnings Growth"))
         and pd.notna(row.get("Profit Margin"))
     ):
-        if row["Revenue Growth"] > 0.15 and row["Earnings Growth"] > 0.15 and row["Profit Margin"] > 0.15:
+        if (
+            row["Revenue Growth"] > 0.15
+            and row["Earnings Growth"] > 0.15
+            and row["Profit Margin"] > 0.15
+        ):
             score += 2
 
     return score
@@ -255,10 +262,8 @@ def get_risk_score(zone, trend_direction):
 def short_score(row):
     score = 0
 
-    # 1. Basis
     score += row["Entry Score"] * 1.5
 
-    # 2. 3M Momentum
     if 0.05 < row["3M Momentum"] < 0.30:
         score += 3
     elif row["3M Momentum"] > 0.30:
@@ -270,13 +275,11 @@ def short_score(row):
     elif row["3M Momentum"] < 0:
         score -= 1
 
-    # 3. Range Momentum
     if row["Momentum"] > 0:
         score += row["Momentum"] * 1.5
     elif row["Momentum"] < -0.2:
         score -= 2
 
-    # 4. Zonen-Logik
     if row["Zone"] == "Watchlist Zone":
         score += 3
     elif row["Zone"] == "Transition Zone":
@@ -288,7 +291,6 @@ def short_score(row):
     elif row["Zone"] == "Weak Zone":
         score -= 2
 
-    # 5. Trendrichtung
     if row["Trendrichtung"] == "Frischer Aufwaertstrend":
         score += 3
     elif row["Trendrichtung"] == "Aufwaertstrend":
@@ -298,7 +300,6 @@ def short_score(row):
     elif row["Trendrichtung"] in ["Abwaertstrend", "Trend schwaecht sich ab"]:
         score -= 3
 
-    # 6. Risiko
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
@@ -308,109 +309,154 @@ def short_score(row):
     elif row["Risiko"] == "Sehr hoch":
         score -= 4
 
-    # 7. Fundamentals Bonus
     if row["Fundamental Quality"] == "Hoch":
         score += 1
 
-    # 8. Pullback Setup
     if (
-        row["Trendrichtung"] in ["Aufwaertstrend", "Frischer Aufwaertstrend"] and
-        row["3M Momentum"] > 0 and
-        row["Trend Score"] < 0.7
+        row["Trendrichtung"] in ["Aufwaertstrend", "Frischer Aufwaertstrend"]
+        and row["3M Momentum"] > 0
+        and row["Trend Score"] < 0.7
     ):
         score += 2
 
     return score
 
 
-def long_score(row):
-    score = 0
-
-    # 1. Fundamentals als Kern
-    score += row["Fundamental Score"] * 2.2
-
-    # 2. Entry Timing
-    if row["Entry Score"] >= 6:
-        score += 2
-    elif row["Entry Score"] >= 4:
-        score += 1
-
-    # 3. Risiko
-    if row["Risiko"] == "Niedrig":
-        score += 2
-    elif row["Risiko"] == "Mittel":
-        score += 1
-    elif row["Risiko"] == "Hoch":
-        score -= 2
-    elif row["Risiko"] == "Sehr hoch":
-        score -= 3
-
-    # 4. Trend Score: guter Bereich ja, Peak nein
-    if 0.45 <= row["Trend Score"] <= 0.80:
-        score += 4
-    elif 0.80 < row["Trend Score"] <= 0.90:
-        score += 1
-    elif row["Trend Score"] > 0.90:
-        score -= 4
-
-    # 5. Momentum: gesundes Wachstum ja, Hype nein
-    if 0.08 <= row["3M Momentum"] <= 0.35:
-        score += 3
-    elif 0 < row["3M Momentum"] < 0.08:
-        score += 1
-    elif row["3M Momentum"] > 0.60:
-        score -= 4
-    elif row["3M Momentum"] < -0.10:
-        score -= 2
-    elif row["3M Momentum"] < 0:
-        score -= 1
-
-    # 6. Turnaround-Bonus nur bei guter Qualität
-    if (
-        row["Trendrichtung"] == "Turnaround moeglich" and
-        row["Fundamental Quality"] == "Hoch"
-    ):
-        score += 1.5
-
-    # 7. Theme-/Sektor-Logik robuster per Keywords
-    theme_text = " ".join([
+def structural_score(row):
+    text = " ".join([
         str(row.get("Main Theme", "")),
         str(row.get("Sub Theme", "")),
         str(row.get("Sector", "")),
         str(row.get("Industry", ""))
     ]).lower()
 
+    score = 0
+
+    structural_keywords = [
+        "ai", "artificial intelligence", "semiconductor", "semiconductors",
+        "chip", "chips", "photonics", "cloud", "data center", "datacenter",
+        "networking", "software", "automation", "memory", "compute"
+    ]
+
     cyclical_keywords = [
         "energy", "oil", "gas", "commodity", "commodities",
         "material", "materials", "gold", "mining",
         "fertilizer", "chemical", "chemicals", "agriculture"
     ]
-    structural_keywords = [
+
+    if any(x in text for x in structural_keywords):
+        score += 3
+
+    if any(x in text for x in cyclical_keywords):
+        score -= 2
+
+    return score
+
+
+def long_type(row):
+    text = " ".join([
+        str(row.get("Main Theme", "")),
+        str(row.get("Sub Theme", "")),
+        str(row.get("Sector", "")),
+        str(row.get("Industry", ""))
+    ]).lower()
+
+    if any(x in text for x in [
         "ai", "artificial intelligence", "semiconductor", "semiconductors",
-        "chip", "chips", "photonics", "cloud", "data center",
-        "networking", "memory", "automation", "software"
-    ]
+        "chip", "chips", "photonics", "cloud", "data center", "datacenter",
+        "networking", "software", "automation", "memory", "compute"
+    ]):
+        return "Structural Growth"
 
-    if any(x in theme_text for x in cyclical_keywords):
-        score -= 3
+    if any(x in text for x in [
+        "energy", "oil", "gas", "commodity", "commodities",
+        "material", "materials", "gold", "mining",
+        "fertilizer", "chemical", "chemicals", "agriculture"
+    ]):
+        return "Cyclical"
 
-        # extra Penalty wenn zyklisch + schon gut gelaufen
-        if row["3M Momentum"] > 0.20:
-            score -= 1.5
+    return "Quality / Defensive"
 
-    if any(x in theme_text for x in structural_keywords):
-        score += 2.5
 
+def long_warning(row):
+    warnings = []
+
+    if row["Trend Score"] > 0.90:
+        warnings.append("Zu spaet im Trend")
+
+    if row["3M Momentum"] > 0.60:
+        warnings.append("Hype Momentum")
+
+    if row["Risiko"] in ["Hoch", "Sehr hoch"]:
+        warnings.append("Erhoehtes Risiko")
+
+    return " | ".join(warnings) if warnings else ""
+
+
+def long_score(row):
+    score = 0
+
+    quality_block = row["Fundamental Score"] * 2
+    if row["Fundamental Quality"] == "Hoch":
+        quality_block += 2
+    elif row["Fundamental Quality"] == "Mittel":
+        quality_block += 1
+
+    timing_block = 0
+
+    if row["Entry Score"] >= 8:
+        timing_block += 3
+    elif row["Entry Score"] >= 6:
+        timing_block += 2
+    elif row["Entry Score"] >= 4:
+        timing_block += 1
+
+    if 0.45 <= row["Trend Score"] <= 0.80:
+        timing_block += 3
+    elif 0.80 < row["Trend Score"] <= 0.90:
+        timing_block += 1
+    elif row["Trend Score"] > 0.90:
+        timing_block -= 3
+
+    if 0.08 <= row["3M Momentum"] <= 0.35:
+        timing_block += 2
+    elif 0 < row["3M Momentum"] < 0.08:
+        timing_block += 1
+    elif row["3M Momentum"] > 0.60:
+        timing_block -= 3
+    elif row["3M Momentum"] < -0.10:
+        timing_block -= 2
+    elif row["3M Momentum"] < 0:
+        timing_block -= 1
+
+    risk_block = 0
+    if row["Risiko"] == "Niedrig":
+        risk_block += 2
+    elif row["Risiko"] == "Mittel":
+        risk_block += 1
+    elif row["Risiko"] == "Hoch":
+        risk_block -= 2
+    elif row["Risiko"] == "Sehr hoch":
+        risk_block -= 3
+
+    turnaround_block = 0
+    if (
+        row["Trendrichtung"] == "Turnaround moeglich" and
+        row["Fundamental Quality"] == "Hoch"
+    ):
+        turnaround_block += 1.5
+
+    structure_block = row["Structural Score"] * 1.5
+
+    score = quality_block + timing_block + risk_block + turnaround_block + structure_block
     return score
 
 
 def early_score(row):
     score = 0
 
-    # Fundament
     score += row["Fundamental Score"] * 2
 
-    # Früh im Move
     if row["Trend Score"] < 0.4:
         score += 5
     elif row["Trend Score"] < 0.6:
@@ -418,7 +464,6 @@ def early_score(row):
     else:
         score -= 2
 
-    # Momentum Sweet Spot
     if 0.03 < row["3M Momentum"] < 0.25:
         score += 5
     elif row["3M Momentum"] >= 0.25:
@@ -426,7 +471,6 @@ def early_score(row):
     elif row["3M Momentum"] > 0:
         score += 2
 
-    # Frischer Trend ist Pflicht
     if row["Trendrichtung"] == "Frischer Aufwaertstrend":
         score += 4
     elif row["Trendrichtung"] == "Turnaround moeglich":
@@ -434,7 +478,6 @@ def early_score(row):
     else:
         score -= 3
 
-    # Smart Money
     if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")) and row["Avg Volume"] not in [0, None]:
         vol_ratio = row["Volume"] / row["Avg Volume"]
 
@@ -447,11 +490,9 @@ def early_score(row):
         else:
             score -= 1
 
-    # Momentum intern
     if row["Momentum"] > 0:
         score += 2
 
-    # Risiko
     if row["Risiko"] == "Sehr hoch":
         score -= 4
 
@@ -505,6 +546,10 @@ df["Risiko"] = df.apply(
     axis=1
 )
 
+df["Structural Score"] = df.apply(structural_score, axis=1)
+df["Long Type"] = df.apply(long_type, axis=1)
+df["Long Warning"] = df.apply(long_warning, axis=1)
+
 df["Short Score"] = df.apply(short_score, axis=1)
 df["Long Score"] = df.apply(long_score, axis=1)
 df["Early Score"] = df.apply(early_score, axis=1)
@@ -531,9 +576,23 @@ short_df = (
     .head(8)
 )
 
-long_df = (
-    df.sort_values(
-        by=["Long Score", "Fundamental Score", "Entry Score", "Trend Score"],
+long_core_df = (
+    df[
+        df["Fundamental Quality"].isin(["Hoch", "Mittel"])
+    ]
+    .sort_values(
+        by=["Fundamental Score", "Structural Score", "Long Score", "Entry Score"],
+        ascending=[False, False, False, False]
+    )
+    .head(8)
+)
+
+long_entry_df = (
+    df[
+        df["Fundamental Quality"].isin(["Hoch", "Mittel"])
+    ]
+    .sort_values(
+        by=["Long Score", "Entry Score", "Trend Score", "Fundamental Score"],
         ascending=[False, False, False, False]
     )
     .head(8)
@@ -562,7 +621,8 @@ early_df = (
 early_df = early_df[early_df["Early Score"] >= 12].head(8)
 
 short_display = add_rank(short_df)
-long_display = add_rank(long_df)
+long_core_display = add_rank(long_core_df)
+long_entry_display = add_rank(long_entry_df)
 early_display = add_rank(early_df)
 
 st.markdown("## 🚀 Top 8 Short Term Chancen")
@@ -612,24 +672,81 @@ st.page_link(
 
 st.markdown("---")
 
-st.markdown("## 📈 Top 8 Long Term Chancen")
-st.caption("Langfristige Qualitätskandidaten mit stärkerem Fokus auf gute Einstiegsbereiche statt reine Peak-Momentum-Werte.")
+st.markdown("## 📈 Long Term Core")
+st.caption("Die qualitativ stärksten langfristigen Kandidaten – stärker auf Unternehmensqualität und strukturelle Stärke fokussiert.")
 
 st.dataframe(
-    long_display[[
+    long_core_display[[
         "Rang",
         "Name",
         "Ticker",
+        "Long Type",
         "Fundamental Quality",
         "Fundamental Score",
+        "Structural Score",
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
         "Risiko",
         "Trend Score",
-        "Long Score"
+        "Long Warning"
     ]].style.format({
         "Fundamental Score": "{:.0f}",
+        "Structural Score": "{:.0f}",
+        "Entry Score": "{:.0f}",
+        "3M Momentum": "{:.1%}",
+        "Trend Score": "{:.2f}"
+    }),
+    use_container_width=True,
+    hide_index=True
+)
+
+st.markdown("### Long Term Core Aktie oeffnen")
+
+long_core_options = long_core_display[["Name", "Ticker"]].drop_duplicates().copy()
+long_core_options["Label"] = long_core_options["Name"] + " (" + long_core_options["Ticker"] + ")"
+
+selected_long_core = st.selectbox(
+    "Long Term Core Aktie fuer Detailseite auswaehlen",
+    long_core_options["Label"].tolist(),
+    key="long_core_detail_select"
+)
+
+selected_long_core_ticker = long_core_options.loc[
+    long_core_options["Label"] == selected_long_core, "Ticker"
+].iloc[0]
+
+st.page_link(
+    "pages/1_Aktien_Detail.py",
+    label=f"Zur Detailseite von {selected_long_core}",
+    icon="📈",
+    query_params={"ticker": selected_long_core_ticker}
+)
+
+st.markdown("---")
+
+st.markdown("## 🔵 Long Term Entry")
+st.caption("Langfristige Qualitätskandidaten mit stärkerem Fokus auf gute Einstiegsbereiche statt Peak-Momentum.")
+
+st.dataframe(
+    long_entry_display[[
+        "Rang",
+        "Name",
+        "Ticker",
+        "Long Type",
+        "Fundamental Quality",
+        "Fundamental Score",
+        "Structural Score",
+        "Entry Quality",
+        "Entry Score",
+        "3M Momentum",
+        "Risiko",
+        "Trend Score",
+        "Long Score",
+        "Long Warning"
+    ]].style.format({
+        "Fundamental Score": "{:.0f}",
+        "Structural Score": "{:.0f}",
         "Entry Score": "{:.0f}",
         "3M Momentum": "{:.1%}",
         "Trend Score": "{:.2f}",
@@ -639,26 +756,26 @@ st.dataframe(
     hide_index=True
 )
 
-st.markdown("### Long Term Aktie oeffnen")
+st.markdown("### Long Term Entry Aktie oeffnen")
 
-long_options = long_display[["Name", "Ticker"]].drop_duplicates().copy()
-long_options["Label"] = long_options["Name"] + " (" + long_options["Ticker"] + ")"
+long_entry_options = long_entry_display[["Name", "Ticker"]].drop_duplicates().copy()
+long_entry_options["Label"] = long_entry_options["Name"] + " (" + long_entry_options["Ticker"] + ")"
 
-selected_long = st.selectbox(
-    "Long Term Aktie fuer Detailseite auswaehlen",
-    long_options["Label"].tolist(),
-    key="long_detail_select"
+selected_long_entry = st.selectbox(
+    "Long Term Entry Aktie fuer Detailseite auswaehlen",
+    long_entry_options["Label"].tolist(),
+    key="long_entry_detail_select"
 )
 
-selected_long_ticker = long_options.loc[
-    long_options["Label"] == selected_long, "Ticker"
+selected_long_entry_ticker = long_entry_options.loc[
+    long_entry_options["Label"] == selected_long_entry, "Ticker"
 ].iloc[0]
 
 st.page_link(
     "pages/1_Aktien_Detail.py",
-    label=f"Zur Detailseite von {selected_long}",
+    label=f"Zur Detailseite von {selected_long_entry}",
     icon="📈",
-    query_params={"ticker": selected_long_ticker}
+    query_params={"ticker": selected_long_entry_ticker}
 )
 
 st.markdown("---")
