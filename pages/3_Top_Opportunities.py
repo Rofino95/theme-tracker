@@ -252,31 +252,70 @@ def get_risk_score(zone, trend_direction):
 def short_score(row):
     score = 0
 
+    # 🔹 1. Basis: Entry Score (wichtig)
     score += row["Entry Score"] * 1.5
 
-    if row["3M Momentum"] > 0.10:
-        score += 2
+    # 🔹 2. 3M Momentum (Sweet Spot statt Hype)
+    if 0.05 < row["3M Momentum"] < 0.30:
+        score += 3
+    elif row["3M Momentum"] > 0.30:
+        score -= 2
     elif row["3M Momentum"] > 0:
         score += 1
     elif row["3M Momentum"] < -0.10:
-        score -= 2
+        score -= 3
     elif row["3M Momentum"] < 0:
         score -= 1
 
+    # 🔹 3. Range Momentum
     if row["Momentum"] > 0:
         score += row["Momentum"] * 1.5
+    elif row["Momentum"] < -0.2:
+        score -= 2
 
+    # 🔹 4. Zonen-Logik
+    if row["Zone"] == "Watchlist Zone":
+        score += 3
+    elif row["Zone"] == "Transition Zone":
+        score += 2
+    elif row["Zone"] == "Hold Zone":
+        score += 1
+    elif row["Zone"] == "Upper Range":
+        score -= 3
+    elif row["Zone"] == "Weak Zone":
+        score -= 2
+
+    # 🔹 5. Trendrichtung
+    if row["Trendrichtung"] == "Frischer Aufwaertstrend":
+        score += 3
+    elif row["Trendrichtung"] == "Aufwaertstrend":
+        score += 2
+    elif row["Trendrichtung"] == "Turnaround moeglich":
+        score += 1
+    elif row["Trendrichtung"] in ["Abwaertstrend", "Trend schwaecht sich ab"]:
+        score -= 3
+
+    # 🔹 6. Risiko
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
         score += 1
     elif row["Risiko"] == "Hoch":
-        score -= 1
-    elif row["Risiko"] == "Sehr hoch":
         score -= 2
+    elif row["Risiko"] == "Sehr hoch":
+        score -= 4
 
+    # 🔹 7. Fundamentals Bonus
     if row["Fundamental Quality"] == "Hoch":
         score += 1
+
+    # 🔹 8. Pullback Setup
+    if (
+        row["Trendrichtung"] in ["Aufwaertstrend", "Frischer Aufwaertstrend"] and
+        row["3M Momentum"] > 0 and
+        row["Trend Score"] < 0.7
+    ):
+        score += 2
 
     return score
 
