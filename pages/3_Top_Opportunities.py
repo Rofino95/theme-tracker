@@ -323,25 +323,16 @@ def short_score(row):
 def long_score(row):
     score = 0
 
-    # 🔹 1. Fundamentals bleiben der Kern
+    # 🔹 1. Fundamentals (Basis)
     score += row["Fundamental Score"] * 2
 
-    # 🔹 2. Trend Score (aber NICHT mehr blind belohnen)
-    score += row["Trend Score"] * 1.5
-
-    # 🔹 3. Entry Score als Timing-Komponente
+    # 🔹 2. Entry Timing
     if row["Entry Score"] >= 6:
         score += 2
     elif row["Entry Score"] >= 4:
         score += 1
 
-    # 🔹 4. Momentum (leicht positiv, aber keine Hype-Jagd)
-    if row["3M Momentum"] > 0:
-        score += 1
-    elif row["3M Momentum"] < -0.10:
-        score -= 2
-
-    # 🔹 5. Risiko bleibt wichtig
+    # 🔹 3. Risiko
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
@@ -351,35 +342,23 @@ def long_score(row):
     elif row["Risiko"] == "Sehr hoch":
         score -= 3
 
-   # 🔹 Sweet Spot
+    # 🔹 4. Trend Score (Timing statt Hype)
     if 0.5 < row["Trend Score"] < 0.8:
-        score += 3
-    
-    # 🔹 leicht fortgeschritten = okay
+        score += 4   # BESTER Bereich
     elif 0.8 <= row["Trend Score"] < 0.9:
-        score += 1
-    
-    # 🔹 wirklich zu spät
+        score += 1   # noch okay
     elif row["Trend Score"] > 0.9:
-        score -= 2
+        score -= 3   # zu spät
 
-    # 🔹 Gesundes Growth Momentum pushen
+    # 🔹 5. Momentum (Growth richtig behandeln)
     if 0.10 < row["3M Momentum"] < 0.40:
-    score += 3
-
-    # 🔹 zu wenig Momentum (langweilig)
-    elif row["3M Momentum"] < 0:
-        score -= 1
-    
-    # 🔹 echtes Hype Momentum bestrafen
+        score += 3   # gesundes Wachstum
     elif row["3M Momentum"] > 0.60:
-        score -= 3
+        score -= 3   # Hype
+    elif row["3M Momentum"] < 0:
+        score -= 1   # schwach
 
-    # 🔥 8. SWEET SPOT PUSH (perfekte Long-Term Zone)
-    if 0.4 < row["Trend Score"] < 0.75:
-        score += 3
-
-    # 🔥 9. TURNAROUND + FUNDAMENTALS = GOLD
+    # 🔹 6. Turnaround Bonus
     if (
         row["Trendrichtung"] == "Turnaround moeglich" and
         row["Fundamental Quality"] == "Hoch"
