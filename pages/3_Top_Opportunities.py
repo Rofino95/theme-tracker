@@ -344,13 +344,13 @@ def long_score(row):
 
     # 🔹 4. Trend Score (Timing statt Hype)
     if 0.5 < row["Trend Score"] < 0.8:
-        score += 4   # BESTER Bereich
+        score += 4   # bester Bereich
     elif 0.8 <= row["Trend Score"] < 0.9:
         score += 1   # noch okay
     elif row["Trend Score"] > 0.9:
         score -= 3   # zu spät
 
-    # 🔹 5. Momentum (Growth richtig behandeln)
+    # 🔹 5. Momentum (Growth vs Hype)
     if 0.10 < row["3M Momentum"] < 0.40:
         score += 3   # gesundes Wachstum
     elif row["3M Momentum"] > 0.60:
@@ -365,8 +365,19 @@ def long_score(row):
     ):
         score += 2
 
-    return score
+    # 🔥 7. STRUCTURAL vs CYCLICAL FILTER
 
+    # ❌ Zyklische Themes leicht bestrafen
+    bad_themes = ["Energy", "Materials", "Commodities", "Gold"]
+    if row.get("Main Theme") in bad_themes:
+        score -= 2
+
+    # ✅ Structural Growth pushen
+    good_themes = ["AI", "Semiconductors", "Photonics", "Cloud", "Data Center"]
+    if row.get("Main Theme") in good_themes:
+        score += 2
+
+    return score
 
 def early_score(row):
     score = 0
