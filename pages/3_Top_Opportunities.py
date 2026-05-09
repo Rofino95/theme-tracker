@@ -323,23 +323,54 @@ def short_score(row):
 def long_score(row):
     score = 0
 
+    # 🔹 1. Fundamentals bleiben der Kern
     score += row["Fundamental Score"] * 2
-    score += row["Trend Score"] * 2
 
+    # 🔹 2. Trend Score (aber NICHT mehr blind belohnen)
+    score += row["Trend Score"] * 1.5
+
+    # 🔹 3. Entry Score als Timing-Komponente
     if row["Entry Score"] >= 6:
         score += 2
     elif row["Entry Score"] >= 4:
         score += 1
 
+    # 🔹 4. Momentum (leicht positiv, aber keine Hype-Jagd)
     if row["3M Momentum"] > 0:
         score += 1
     elif row["3M Momentum"] < -0.10:
-        score -= 1
+        score -= 2
 
+    # 🔹 5. Risiko bleibt wichtig
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
         score += 1
+    elif row["Risiko"] == "Hoch":
+        score -= 2
+    elif row["Risiko"] == "Sehr hoch":
+        score -= 3
+
+    # 🔥 6. LATE CYCLE PENALTY (GAMECHANGER)
+    if row["Trend Score"] > 0.90:
+        score -= 4
+    elif row["Trend Score"] > 0.80:
+        score -= 2
+
+    # 🔥 7. ÜBERHITZTES MOMENTUM RAUS
+    if row["3M Momentum"] > 0.50:
+        score -= 3
+
+    # 🔥 8. SWEET SPOT PUSH (perfekte Long-Term Zone)
+    if 0.4 < row["Trend Score"] < 0.75:
+        score += 3
+
+    # 🔥 9. TURNAROUND + FUNDAMENTALS = GOLD
+    if (
+        row["Trendrichtung"] == "Turnaround moeglich" and
+        row["Fundamental Quality"] == "Hoch"
+    ):
+        score += 2
 
     return score
 
