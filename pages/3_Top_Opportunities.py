@@ -351,14 +351,28 @@ def long_score(row):
     elif row["Risiko"] == "Sehr hoch":
         score -= 3
 
-    # 🔥 6. LATE CYCLE PENALTY (GAMECHANGER)
-    if row["Trend Score"] > 0.90:
-        score -= 4
-    elif row["Trend Score"] > 0.80:
+   # 🔹 Sweet Spot
+    if 0.5 < row["Trend Score"] < 0.8:
+        score += 3
+    
+    # 🔹 leicht fortgeschritten = okay
+    elif 0.8 <= row["Trend Score"] < 0.9:
+        score += 1
+    
+    # 🔹 wirklich zu spät
+    elif row["Trend Score"] > 0.9:
         score -= 2
 
-    # 🔥 7. ÜBERHITZTES MOMENTUM RAUS
-    if row["3M Momentum"] > 0.50:
+    # 🔹 Gesundes Growth Momentum pushen
+    if 0.10 < row["3M Momentum"] < 0.40:
+    score += 3
+
+    # 🔹 zu wenig Momentum (langweilig)
+    elif row["3M Momentum"] < 0:
+        score -= 1
+    
+    # 🔹 echtes Hype Momentum bestrafen
+    elif row["3M Momentum"] > 0.60:
         score -= 3
 
     # 🔥 8. SWEET SPOT PUSH (perfekte Long-Term Zone)
