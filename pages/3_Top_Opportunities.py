@@ -35,6 +35,9 @@ Fokus: Entry Score, echtes 3M Momentum, Zone und Risiko.
 
 **Long Term (6+ Monate bis mehrere Jahre)**  
 Fokus: Fundamentaldaten, Qualität und stabile technische Lage.
+
+**Early Plays**  
+Gefilterte Kandidaten für frühe Trends mit zusätzlichem Smart-Money-Check.
 """)
 
 if not os.path.exists("theme_scores.csv"):
@@ -252,10 +255,10 @@ def get_risk_score(zone, trend_direction):
 def short_score(row):
     score = 0
 
-    # 🔹 1. Basis: Entry Score (wichtig)
+    # 1. Basis
     score += row["Entry Score"] * 1.5
 
-    # 🔹 2. 3M Momentum (Sweet Spot statt Hype)
+    # 2. 3M Momentum
     if 0.05 < row["3M Momentum"] < 0.30:
         score += 3
     elif row["3M Momentum"] > 0.30:
@@ -267,13 +270,13 @@ def short_score(row):
     elif row["3M Momentum"] < 0:
         score -= 1
 
-    # 🔹 3. Range Momentum
+    # 3. Range Momentum
     if row["Momentum"] > 0:
         score += row["Momentum"] * 1.5
     elif row["Momentum"] < -0.2:
         score -= 2
 
-    # 🔹 4. Zonen-Logik
+    # 4. Zonen-Logik
     if row["Zone"] == "Watchlist Zone":
         score += 3
     elif row["Zone"] == "Transition Zone":
@@ -285,7 +288,7 @@ def short_score(row):
     elif row["Zone"] == "Weak Zone":
         score -= 2
 
-    # 🔹 5. Trendrichtung
+    # 5. Trendrichtung
     if row["Trendrichtung"] == "Frischer Aufwaertstrend":
         score += 3
     elif row["Trendrichtung"] == "Aufwaertstrend":
@@ -295,7 +298,7 @@ def short_score(row):
     elif row["Trendrichtung"] in ["Abwaertstrend", "Trend schwaecht sich ab"]:
         score -= 3
 
-    # 🔹 6. Risiko
+    # 6. Risiko
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
@@ -305,11 +308,11 @@ def short_score(row):
     elif row["Risiko"] == "Sehr hoch":
         score -= 4
 
-    # 🔹 7. Fundamentals Bonus
+    # 7. Fundamentals Bonus
     if row["Fundamental Quality"] == "Hoch":
         score += 1
 
-    # 🔹 8. Pullback Setup
+    # 8. Pullback Setup
     if (
         row["Trendrichtung"] in ["Aufwaertstrend", "Frischer Aufwaertstrend"] and
         row["3M Momentum"] > 0 and
@@ -323,16 +326,16 @@ def short_score(row):
 def long_score(row):
     score = 0
 
-    # 🔹 1. Fundamentals (Basis)
-    score += row["Fundamental Score"] * 2
+    # 1. Fundamentals als Kern
+    score += row["Fundamental Score"] * 2.2
 
-    # 🔹 2. Entry Timing
+    # 2. Entry Timing
     if row["Entry Score"] >= 6:
         score += 2
     elif row["Entry Score"] >= 4:
         score += 1
 
-    # 🔹 3. Risiko
+    # 3. Risiko
     if row["Risiko"] == "Niedrig":
         score += 2
     elif row["Risiko"] == "Mittel":
@@ -342,42 +345,64 @@ def long_score(row):
     elif row["Risiko"] == "Sehr hoch":
         score -= 3
 
-    # 🔹 4. Trend Score (Timing statt Hype)
-    if 0.5 < row["Trend Score"] < 0.8:
-        score += 4   # bester Bereich
-    elif 0.8 <= row["Trend Score"] < 0.9:
-        score += 1   # noch okay
-    elif row["Trend Score"] > 0.9:
-        score -= 3   # zu spät
+    # 4. Trend Score: guter Bereich ja, Peak nein
+    if 0.45 <= row["Trend Score"] <= 0.80:
+        score += 4
+    elif 0.80 < row["Trend Score"] <= 0.90:
+        score += 1
+    elif row["Trend Score"] > 0.90:
+        score -= 4
 
-    # 🔹 5. Momentum (Growth vs Hype)
-    if 0.10 < row["3M Momentum"] < 0.40:
-        score += 3   # gesundes Wachstum
+    # 5. Momentum: gesundes Wachstum ja, Hype nein
+    if 0.08 <= row["3M Momentum"] <= 0.35:
+        score += 3
+    elif 0 < row["3M Momentum"] < 0.08:
+        score += 1
     elif row["3M Momentum"] > 0.60:
-        score -= 3   # Hype
+        score -= 4
+    elif row["3M Momentum"] < -0.10:
+        score -= 2
     elif row["3M Momentum"] < 0:
-        score -= 1   # schwach
+        score -= 1
 
-    # 🔹 6. Turnaround Bonus
+    # 6. Turnaround-Bonus nur bei guter Qualität
     if (
         row["Trendrichtung"] == "Turnaround moeglich" and
         row["Fundamental Quality"] == "Hoch"
     ):
-        score += 2
+        score += 1.5
 
-    # 🔥 7. STRUCTURAL vs CYCLICAL FILTER
+    # 7. Theme-/Sektor-Logik robuster per Keywords
+    theme_text = " ".join([
+        str(row.get("Main Theme", "")),
+        str(row.get("Sub Theme", "")),
+        str(row.get("Sector", "")),
+        str(row.get("Industry", ""))
+    ]).lower()
 
-    # ❌ Zyklische Themes leicht bestrafen
-    bad_themes = ["Energy", "Materials", "Commodities", "Gold"]
-    if row.get("Main Theme") in bad_themes:
-        score -= 2
+    cyclical_keywords = [
+        "energy", "oil", "gas", "commodity", "commodities",
+        "material", "materials", "gold", "mining",
+        "fertilizer", "chemical", "chemicals", "agriculture"
+    ]
+    structural_keywords = [
+        "ai", "artificial intelligence", "semiconductor", "semiconductors",
+        "chip", "chips", "photonics", "cloud", "data center",
+        "networking", "memory", "automation", "software"
+    ]
 
-    # ✅ Structural Growth pushen
-    good_themes = ["AI", "Semiconductors", "Photonics", "Cloud", "Data Center"]
-    if row.get("Main Theme") in good_themes:
-        score += 2
+    if any(x in theme_text for x in cyclical_keywords):
+        score -= 3
+
+        # extra Penalty wenn zyklisch + schon gut gelaufen
+        if row["3M Momentum"] > 0.20:
+            score -= 1.5
+
+    if any(x in theme_text for x in structural_keywords):
+        score += 2.5
 
     return score
+
 
 def early_score(row):
     score = 0
@@ -385,7 +410,7 @@ def early_score(row):
     # Fundament
     score += row["Fundamental Score"] * 2
 
-    # Früh im Move (wichtigster Faktor)
+    # Früh im Move
     if row["Trend Score"] < 0.4:
         score += 5
     elif row["Trend Score"] < 0.6:
@@ -393,7 +418,7 @@ def early_score(row):
     else:
         score -= 2
 
-    # Momentum Sweet Spot (NICHT zu hoch!)
+    # Momentum Sweet Spot
     if 0.03 < row["3M Momentum"] < 0.25:
         score += 5
     elif row["3M Momentum"] >= 0.25:
@@ -409,8 +434,8 @@ def early_score(row):
     else:
         score -= 3
 
-    # Smart Money (EXTREM wichtig)
-    if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")):
+    # Smart Money
+    if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")) and row["Avg Volume"] not in [0, None]:
         vol_ratio = row["Volume"] / row["Avg Volume"]
 
         if vol_ratio > 2:
@@ -426,7 +451,7 @@ def early_score(row):
     if row["Momentum"] > 0:
         score += 2
 
-    # Risiko rausfiltern
+    # Risiko
     if row["Risiko"] == "Sehr hoch":
         score -= 4
 
@@ -453,7 +478,6 @@ df["Fundamental Score"] = df.apply(get_fundamental_score, axis=1)
 df["Fundamental Quality"] = df["Fundamental Score"].apply(get_fundamental_quality)
 
 trendrichtungen = []
-
 for _, row in df.iterrows():
     hist = load_price_history(row["Ticker"])
     trendrichtungen.append(get_trend_direction(hist, row["Preis"]))
@@ -486,7 +510,7 @@ df["Long Score"] = df.apply(long_score, axis=1)
 df["Early Score"] = df.apply(early_score, axis=1)
 
 df["High Conviction"] = (
-    (df["Early Score"] >= 8) &
+    (df["Early Score"] >= 12) &
     (df["Fundamental Quality"] == "Hoch") &
     (df["3M Momentum"] > 0)
 )
@@ -509,30 +533,37 @@ short_df = (
 
 long_df = (
     df.sort_values(
-        by=["Long Score", "Fundamental Score", "Trend Score", "Entry Score"],
+        by=["Long Score", "Fundamental Score", "Entry Score", "Trend Score"],
         ascending=[False, False, False, False]
     )
     .head(8)
 )
 
-early_df = (
-    df[
+has_volume_cols = {"Volume", "Avg Volume"}.issubset(df.columns)
+
+if has_volume_cols:
+    early_mask = (
         (df["Trend Score"] < 0.65) &
         (df["Trend Score"] > 0.25) &
         (df["3M Momentum"] > 0.03) &
         (df["3M Momentum"] < 0.20) &
         (df["Trendrichtung"] == "Frischer Aufwaertstrend") &
+        (df["Avg Volume"] > 0) &
         (df["Volume"] > 1.2 * df["Avg Volume"])
-    ]
-    .sort_values(by="Early Score", ascending=False)
+    )
+else:
+    early_mask = pd.Series([False] * len(df), index=df.index)
+
+early_df = (
+    df[early_mask]
+    .sort_values(by=["Early Score", "Fundamental Score", "3M Momentum"], ascending=[False, False, False])
 )
 
-early_df = early_df[early_df["Early Score"] >= 12]
-early_df = early_df.head(8)
+early_df = early_df[early_df["Early Score"] >= 12].head(8)
 
-early_display = add_rank(early_df)
 short_display = add_rank(short_df)
 long_display = add_rank(long_df)
+early_display = add_rank(early_df)
 
 st.markdown("## 🚀 Top 8 Short Term Chancen")
 
@@ -582,6 +613,7 @@ st.page_link(
 st.markdown("---")
 
 st.markdown("## 📈 Top 8 Long Term Chancen")
+st.caption("Langfristige Qualitätskandidaten mit stärkerem Fokus auf gute Einstiegsbereiche statt reine Peak-Momentum-Werte.")
 
 st.dataframe(
     long_display[[
@@ -659,7 +691,6 @@ st.dataframe(
 )
 
 if not early_display.empty:
-
     st.markdown("### Early Play oeffnen")
 
     early_options = early_display[["Name", "Ticker"]].drop_duplicates().copy()
@@ -681,6 +712,6 @@ if not early_display.empty:
         icon="📈",
         query_params={"ticker": selected_early_ticker}
     )
-
 else:
     st.warning("Aktuell keine Early Plays im Markt gefunden.")
+    
