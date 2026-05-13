@@ -1,25 +1,25 @@
 Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Momentum,Entry Score,Entry Quality,Fundamental Score,Fundamental Quality,Signal Score
-2026-05-13,Short Term,1,EOG,"EOG Resources, Inc.",134.10499572753906,0.67,0.35,0.15,9,Sehr gut,9,Hoch,20.5
-2026-05-13,Short Term,2,FSLR,"First Solar, Inc.",236.30499267578125,0.67,0.34,0.07,8,Sehr gut,10,Hoch,19.0
-2026-05-13,Short Term,3,ANET,"Arista Networks, Inc.",142.65499877929688,0.61,0.23,0.06,7,Gut,9,Hoch,17.5
-2026-05-13,Short Term,4,BLK,"BlackRock, Inc.",1091.2900390625,0.6,0.2,0.04,8,Sehr gut,10,Hoch,17.0
-2026-05-13,Short Term,5,OMCL,"Omnicell, Inc.",43.290000915527344,0.58,0.17,0.2,7,Gut,3,Niedrig,16.5
-2026-05-13,Short Term,6,COP,ConocoPhillips,116.5500030517578,0.66,0.31,0.07,6,Gut,3,Niedrig,15.0
-2026-05-13,Short Term,7,SHEL,Shell PLC,84.94999694824219,0.68,0.37,0.1,6,Gut,4,Niedrig,15.0
-2026-05-13,Short Term,8,DRS,"Leonardo DRS, Inc.",42.27999877929688,0.6,0.19,0.12,6,Gut,4,Niedrig,15.0
-2026-05-13,Long Term,1,NVDA,NVIDIA Corporation,226.9600067138672,0.99,0.98,0.21,6,Gut,10,Hoch,25.98
-2026-05-13,Long Term,2,TD,Toronto Dominion Bank (The),106.94000244140624,0.95,0.9,0.13,6,Gut,10,Hoch,25.9
-2026-05-13,Long Term,3,EOG,"EOG Resources, Inc.",134.10499572753906,0.67,0.35,0.15,9,Sehr gut,9,Hoch,24.34
-2026-05-13,Long Term,4,FSLR,"First Solar, Inc.",236.30499267578125,0.67,0.34,0.07,8,Sehr gut,10,Hoch,24.34
-2026-05-13,Long Term,5,BLK,"BlackRock, Inc.",1091.2900390625,0.6,0.2,0.04,8,Sehr gut,10,Hoch,24.2
-2026-05-13,Long Term,6,MS,Morgan Stanley,193.42999267578125,0.98,0.96,0.16,6,Gut,9,Hoch,23.96
-2026-05-13,Long Term,7,C,"Citigroup, Inc.",125.46499633789062,0.86,0.72,0.13,6,Gut,9,Hoch,23.72
-2026-05-13,Long Term,8,NEM,Newmont Corporation,120.06500244140624,0.83,0.67,0.02,6,Gut,10,Hoch,23.66
-2026-05-13,Early Play,1,ORCL,Oracle Corporation,188.6699981689453,0.26,-0.48,0.21,3,Riskant,9,Hoch,28.0
-2026-05-13,Early Play,2,NFLX,"Netflix, Inc.",87.8550033569336,0.22,-0.57,0.16,3,Riskant,8,Hoch,26.0
-2026-05-13,Early Play,3,TD,Toronto Dominion Bank (The),106.94000244140624,0.95,0.9,0.13,6,Gut,10,Hoch,25.0
-2026-05-13,Early Play,4,BLK,"BlackRock, Inc.",1091.2900390625,0.6,0.2,0.04,8,Sehr gut,10,Hoch,25.0
-2026-05-13,Early Play,5,NVO,Novo Nordisk A/S,46.90999984741211,0.29,-0.43,-0.01,1,Riskant,10,Hoch,25.0
-2026-05-13,Early Play,6,META,"Meta Platforms, Inc.",615.4749755859375,0.35,-0.31,-0.05,1,Riskant,10,Hoch,25.0
-2026-05-13,Early Play,7,FIS,Fidelity National Information S,42.22999954223633,0.01,-0.97,-0.09,1,Riskant,10,Hoch,25.0
-2026-05-13,Early Play,8,NU,Nu Holdings Ltd.,13.104999542236328,0.19,-0.62,-0.23,0,Riskant,10,Hoch,25.0
+2026-05-13,Short Term,1,EOG,"EOG Resources, Inc.",134.08999633789062,0.67,0.35,0.15,9,Sehr gut,9,Hoch,20.5
+2026-05-13,Short Term,2,FSLR,"First Solar, Inc.",236.9600067138672,0.67,0.35,0.07,8,Sehr gut,10,Hoch,19.0
+2026-05-13,Short Term,3,BLK,"BlackRock, Inc.",1094.1500244140625,0.61,0.22,0.04,8,Sehr gut,10,Hoch,17.0
+2026-05-13,Short Term,4,OMCL,"Omnicell, Inc.",42.869998931884766,0.57,0.14,0.18,7,Gut,3,Niedrig,16.5
+2026-05-13,Short Term,5,ANET,"Arista Networks, Inc.",142.3800048828125,0.61,0.22,0.05,7,Gut,9,Hoch,15.5
+2026-05-13,Short Term,6,MP,MP Materials Corp.,64.67500305175781,0.56,0.13,0.13,6,Gut,2,Niedrig,15.0
+2026-05-13,Short Term,7,COP,ConocoPhillips,116.73500061035156,0.66,0.32,0.07,6,Gut,3,Niedrig,15.0
+2026-05-13,Short Term,8,SHEL,Shell PLC,84.88050079345703,0.68,0.36,0.1,6,Gut,4,Niedrig,15.0
+2026-05-13,Long Term,1,NVDA,NVIDIA Corporation,225.9149932861328,0.98,0.96,0.21,6,Gut,10,Hoch,25.96
+2026-05-13,Long Term,2,TD,Toronto Dominion Bank (The),106.75,0.95,0.9,0.13,6,Gut,10,Hoch,25.9
+2026-05-13,Long Term,3,EOG,"EOG Resources, Inc.",134.08999633789062,0.67,0.35,0.15,9,Sehr gut,9,Hoch,24.34
+2026-05-13,Long Term,4,FSLR,"First Solar, Inc.",236.9600067138672,0.67,0.35,0.07,8,Sehr gut,10,Hoch,24.34
+2026-05-13,Long Term,5,BLK,"BlackRock, Inc.",1094.1500244140625,0.61,0.22,0.04,8,Sehr gut,10,Hoch,24.22
+2026-05-13,Long Term,6,MS,Morgan Stanley,194.0,0.99,0.98,0.16,6,Gut,9,Hoch,23.98
+2026-05-13,Long Term,7,C,"Citigroup, Inc.",125.50499725341795,0.86,0.72,0.13,6,Gut,9,Hoch,23.72
+2026-05-13,Long Term,8,NEM,Newmont Corporation,119.63500213623048,0.83,0.66,0.01,6,Gut,10,Hoch,23.66
+2026-05-13,Early Play,1,ORCL,Oracle Corporation,188.1699981689453,0.26,-0.49,0.21,3,Riskant,9,Hoch,28.0
+2026-05-13,Early Play,2,NFLX,"Netflix, Inc.",87.88500213623047,0.22,-0.56,0.16,3,Riskant,8,Hoch,26.0
+2026-05-13,Early Play,3,NVDA,NVIDIA Corporation,225.8999938964844,0.98,0.96,0.21,6,Gut,10,Hoch,25.0
+2026-05-13,Early Play,4,FIS,Fidelity National Information S,42.375,0.02,-0.96,-0.09,1,Riskant,10,Hoch,25.0
+2026-05-13,Early Play,5,NU,Nu Holdings Ltd.,12.994999885559082,0.18,-0.65,-0.24,0,Riskant,10,Hoch,25.0
+2026-05-13,Early Play,6,BLK,"BlackRock, Inc.",1094.1500244140625,0.61,0.22,0.04,8,Sehr gut,10,Hoch,25.0
+2026-05-13,Early Play,7,TD,Toronto Dominion Bank (The),106.75,0.95,0.9,0.13,6,Gut,10,Hoch,25.0
+2026-05-13,Early Play,8,NVO,Novo Nordisk A/S,46.81499862670898,0.28,-0.43,-0.01,1,Riskant,10,Hoch,25.0
