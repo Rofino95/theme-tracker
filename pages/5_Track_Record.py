@@ -43,6 +43,9 @@ if not os.path.exists(HISTORY_FILE):
 
 df = pd.read_csv(HISTORY_FILE)
 
+if "Preis" not in df.columns and "Entry Price" in df.columns:
+    df = df.rename(columns={"Entry Price": "Preis"})
+
 if len(df) == 0:
     st.warning("Noch keine historischen Daten vorhanden.")
     st.stop()
