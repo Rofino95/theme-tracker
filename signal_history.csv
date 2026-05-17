@@ -112,10 +112,10 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-17,Long Term,7,EOG,"EOG Resources, Inc.",140.25999450683594,0.79,0.59,0.18,7,Gut,9,Hoch,23.58
 2026-05-17,Long Term,8,CF,"CF Industries Holdings, Inc.",125.23999786376952,0.76,0.52,0.34,7,Gut,9,Hoch,23.52
 2026-05-17,Early Play,1,BLK,"BlackRock, Inc.",1081.9000244140625,0.57,0.13,0.01,8,Sehr gut,10,Hoch,27.0
-2026-05-17,Early Play,2,NFLX,"Netflix, Inc.",87.0199966430664,0.2,-0.59,0.13,3,Riskant,8,Hoch,26.0
-2026-05-17,Early Play,3,DSGX,The Descartes Systems Group Inc,67.69999694824219,0.09,-0.81,0.04,2,Riskant,8,Hoch,26.0
-2026-05-17,Early Play,4,MSFT,Microsoft Corporation,421.9200134277344,0.33,-0.33,0.07,2,Riskant,8,Hoch,26.0
+2026-05-17,Early Play,2,MSFT,Microsoft Corporation,421.9200134277344,0.33,-0.33,0.07,2,Riskant,8,Hoch,26.0
+2026-05-17,Early Play,3,NFLX,"Netflix, Inc.",87.0199966430664,0.2,-0.59,0.13,3,Riskant,8,Hoch,26.0
+2026-05-17,Early Play,4,DSGX,The Descartes Systems Group Inc,67.69999694824219,0.09,-0.81,0.04,2,Riskant,8,Hoch,26.0
 2026-05-17,Early Play,5,AEM,Agnico Eagle Mines Limited,180.3300018310547,0.51,0.02,-0.15,4,Neutral,10,Hoch,25.0
 2026-05-17,Early Play,6,META,"Meta Platforms, Inc.",614.22998046875,0.34,-0.31,-0.04,1,Riskant,10,Hoch,25.0
-2026-05-17,Early Play,7,HALO,"Halozyme Therapeutics, Inc.",67.12000274658203,0.55,0.1,-0.17,5,Neutral,10,Hoch,25.0
-2026-05-17,Early Play,8,TD,Toronto Dominion Bank (The),107.63999938964844,0.97,0.93,0.13,6,Gut,10,Hoch,25.0
+2026-05-17,Early Play,7,TD,Toronto Dominion Bank (The),107.63999938964844,0.97,0.93,0.13,6,Gut,10,Hoch,25.0
+2026-05-17,Early Play,8,KGC,Kinross Gold Corporation,28.3799991607666,0.59,0.17,-0.15,5,Neutral,10,Hoch,25.0
