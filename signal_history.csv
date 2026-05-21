@@ -191,27 +191,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-20,Early Play,6,TD,Toronto Dominion Bank (The),109.58000183105467,0.99,0.99,0.14,6,Gut,10,Hoch,25.0
 2026-05-20,Early Play,7,META,"Meta Platforms, Inc.",605.0599975585938,0.31,-0.38,-0.08,1,Riskant,10,Hoch,25.0
 2026-05-20,Early Play,8,NVDA,NVIDIA Corporation,223.47000122070312,0.88,0.76,0.18,6,Gut,10,Hoch,25.0
-2026-05-21,Short Term,1,ANET,"Arista Networks, Inc.",143.33999633789062,0.62,0.24,0.12,8,Sehr gut,9,Hoch,19.0
-2026-05-21,Short Term,2,PVH,PVH Corp.,83.63500213623047,0.59,0.19,0.21,7,Gut,3,Niedrig,16.5
-2026-05-21,Short Term,3,JD,"JD.com, Inc.",31.3799991607666,0.65,0.29,0.19,7,Gut,2,Niedrig,16.5
-2026-05-21,Short Term,4,APO,"Apollo Global Management, Inc. ",132.22999572753906,0.59,0.19,0.17,7,Gut,2,Niedrig,16.5
-2026-05-21,Short Term,5,C,"Citigroup, Inc.",123.9800033569336,0.83,0.67,0.12,7,Gut,9,Hoch,15.5
-2026-05-21,Short Term,6,EOG,"EOG Resources, Inc.",142.25680541992188,0.83,0.67,0.17,7,Gut,9,Hoch,15.5
-2026-05-21,Short Term,7,DRS,"Leonardo DRS, Inc.",43.18999862670898,0.66,0.31,0.14,6,Gut,4,Niedrig,15.0
-2026-05-21,Short Term,8,TTWO,"Take-Two Interactive Software, ",237.83999633789065,0.65,0.3,0.22,6,Gut,3,Niedrig,15.0
-2026-05-21,Long Term,1,TD,Toronto Dominion Bank (The),109.2699966430664,0.99,0.97,0.15,6,Gut,10,Hoch,25.98
-2026-05-21,Long Term,2,NVDA,NVIDIA Corporation,225.50999450683597,0.9,0.79,0.18,6,Gut,10,Hoch,25.8
-2026-05-21,Long Term,3,ANET,"Arista Networks, Inc.",143.33999633789062,0.62,0.24,0.12,8,Sehr gut,9,Hoch,24.24
-2026-05-21,Long Term,4,005930.KS,SamsungElec,299500.0,1.0,1.0,0.58,6,Gut,10,Hoch,24.0
-2026-05-21,Long Term,5,MS,Morgan Stanley,197.67999267578125,0.98,0.97,0.19,6,Gut,9,Hoch,23.96
-2026-05-21,Long Term,6,C,"Citigroup, Inc.",123.9800033569336,0.83,0.67,0.12,7,Gut,9,Hoch,23.66
-2026-05-21,Long Term,7,EOG,"EOG Resources, Inc.",142.25680541992188,0.83,0.67,0.17,7,Gut,9,Hoch,23.66
-2026-05-21,Long Term,8,CF,"CF Industries Holdings, Inc.",124.01740264892578,0.74,0.48,0.3,7,Gut,9,Hoch,23.48
-2026-05-21,Early Play,1,NVO,Novo Nordisk A/S,43.89500045776367,0.22,-0.57,0.15,4,Neutral,10,Hoch,30.0
-2026-05-21,Early Play,2,MSFT,Microsoft Corporation,421.7701110839844,0.33,-0.33,0.1,2,Riskant,8,Hoch,26.0
-2026-05-21,Early Play,3,NFLX,"Netflix, Inc.",88.12000274658203,0.22,-0.56,0.16,3,Riskant,8,Hoch,26.0
-2026-05-21,Early Play,4,PLTR,Palantir Technologies Inc.,137.94000244140625,0.21,-0.57,0.06,1,Riskant,8,Hoch,26.0
-2026-05-21,Early Play,5,DSGX,The Descartes Systems Group Inc,70.68000030517578,0.15,-0.7,0.13,3,Riskant,8,Hoch,26.0
-2026-05-21,Early Play,6,META,"Meta Platforms, Inc.",600.4099731445312,0.29,-0.42,-0.06,1,Riskant,10,Hoch,25.0
-2026-05-21,Early Play,7,NVDA,NVIDIA Corporation,225.50999450683597,0.9,0.79,0.18,6,Gut,10,Hoch,25.0
-2026-05-21,Early Play,8,HALO,"Halozyme Therapeutics, Inc.",67.5999984741211,0.53,0.06,-0.04,5,Neutral,10,Hoch,25.0
+2026-05-21,Short Term,1,ANET,"Arista Networks, Inc.",143.9199981689453,0.63,0.25,0.13,8,Sehr gut,9,Hoch,19.0
+2026-05-21,Short Term,2,PVH,PVH Corp.,84.12999725341797,0.6,0.21,0.22,7,Gut,3,Niedrig,16.5
+2026-05-21,Short Term,3,JD,"JD.com, Inc.",31.30500030517578,0.64,0.28,0.19,7,Gut,2,Niedrig,16.5
+2026-05-21,Short Term,4,APO,"Apollo Global Management, Inc. ",131.67999267578125,0.58,0.17,0.16,7,Gut,2,Niedrig,16.5
+2026-05-21,Short Term,5,NVDA,NVIDIA Corporation,219.27029418945312,0.84,0.68,0.14,7,Gut,10,Hoch,15.5
+2026-05-21,Short Term,6,EOG,"EOG Resources, Inc.",142.2449951171875,0.83,0.67,0.17,7,Gut,9,Hoch,15.5
+2026-05-21,Short Term,7,C,"Citigroup, Inc.",123.3000030517578,0.82,0.65,0.12,7,Gut,9,Hoch,15.5
+2026-05-21,Short Term,8,OMCL,"Omnicell, Inc.",43.625,0.6,0.19,0.1,6,Gut,3,Niedrig,15.0
+2026-05-21,Long Term,1,TD,Toronto Dominion Bank (The),110.16000366210938,1.0,1.0,0.16,6,Gut,10,Hoch,26.0
+2026-05-21,Long Term,2,NVDA,NVIDIA Corporation,219.27029418945312,0.84,0.68,0.14,7,Gut,10,Hoch,25.68
+2026-05-21,Long Term,3,ANET,"Arista Networks, Inc.",143.9199981689453,0.63,0.25,0.13,8,Sehr gut,9,Hoch,24.26
+2026-05-21,Long Term,4,MS,Morgan Stanley,197.08999633789065,0.95,0.91,0.19,6,Gut,9,Hoch,23.9
+2026-05-21,Long Term,5,EOG,"EOG Resources, Inc.",142.2449951171875,0.83,0.67,0.17,7,Gut,9,Hoch,23.66
+2026-05-21,Long Term,6,C,"Citigroup, Inc.",123.3000030517578,0.82,0.65,0.12,7,Gut,9,Hoch,23.64
+2026-05-21,Long Term,7,FSLR,"First Solar, Inc.",254.0399932861328,0.79,0.58,0.05,6,Gut,10,Hoch,23.58
+2026-05-21,Long Term,8,CF,"CF Industries Holdings, Inc.",124.70500183105467,0.75,0.5,0.31,7,Gut,9,Hoch,23.5
+2026-05-21,Early Play,1,NVO,Novo Nordisk A/S,43.9900016784668,0.22,-0.56,0.15,4,Neutral,10,Hoch,30.0
+2026-05-21,Early Play,2,NFLX,"Netflix, Inc.",89.56999969482422,0.25,-0.51,0.18,3,Riskant,8,Hoch,26.0
+2026-05-21,Early Play,3,MSFT,Microsoft Corporation,416.5700073242188,0.31,-0.38,0.08,2,Riskant,8,Hoch,26.0
+2026-05-21,Early Play,4,DSGX,The Descartes Systems Group Inc,70.05000305175781,0.14,-0.73,0.12,3,Riskant,8,Hoch,26.0
+2026-05-21,Early Play,5,PLTR,Palantir Technologies Inc.,137.02000427246094,0.2,-0.59,0.05,1,Riskant,8,Hoch,26.0
+2026-05-21,Early Play,6,NVDA,NVIDIA Corporation,219.10989379882807,0.84,0.68,0.14,7,Gut,10,Hoch,25.0
+2026-05-21,Early Play,7,KGC,Kinross Gold Corporation,28.299999237060547,0.57,0.13,-0.2,5,Neutral,10,Hoch,25.0
+2026-05-21,Early Play,8,NU,Nu Holdings Ltd.,13.005000114440918,0.18,-0.64,-0.2,0,Riskant,10,Hoch,25.0
