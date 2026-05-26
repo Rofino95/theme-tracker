@@ -313,15 +313,15 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-25,Early Play,8,META,"Meta Platforms, Inc.",610.260009765625,0.33,-0.34,-0.04,1,Riskant,10,Hoch,25.0
 2026-05-26,Short Term,1,JD,"JD.com, Inc.",30.520000457763672,0.57,0.15,0.15,7,Gut,2,Niedrig,16.5
 2026-05-26,Short Term,2,ETSY,"Etsy, Inc.",62.380001068115234,0.57,0.13,0.15,7,Gut,2,Niedrig,16.5
-2026-05-26,Short Term,3,CF,"CF Industries Holdings, Inc.",121.6999969482422,0.7,0.41,0.27,7,Gut,9,Hoch,15.5
-2026-05-26,Short Term,4,EOG,"EOG Resources, Inc.",141.22000122070312,0.81,0.63,0.15,7,Gut,9,Hoch,15.5
-2026-05-26,Short Term,5,NVDA,NVIDIA Corporation,215.3300018310547,0.8,0.61,0.12,7,Gut,10,Hoch,15.5
+2026-05-26,Short Term,3,NVDA,NVIDIA Corporation,215.3300018310547,0.8,0.61,0.12,7,Gut,10,Hoch,15.5
+2026-05-26,Short Term,4,CF,"CF Industries Holdings, Inc.",121.6999969482422,0.7,0.41,0.27,7,Gut,9,Hoch,15.5
+2026-05-26,Short Term,5,EOG,"EOG Resources, Inc.",141.22000122070312,0.81,0.63,0.15,7,Gut,9,Hoch,15.5
 2026-05-26,Short Term,6,OMCL,"Omnicell, Inc.",44.40999984741211,0.62,0.25,0.11,6,Gut,2,Niedrig,15.0
 2026-05-26,Short Term,7,JPM,JP Morgan Chase & Co.,306.3800048828125,0.67,0.33,0.04,7,Gut,6,Mittel,14.5
-2026-05-26,Short Term,8,BAC,Bank of America Corporation,51.79999923706055,0.66,0.31,0.03,7,Gut,7,Mittel,14.5
+2026-05-26,Short Term,8,MDLZ,"Mondelez International, Inc.",61.7599983215332,0.59,0.18,0.02,7,Gut,5,Mittel,14.5
 2026-05-26,Long Term,1,TD,Toronto Dominion Bank (The),111.87000274658205,0.99,0.98,0.19,6,Gut,10,Hoch,25.98
 2026-05-26,Long Term,2,NVDA,NVIDIA Corporation,215.3300018310547,0.8,0.61,0.12,7,Gut,10,Hoch,25.6
-2026-05-26,Long Term,3,005930.KS,SamsungElec,301250.0,1.0,0.99,0.56,6,Gut,10,Hoch,24.0
+2026-05-26,Long Term,3,005930.KS,SamsungElec,299000.0,0.99,0.98,0.55,6,Gut,10,Hoch,23.98
 2026-05-26,Long Term,4,MS,Morgan Stanley,201.02999877929688,0.97,0.95,0.2,6,Gut,9,Hoch,23.94
 2026-05-26,Long Term,5,C,"Citigroup, Inc.",125.08999633789062,0.85,0.7,0.15,6,Gut,9,Hoch,23.7
 2026-05-26,Long Term,6,EOG,"EOG Resources, Inc.",141.22000122070312,0.81,0.63,0.15,7,Gut,9,Hoch,23.62
