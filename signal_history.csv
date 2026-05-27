@@ -352,10 +352,10 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-27,Long Term,7,FSLR,"First Solar, Inc.",273.6700134277344,0.92,0.84,0.37,6,Gut,10,Hoch,23.84
 2026-05-27,Long Term,8,AFL,AFLAC Incorporated,114.8499984741211,0.82,0.64,0.01,6,Gut,10,Hoch,23.64
 2026-05-27,Early Play,1,NVO,Novo Nordisk A/S,44.54999923706055,0.23,-0.54,0.23,4,Neutral,10,Hoch,30.0
-2026-05-27,Early Play,2,NVDA,NVIDIA Corporation,212.6000061035156,0.77,0.54,0.15,7,Gut,10,Hoch,25.0
-2026-05-27,Early Play,3,TD,Toronto Dominion Bank (The),112.1999969482422,0.97,0.94,0.14,6,Gut,10,Hoch,25.0
-2026-05-27,Early Play,4,HALO,"Halozyme Therapeutics, Inc.",68.6500015258789,0.56,0.13,-0.01,6,Gut,10,Hoch,25.0
-2026-05-27,Early Play,5,NU,Nu Holdings Ltd.,13.029999732971191,0.18,-0.64,-0.13,0,Riskant,10,Hoch,25.0
+2026-05-27,Early Play,2,KGC,Kinross Gold Corporation,28.51000022888184,0.57,0.15,-0.22,5,Neutral,10,Hoch,25.0
+2026-05-27,Early Play,3,FIS,Fidelity National Information S,42.02000045776367,0.02,-0.97,-0.17,0,Riskant,10,Hoch,25.0
+2026-05-27,Early Play,4,NU,Nu Holdings Ltd.,13.029999732971191,0.18,-0.64,-0.13,0,Riskant,10,Hoch,25.0
+2026-05-27,Early Play,5,NVDA,NVIDIA Corporation,212.6000061035156,0.77,0.54,0.15,7,Gut,10,Hoch,25.0
 2026-05-27,Early Play,6,BLK,"BlackRock, Inc.",1070.3399658203125,0.53,0.06,-0.01,5,Neutral,10,Hoch,25.0
-2026-05-27,Early Play,7,FIS,Fidelity National Information S,42.02000045776367,0.02,-0.97,-0.17,0,Riskant,10,Hoch,25.0
-2026-05-27,Early Play,8,KGC,Kinross Gold Corporation,28.51000022888184,0.57,0.15,-0.22,5,Neutral,10,Hoch,25.0
+2026-05-27,Early Play,7,HALO,"Halozyme Therapeutics, Inc.",68.6500015258789,0.56,0.13,-0.01,6,Gut,10,Hoch,25.0
+2026-05-27,Early Play,8,TD,Toronto Dominion Bank (The),112.1999969482422,0.97,0.94,0.14,6,Gut,10,Hoch,25.0
