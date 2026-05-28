@@ -359,27 +359,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-27,Early Play,6,BLK,"BlackRock, Inc.",1070.3399658203125,0.53,0.06,-0.01,5,Neutral,10,Hoch,25.0
 2026-05-27,Early Play,7,HALO,"Halozyme Therapeutics, Inc.",68.6500015258789,0.56,0.13,-0.01,6,Gut,10,Hoch,25.0
 2026-05-27,Early Play,8,TD,Toronto Dominion Bank (The),112.1999969482422,0.97,0.94,0.14,6,Gut,10,Hoch,25.0
-2026-05-28,Short Term,1,CF,"CF Industries Holdings, Inc.",117.34500122070312,0.64,0.28,0.18,9,Sehr gut,9,Hoch,20.5
-2026-05-28,Short Term,2,RUN,Sunrun Inc.,15.425000190734863,0.59,0.18,0.16,9,Sehr gut,9,Hoch,20.5
-2026-05-28,Short Term,3,EOG,"EOG Resources, Inc.",134.58999633789062,0.68,0.37,0.09,8,Sehr gut,9,Hoch,19.0
-2026-05-28,Short Term,4,SAIC,Science Applications Internatio,103.98999786376952,0.6,0.19,0.13,7,Gut,2,Niedrig,16.5
-2026-05-28,Short Term,5,BP,BP p.l.c.,41.36000061035156,0.69,0.38,0.08,7,Gut,5,Mittel,16.5
-2026-05-28,Short Term,6,ARRY,"Array Technologies, Inc.",9.375,0.58,0.17,0.24,7,Gut,2,Niedrig,16.5
-2026-05-28,Short Term,7,C,"Citigroup, Inc.",124.2249984741211,0.83,0.66,0.13,7,Gut,9,Hoch,15.5
-2026-05-28,Short Term,8,NVDA,NVIDIA Corporation,213.7104949951172,0.78,0.56,0.21,7,Gut,10,Hoch,15.5
-2026-05-28,Long Term,1,TD,Toronto Dominion Bank (The),112.25,0.97,0.95,0.16,6,Gut,10,Hoch,25.94
-2026-05-28,Long Term,2,NVDA,NVIDIA Corporation,213.69729614257807,0.78,0.56,0.21,7,Gut,10,Hoch,25.56
-2026-05-28,Long Term,3,EOG,"EOG Resources, Inc.",134.58999633789062,0.68,0.37,0.09,8,Sehr gut,9,Hoch,24.36
-2026-05-28,Long Term,4,CF,"CF Industries Holdings, Inc.",117.34500122070312,0.64,0.28,0.18,9,Sehr gut,9,Hoch,24.28
-2026-05-28,Long Term,5,RUN,Sunrun Inc.,15.425000190734863,0.59,0.18,0.16,9,Sehr gut,9,Hoch,24.18
-2026-05-28,Long Term,6,MS,Morgan Stanley,204.01499938964844,1.0,0.99,0.23,6,Gut,9,Hoch,24.0
-2026-05-28,Long Term,7,FSLR,"First Solar, Inc.",305.1400146484375,1.0,0.99,0.55,6,Gut,10,Hoch,24.0
-2026-05-28,Long Term,8,C,"Citigroup, Inc.",124.2249984741211,0.83,0.66,0.13,7,Gut,9,Hoch,23.66
-2026-05-28,Early Play,1,RUN,Sunrun Inc.,15.425000190734863,0.59,0.18,0.16,9,Sehr gut,9,Hoch,28.0
-2026-05-28,Early Play,2,DSGX,The Descartes Systems Group Inc,71.44999694824219,0.16,-0.67,0.08,2,Riskant,8,Hoch,26.0
-2026-05-28,Early Play,3,MSFT,Microsoft Corporation,424.6799926757813,0.35,-0.29,0.08,4,Neutral,8,Hoch,26.0
-2026-05-28,Early Play,4,NVDA,NVIDIA Corporation,213.69729614257807,0.78,0.56,0.21,7,Gut,10,Hoch,25.0
-2026-05-28,Early Play,5,FIS,Fidelity National Information S,41.97999954223633,0.02,-0.97,-0.17,0,Riskant,10,Hoch,25.0
-2026-05-28,Early Play,6,TD,Toronto Dominion Bank (The),112.25,0.97,0.95,0.16,6,Gut,10,Hoch,25.0
-2026-05-28,Early Play,7,NU,Nu Holdings Ltd.,13.21500015258789,0.21,-0.59,-0.12,0,Riskant,10,Hoch,25.0
-2026-05-28,Early Play,8,HALO,"Halozyme Therapeutics, Inc.",68.73999786376953,0.57,0.13,-0.01,6,Gut,10,Hoch,25.0
+2026-05-28,Short Term,1,CF,"CF Industries Holdings, Inc.",116.66000366210938,0.63,0.26,0.18,9,Sehr gut,9,Hoch,20.5
+2026-05-28,Short Term,2,EOG,"EOG Resources, Inc.",134.6649932861328,0.68,0.37,0.09,8,Sehr gut,9,Hoch,19.0
+2026-05-28,Short Term,3,BP,BP p.l.c.,41.47499847412109,0.69,0.39,0.08,7,Gut,5,Mittel,16.5
+2026-05-28,Short Term,4,SAIC,Science Applications Internatio,103.0749969482422,0.57,0.15,0.12,7,Gut,2,Niedrig,16.5
+2026-05-28,Short Term,5,ARRY,"Array Technologies, Inc.",9.220000267028809,0.56,0.12,0.22,7,Gut,2,Niedrig,16.5
+2026-05-28,Short Term,6,SMCI,"Super Micro Computer, Inc.",41.84999847412109,0.52,0.04,0.29,7,Gut,6,Mittel,15.5
+2026-05-28,Short Term,7,NVDA,NVIDIA Corporation,214.2400054931641,0.78,0.57,0.21,7,Gut,10,Hoch,15.5
+2026-05-28,Short Term,8,C,"Citigroup, Inc.",124.83000183105467,0.84,0.68,0.14,7,Gut,9,Hoch,15.5
+2026-05-28,Long Term,1,TD,Toronto Dominion Bank (The),113.1852035522461,0.99,0.99,0.17,6,Gut,10,Hoch,25.98
+2026-05-28,Long Term,2,NVDA,NVIDIA Corporation,214.3300018310547,0.79,0.57,0.21,7,Gut,10,Hoch,25.58
+2026-05-28,Long Term,3,EOG,"EOG Resources, Inc.",134.6649932861328,0.68,0.37,0.09,8,Sehr gut,9,Hoch,24.36
+2026-05-28,Long Term,4,CF,"CF Industries Holdings, Inc.",116.66000366210938,0.63,0.26,0.18,9,Sehr gut,9,Hoch,24.26
+2026-05-28,Long Term,5,MS,Morgan Stanley,204.1999969482422,1.0,1.0,0.23,6,Gut,9,Hoch,24.0
+2026-05-28,Long Term,6,FSLR,"First Solar, Inc.",308.2300109863281,0.99,0.97,0.56,6,Gut,10,Hoch,23.98
+2026-05-28,Long Term,7,005930.KS,SamsungElec,299500.0,0.91,0.83,0.47,6,Gut,10,Hoch,23.82
+2026-05-28,Long Term,8,C,"Citigroup, Inc.",124.83000183105467,0.84,0.68,0.14,7,Gut,9,Hoch,23.68
+2026-05-28,Early Play,1,MSFT,Microsoft Corporation,426.4599914550781,0.36,-0.27,0.09,4,Neutral,8,Hoch,26.0
+2026-05-28,Early Play,2,PLTR,Palantir Technologies Inc.,142.7301025390625,0.27,-0.46,0.04,1,Riskant,8,Hoch,26.0
+2026-05-28,Early Play,3,DSGX,The Descartes Systems Group Inc,71.91000366210938,0.17,-0.66,0.09,2,Riskant,8,Hoch,26.0
+2026-05-28,Early Play,4,TD,Toronto Dominion Bank (The),113.1852035522461,0.99,0.99,0.17,6,Gut,10,Hoch,25.0
+2026-05-28,Early Play,5,NVDA,NVIDIA Corporation,214.41000366210935,0.79,0.57,0.21,7,Gut,10,Hoch,25.0
+2026-05-28,Early Play,6,FIS,Fidelity National Information S,42.11000061035156,0.02,-0.96,-0.17,0,Riskant,10,Hoch,25.0
+2026-05-28,Early Play,7,HALO,"Halozyme Therapeutics, Inc.",68.63999938964844,0.56,0.13,-0.01,6,Gut,10,Hoch,25.0
+2026-05-28,Early Play,8,NU,Nu Holdings Ltd.,13.157400131225586,0.2,-0.6,-0.12,0,Riskant,10,Hoch,25.0
