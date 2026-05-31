@@ -437,8 +437,8 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-31,Short Term,4,SEIC,SEI Investments Company,87.87999725341797,0.69,0.39,0.07,7,Gut,6,Mittel,16.5
 2026-05-31,Short Term,5,NVDA,NVIDIA Corporation,211.13999938964844,0.75,0.51,0.16,7,Gut,10,Hoch,15.5
 2026-05-31,Short Term,6,MSFT,Microsoft Corporation,450.239990234375,0.48,-0.03,0.13,6,Gut,8,Hoch,15.0
-2026-05-31,Short Term,7,JPM,JP Morgan Chase & Co.,299.3099975585937,0.56,0.12,0.01,7,Gut,6,Mittel,14.5
-2026-05-31,Short Term,8,BAC,Bank of America Corporation,51.59999847412109,0.62,0.24,0.04,7,Gut,7,Mittel,14.5
+2026-05-31,Short Term,7,TEL,TE Connectivity plc,213.41000366210935,0.6,0.2,0.01,7,Gut,6,Mittel,14.5
+2026-05-31,Short Term,8,MDLZ,"Mondelez International, Inc.",61.16999816894531,0.56,0.12,0.02,7,Gut,5,Mittel,14.5
 2026-05-31,Long Term,1,NVDA,NVIDIA Corporation,211.13999938964844,0.75,0.51,0.16,7,Gut,10,Hoch,25.5
 2026-05-31,Long Term,2,CF,"CF Industries Holdings, Inc.",112.3499984741211,0.56,0.13,0.08,8,Sehr gut,9,Hoch,24.12
 2026-05-31,Long Term,3,MS,Morgan Stanley,208.0,1.0,1.0,0.25,6,Gut,9,Hoch,24.0
