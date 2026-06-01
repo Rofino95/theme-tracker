@@ -437,7 +437,7 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-05-31,Short Term,4,SEIC,SEI Investments Company,87.87999725341797,0.69,0.39,0.07,7,Gut,6,Mittel,16.5
 2026-05-31,Short Term,5,NVDA,NVIDIA Corporation,211.13999938964844,0.75,0.51,0.16,7,Gut,10,Hoch,15.5
 2026-05-31,Short Term,6,MSFT,Microsoft Corporation,450.239990234375,0.48,-0.03,0.13,6,Gut,8,Hoch,15.0
-2026-05-31,Short Term,7,TEL,TE Connectivity plc,213.41000366210932,0.6,0.2,0.01,7,Gut,6,Mittel,14.5
+2026-05-31,Short Term,7,TEL,TE Connectivity plc,213.4100036621093,0.6,0.2,0.01,7,Gut,6,Mittel,14.5
 2026-05-31,Short Term,8,MDLZ,"Mondelez International, Inc.",61.16999816894531,0.56,0.12,0.02,7,Gut,5,Mittel,14.5
 2026-05-31,Long Term,1,NVDA,NVIDIA Corporation,211.13999938964844,0.75,0.51,0.16,7,Gut,10,Hoch,25.5
 2026-05-31,Long Term,2,CF,"CF Industries Holdings, Inc.",112.3499984741211,0.56,0.13,0.08,8,Sehr gut,9,Hoch,24.12
@@ -476,6 +476,6 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-01,Early Play,3,NVDA,NVIDIA Corporation,211.13999938964844,0.75,0.51,0.16,7,Gut,10,Hoch,25.0
 2026-06-01,Early Play,4,FIS,Fidelity National Information S,42.9900016784668,0.04,-0.92,-0.13,0,Riskant,10,Hoch,25.0
 2026-06-01,Early Play,5,NU,Nu Holdings Ltd.,13.130000114440918,0.2,-0.61,-0.14,0,Riskant,10,Hoch,25.0
-2026-06-01,Early Play,6,MSFT,Microsoft Corporation,450.239990234375,0.48,-0.03,0.13,6,Gut,8,Hoch,24.0
-2026-06-01,Early Play,7,PLTR,Palantir Technologies Inc.,156.5399932861328,0.42,-0.15,0.08,4,Neutral,8,Hoch,24.0
+2026-06-01,Early Play,6,PLTR,Palantir Technologies Inc.,156.5399932861328,0.42,-0.15,0.08,4,Neutral,8,Hoch,24.0
+2026-06-01,Early Play,7,MSFT,Microsoft Corporation,450.239990234375,0.48,-0.03,0.13,6,Gut,8,Hoch,24.0
 2026-06-01,Early Play,8,ARES,Ares Management Corporation,128.5,0.36,-0.29,0.15,5,Neutral,7,Mittel,24.0
