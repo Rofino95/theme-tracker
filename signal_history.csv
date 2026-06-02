@@ -483,9 +483,9 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-02,Short Term,2,MSFT,Microsoft Corporation,460.5199890136719,0.54,0.07,0.14,7,Gut,8,Hoch,16.5
 2026-06-02,Short Term,3,GEV,GE Vernova Inc.,950.5399780273438,0.68,0.36,0.13,7,Gut,7,Mittel,16.5
 2026-06-02,Short Term,4,RUN,Sunrun Inc.,15.579999923706056,0.6,0.2,0.35,9,Sehr gut,9,Hoch,15.5
-2026-06-02,Short Term,5,OMCL,"Omnicell, Inc.",43.15999984741211,0.58,0.16,0.06,6,Gut,3,Niedrig,15.0
-2026-06-02,Short Term,6,FORM,"FormFactor, Inc.",115.06999969482422,0.67,0.34,0.24,6,Gut,4,Niedrig,15.0
-2026-06-02,Short Term,7,CLF,Cleveland-Cliffs Inc.,13.579999923706056,0.69,0.38,0.23,6,Gut,2,Niedrig,15.0
+2026-06-02,Short Term,5,CLF,Cleveland-Cliffs Inc.,13.579999923706056,0.69,0.38,0.23,6,Gut,2,Niedrig,15.0
+2026-06-02,Short Term,6,OMCL,"Omnicell, Inc.",43.15999984741211,0.58,0.16,0.06,6,Gut,3,Niedrig,15.0
+2026-06-02,Short Term,7,FORM,"FormFactor, Inc.",115.06999969482422,0.67,0.34,0.24,6,Gut,4,Niedrig,15.0
 2026-06-02,Short Term,8,BAC,Bank of America Corporation,51.5099983215332,0.61,0.23,0.04,7,Gut,7,Mittel,14.5
 2026-06-02,Long Term,1,NVDA,NVIDIA Corporation,224.3600006103516,0.88,0.76,0.25,6,Gut,10,Hoch,25.76
 2026-06-02,Long Term,2,RUN,Sunrun Inc.,15.579999923706056,0.6,0.2,0.35,9,Sehr gut,9,Hoch,24.2
