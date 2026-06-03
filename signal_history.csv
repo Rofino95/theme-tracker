@@ -503,3 +503,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-02,Early Play,6,NVDA,NVIDIA Corporation,222.82000732421875,0.86,0.72,0.22,6,Gut,10,Hoch,25.0
 2026-06-02,Early Play,7,NU,Nu Holdings Ltd.,11.93000030517578,0.06,-0.87,-0.2,0,Riskant,10,Hoch,25.0
 2026-06-02,Early Play,8,BLK,"BlackRock, Inc.",1018.9600219726562,0.35,-0.3,-0.02,3,Riskant,10,Hoch,25.0
+2026-06-03,Short Term,1,S,"SentinelOne, Inc.",17.350000381469727,0.58,0.16,0.29,6,Gut,2,Niedrig,15.0
+2026-06-03,Short Term,2,TEL,TE Connectivity plc,214.72999572753903,0.61,0.21,0.03,7,Gut,6,Mittel,14.5
+2026-06-03,Short Term,3,QLYS,"Qualys, Inc.",113.41999816894533,0.48,-0.04,0.16,6,Gut,6,Mittel,14.0
+2026-06-03,Short Term,4,GOOGL,Alphabet Inc.,361.8500061035156,0.81,0.62,0.19,6,Gut,9,Hoch,14.0
+2026-06-03,Short Term,5,DT,"Dynatrace, Inc.",44.970001220703125,0.51,0.03,0.21,6,Gut,3,Niedrig,14.0
+2026-06-03,Short Term,6,MSFT,Microsoft Corporation,441.30999755859375,0.44,-0.12,0.09,5,Neutral,8,Hoch,13.5
+2026-06-03,Short Term,7,ESTC,Elastic N.V.,67.58999633789062,0.47,-0.05,0.3,6,Gut,5,Mittel,12.0
+2026-06-03,Short Term,8,AMZN,"Amazon.com, Inc.",256.5199890136719,0.73,0.47,0.18,5,Neutral,5,Mittel,11.5
+2026-06-03,Long Term,1,NVDA,NVIDIA Corporation,222.82000732421875,0.86,0.72,0.22,6,Gut,10,Hoch,25.72
+2026-06-03,Long Term,2,GOOGL,Alphabet Inc.,361.8500061035156,0.81,0.62,0.19,6,Gut,9,Hoch,23.62
+2026-06-03,Long Term,3,TSM,Taiwan Semiconductor Manufactur,446.6900024414063,0.99,0.98,0.25,5,Neutral,9,Hoch,22.98
+2026-06-03,Long Term,4,MU,"Micron Technology, Inc.",1064.0999755859375,0.99,0.97,1.66,6,Gut,10,Hoch,20.98
+2026-06-03,Long Term,5,000660.KS,SK hynix,2360000.0,0.98,0.96,1.51,6,Gut,10,Hoch,20.96
+2026-06-03,Long Term,6,005930.KS,SamsungElec,360500.0,0.97,0.94,0.85,6,Gut,10,Hoch,20.94
+2026-06-03,Long Term,7,AVGO,Broadcom Inc.,481.5700073242188,0.97,0.94,0.52,5,Neutral,9,Hoch,20.94
+2026-06-03,Long Term,8,ANET,"Arista Networks, Inc.",175.3300018310547,0.95,0.91,0.3,5,Neutral,8,Hoch,20.9
+2026-06-03,Early Play,1,NVDA,NVIDIA Corporation,222.82000732421875,0.86,0.72,0.22,6,Gut,10,Hoch,25.0
+2026-06-03,Early Play,2,META,"Meta Platforms, Inc.",597.6300048828125,0.28,-0.44,-0.1,1,Riskant,10,Hoch,25.0
+2026-06-03,Early Play,3,MSFT,Microsoft Corporation,441.30999755859375,0.44,-0.12,0.09,5,Neutral,8,Hoch,24.0
+2026-06-03,Early Play,4,GOOGL,Alphabet Inc.,361.8500061035156,0.81,0.62,0.19,6,Gut,9,Hoch,23.0
+2026-06-03,Early Play,5,CRM,"Salesforce, Inc.",200.83999633789065,0.33,-0.33,0.04,2,Riskant,6,Mittel,22.0
+2026-06-03,Early Play,6,PLTR,Palantir Technologies Inc.,152.1699981689453,0.38,-0.25,-0.01,1,Riskant,8,Hoch,21.0
+2026-06-03,Early Play,7,QLYS,"Qualys, Inc.",113.41999816894533,0.48,-0.04,0.16,6,Gut,6,Mittel,20.0
+2026-06-03,Early Play,8,ORCL,Oracle Corporation,244.5800018310547,0.53,0.06,0.61,7,Gut,9,Hoch,20.0
