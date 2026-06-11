@@ -695,27 +695,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-10,Early Play,6,META,"Meta Platforms, Inc.",570.97998046875,0.19,-0.63,-0.1,1,Riskant,10,Hoch,25.0
 2026-06-10,Early Play,7,AEM,Agnico Eagle Mines Limited,152.47999572753906,0.28,-0.45,-0.3,0,Riskant,10,Hoch,25.0
 2026-06-10,Early Play,8,KGC,Kinross Gold Corporation,23.65999984741211,0.37,-0.26,-0.27,2,Riskant,10,Hoch,25.0
-2026-06-11,Short Term,1,6954.T,FANUC CORPORATION,6778.0,0.6,0.21,0.11,6,Gut,3,Niedrig,15.0
-2026-06-11,Short Term,2,VWS.CO,Vestas Wind Systems A/S,166.64999389648438,0.67,0.34,0.05,7,Gut,5,Mittel,14.5
-2026-06-11,Short Term,3,ADDYY,adidas AG,96.93000030517578,0.47,-0.07,0.21,5,Neutral,4,Niedrig,12.5
-2026-06-11,Short Term,4,SAN.MC,BANCO SANTANDER S.A.,10.444000244140623,0.85,0.7,0.07,5,Neutral,6,Mittel,11.5
-2026-06-11,Short Term,5,005930.KS,SamsungElec,299000.0,0.77,0.55,0.58,7,Gut,10,Hoch,10.5
-2026-06-11,Short Term,6,CFR.SW,RICHEMONT N,169.0500030517578,0.8,0.6,0.22,4,Neutral,2,Niedrig,10.0
-2026-06-11,Short Term,7,SIE.DE,SIEMENS AG                    N,258.3999938964844,0.73,0.47,0.13,4,Neutral,1,Niedrig,10.0
-2026-06-11,Short Term,8,VCNX,"Vaccinex, Inc.",1.1200000047683716,0.68,0.36,0.87,6,Gut,0,Niedrig,10.0
-2026-06-11,Long Term,1,005930.KS,SamsungElec,299000.0,0.77,0.55,0.58,7,Gut,10,Hoch,23.54
-2026-06-11,Long Term,2,000660.KS,SK hynix,2101000.0,0.86,0.72,1.2,6,Gut,10,Hoch,20.72
-2026-06-11,Long Term,3,LLOY.L,LLOYDS BANKING GROUP PLC ORD 10,97.22000122070312,0.58,0.17,-0.02,5,Neutral,7,Mittel,16.16
-2026-06-11,Long Term,4,NTDOY,"Nintendo Co., Ltd.",11.130000114440918,0.05,-0.9,-0.3,0,Riskant,9,Hoch,16.1
-2026-06-11,Long Term,5,BNP.PA,BNP PARIBAS ACT.A,91.95999908447266,0.9,0.79,0.06,4,Neutral,6,Mittel,14.8
-2026-06-11,Long Term,6,SAN.MC,BANCO SANTANDER S.A.,10.444000244140623,0.85,0.7,0.07,5,Neutral,6,Mittel,14.7
-2026-06-11,Long Term,7,RHHBY,Roche Holding Ltd,50.22999954223633,0.61,0.23,-0.03,5,Neutral,6,Mittel,14.22
-2026-06-11,Long Term,8,VWS.CO,Vestas Wind Systems A/S,166.64999389648438,0.67,0.34,0.05,7,Gut,5,Mittel,13.34
-2026-06-11,Early Play,1,NTDOY,"Nintendo Co., Ltd.",11.130000114440918,0.05,-0.9,-0.3,0,Riskant,9,Hoch,23.0
-2026-06-11,Early Play,2,LLOY.L,LLOYDS BANKING GROUP PLC ORD 10,97.22000122070312,0.58,0.17,-0.02,5,Neutral,7,Mittel,19.0
-2026-06-11,Early Play,3,ORSTED.CO,ORSTED A/S,155.85000610351562,0.24,-0.53,0.09,1,Riskant,4,Niedrig,18.0
-2026-06-11,Early Play,4,000660.KS,SK hynix,2101000.0,0.86,0.72,1.2,6,Gut,10,Hoch,17.0
-2026-06-11,Early Play,5,BNP.PA,BNP PARIBAS ACT.A,91.95999908447266,0.9,0.79,0.06,4,Neutral,6,Mittel,17.0
-2026-06-11,Early Play,6,SAN.MC,BANCO SANTANDER S.A.,10.444000244140623,0.85,0.7,0.07,5,Neutral,6,Mittel,17.0
-2026-06-11,Early Play,7,ADYEN.AS,ADYEN,803.0999755859375,0.03,-0.94,-0.13,0,Riskant,6,Mittel,17.0
-2026-06-11,Early Play,8,005930.KS,SamsungElec,299000.0,0.77,0.55,0.58,7,Gut,10,Hoch,17.0
+2026-06-11,Short Term,1,CPA,"Copa Holdings, S.A.",128.50999450683594,0.58,0.17,0.16,9,Sehr gut,8,Hoch,20.5
+2026-06-11,Short Term,2,FSLR,"First Solar, Inc.",249.2700042724609,0.61,0.23,0.26,9,Sehr gut,10,Hoch,20.5
+2026-06-11,Short Term,3,HALO,"Halozyme Therapeutics, Inc.",70.5,0.62,0.25,0.11,9,Sehr gut,10,Hoch,20.5
+2026-06-11,Short Term,4,NVDA,NVIDIA Corporation,200.4199981689453,0.63,0.25,0.1,8,Sehr gut,10,Hoch,19.0
+2026-06-11,Short Term,5,F,Ford Motor Company,14.300000190734863,0.56,0.12,0.2,8,Sehr gut,5,Mittel,18.0
+2026-06-11,Short Term,6,UAL,"United Airlines Holdings, Inc.",102.77999877929688,0.66,0.31,0.19,8,Sehr gut,5,Mittel,18.0
+2026-06-11,Short Term,7,AVGO,Broadcom Inc.,372.1000061035156,0.51,0.03,0.11,8,Sehr gut,10,Hoch,18.0
+2026-06-11,Short Term,8,PLUS,ePlus inc.,83.33000183105469,0.68,0.36,0.09,7,Gut,5,Mittel,16.5
+2026-06-11,Long Term,1,NVDA,NVIDIA Corporation,200.4199981689453,0.63,0.25,0.1,8,Sehr gut,10,Hoch,26.26
+2026-06-11,Long Term,2,HALO,"Halozyme Therapeutics, Inc.",70.5,0.62,0.25,0.11,9,Sehr gut,10,Hoch,26.24
+2026-06-11,Long Term,3,FSLR,"First Solar, Inc.",249.2700042724609,0.61,0.23,0.26,9,Sehr gut,10,Hoch,26.22
+2026-06-11,Long Term,4,AVGO,Broadcom Inc.,372.1000061035156,0.51,0.03,0.11,8,Sehr gut,10,Hoch,26.02
+2026-06-11,Long Term,5,INCY,Incyte Corporation,105.38999938964844,0.85,0.7,0.15,7,Gut,10,Hoch,25.7
+2026-06-11,Long Term,6,C,"Citigroup, Inc.",133.3800048828125,0.94,0.88,0.27,6,Gut,9,Hoch,23.88
+2026-06-11,Long Term,7,MS,Morgan Stanley,206.66000366210935,0.87,0.73,0.35,6,Gut,9,Hoch,23.74
+2026-06-11,Long Term,8,TSM,Taiwan Semiconductor Manufactur,408.75,0.83,0.66,0.22,6,Gut,9,Hoch,23.66
+2026-06-11,Early Play,1,BLK,"BlackRock, Inc.",1010.6799926757812,0.34,-0.32,0.1,3,Riskant,10,Hoch,30.0
+2026-06-11,Early Play,2,NVO,Novo Nordisk A/S,42.810001373291016,0.19,-0.62,0.17,4,Neutral,10,Hoch,30.0
+2026-06-11,Early Play,3,AVGO,Broadcom Inc.,372.1000061035156,0.51,0.03,0.11,8,Sehr gut,10,Hoch,30.0
+2026-06-11,Early Play,4,CPA,"Copa Holdings, S.A.",128.50999450683594,0.58,0.17,0.16,9,Sehr gut,8,Hoch,26.0
+2026-06-11,Early Play,5,V,Visa Inc.,322.9599914550781,0.37,-0.25,0.06,4,Neutral,8,Hoch,26.0
+2026-06-11,Early Play,6,AEM,Agnico Eagle Mines Limited,152.47999572753906,0.28,-0.45,-0.3,0,Riskant,10,Hoch,25.0
+2026-06-11,Early Play,7,AFL,AFLAC Incorporated,117.11000061035156,0.91,0.83,0.07,5,Neutral,10,Hoch,25.0
+2026-06-11,Early Play,8,FIS,Fidelity National Information S,38.970001220703125,0.01,-0.98,-0.21,0,Riskant,10,Hoch,25.0
