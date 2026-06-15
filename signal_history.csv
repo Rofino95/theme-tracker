@@ -791,27 +791,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-14,Early Play,6,AFL,AFLAC Incorporated,117.8000030517578,0.94,0.89,0.09,5,Neutral,10,Hoch,25.0
 2026-06-14,Early Play,7,META,"Meta Platforms, Inc.",566.97998046875,0.17,-0.66,-0.1,1,Riskant,10,Hoch,25.0
 2026-06-14,Early Play,8,AEM,Agnico Eagle Mines Limited,162.63999938964844,0.35,-0.3,-0.22,0,Riskant,10,Hoch,25.0
-2026-06-15,Short Term,1,AVGO,Broadcom Inc.,393.6499938964844,0.6,0.2,0.23,8,Sehr gut,9,Hoch,19.0
-2026-06-15,Short Term,2,HALO,"Halozyme Therapeutics, Inc.",70.66000366210938,0.63,0.26,0.08,8,Sehr gut,10,Hoch,19.0
-2026-06-15,Short Term,3,DB,Deutsche Bank AG,34.58000183105469,0.65,0.3,0.2,8,Sehr gut,5,Mittel,18.0
-2026-06-15,Short Term,4,F,Ford Motor Company,14.80500030517578,0.62,0.25,0.26,8,Sehr gut,5,Mittel,18.0
-2026-06-15,Short Term,5,TEL,TE Connectivity plc,217.2050018310547,0.62,0.25,0.07,7,Gut,6,Mittel,16.5
-2026-06-15,Short Term,6,VMC,Vulcan Materials Company (Holdi,294.6099853515625,0.55,0.1,0.11,7,Gut,5,Mittel,16.5
-2026-06-15,Short Term,7,AMZN,"Amazon.com, Inc.",246.6199951171875,0.61,0.23,0.15,7,Gut,5,Mittel,16.5
-2026-06-15,Short Term,8,VWS.CO,Vestas Wind Systems A/S,169.60000610351562,0.7,0.39,0.1,7,Gut,5,Mittel,16.5
-2026-06-15,Long Term,1,HALO,"Halozyme Therapeutics, Inc.",70.66000366210938,0.63,0.26,0.08,8,Sehr gut,10,Hoch,26.26
-2026-06-15,Long Term,2,INCY,Incyte Corporation,101.69000244140624,0.77,0.53,0.08,6,Gut,10,Hoch,25.54
-2026-06-15,Long Term,3,NVDA,NVIDIA Corporation,211.9600982666016,0.74,0.49,0.17,7,Gut,10,Hoch,25.48
-2026-06-15,Long Term,4,BLK,"BlackRock, Inc.",1047.9649658203125,0.47,-0.06,0.09,6,Gut,10,Hoch,24.94
-2026-06-15,Long Term,5,AFL,AFLAC Incorporated,117.12999725341795,0.91,0.83,0.08,5,Neutral,10,Hoch,24.82
-2026-06-15,Long Term,6,AVGO,Broadcom Inc.,393.6499938964844,0.6,0.2,0.23,8,Sehr gut,9,Hoch,24.2
-2026-06-15,Long Term,7,C,"Citigroup, Inc.",141.61000061035156,0.97,0.94,0.32,6,Gut,9,Hoch,23.94
-2026-06-15,Long Term,8,GOOGL,Alphabet Inc.,370.152587890625,0.85,0.69,0.19,6,Gut,9,Hoch,23.7
-2026-06-15,Early Play,1,NVO,Novo Nordisk A/S,43.92499923706055,0.23,-0.53,0.18,4,Neutral,10,Hoch,30.0
-2026-06-15,Early Play,2,BLK,"BlackRock, Inc.",1047.9649658203125,0.47,-0.06,0.09,6,Gut,10,Hoch,28.0
-2026-06-15,Early Play,3,INCY,Incyte Corporation,101.69000244140624,0.77,0.53,0.08,6,Gut,10,Hoch,25.0
-2026-06-15,Early Play,4,META,"Meta Platforms, Inc.",593.719970703125,0.27,-0.46,-0.05,1,Riskant,10,Hoch,25.0
-2026-06-15,Early Play,5,KGC,Kinross Gold Corporation,27.30500030517578,0.52,0.04,-0.12,4,Neutral,10,Hoch,25.0
-2026-06-15,Early Play,6,AFL,AFLAC Incorporated,117.12999725341795,0.91,0.83,0.08,5,Neutral,10,Hoch,25.0
-2026-06-15,Early Play,7,FIS,Fidelity National Information S,38.93000030517578,0.02,-0.95,-0.22,0,Riskant,10,Hoch,25.0
-2026-06-15,Early Play,8,NVDA,NVIDIA Corporation,211.9900054931641,0.74,0.49,0.17,7,Gut,10,Hoch,25.0
+2026-06-15,Short Term,1,HALO,"Halozyme Therapeutics, Inc.",71.27999877929688,0.65,0.3,0.09,8,Sehr gut,10,Hoch,19.0
+2026-06-15,Short Term,2,AVGO,Broadcom Inc.,393.9400024414063,0.6,0.2,0.23,8,Sehr gut,9,Hoch,19.0
+2026-06-15,Short Term,3,F,Ford Motor Company,14.770000457763672,0.62,0.24,0.25,8,Sehr gut,5,Mittel,18.0
+2026-06-15,Short Term,4,DB,Deutsche Bank AG,34.5,0.65,0.29,0.19,8,Sehr gut,5,Mittel,18.0
+2026-06-15,Short Term,5,AMZN,"Amazon.com, Inc.",246.0200042724609,0.61,0.21,0.14,7,Gut,5,Mittel,16.5
+2026-06-15,Short Term,6,EXP,Eagle Materials Inc,217.9600067138672,0.65,0.29,0.16,7,Gut,3,Niedrig,16.5
+2026-06-15,Short Term,7,MDLZ,"Mondelez International, Inc.",61.5,0.58,0.16,0.07,7,Gut,5,Mittel,16.5
+2026-06-15,Short Term,8,APO,"Apollo Global Management, Inc. ",136.11000061035156,0.66,0.33,0.26,7,Gut,2,Niedrig,16.5
+2026-06-15,Long Term,1,HALO,"Halozyme Therapeutics, Inc.",71.27999877929688,0.65,0.3,0.09,8,Sehr gut,10,Hoch,26.3
+2026-06-15,Long Term,2,INCY,Incyte Corporation,101.9800033569336,0.77,0.55,0.08,6,Gut,10,Hoch,25.54
+2026-06-15,Long Term,3,NVDA,NVIDIA Corporation,212.4499969482422,0.75,0.5,0.17,7,Gut,10,Hoch,25.5
+2026-06-15,Long Term,4,BLK,"BlackRock, Inc.",1042.8699951171875,0.45,-0.09,0.08,6,Gut,10,Hoch,24.9
+2026-06-15,Long Term,5,AVGO,Broadcom Inc.,393.9400024414063,0.6,0.2,0.23,8,Sehr gut,9,Hoch,24.2
+2026-06-15,Long Term,6,C,"Citigroup, Inc.",141.2100067138672,0.97,0.93,0.32,6,Gut,9,Hoch,23.94
+2026-06-15,Long Term,7,GOOGL,Alphabet Inc.,369.3500061035156,0.84,0.68,0.19,6,Gut,9,Hoch,23.68
+2026-06-15,Long Term,8,ORCL,Oracle Corporation,192.63999938964844,0.28,-0.44,0.25,4,Neutral,10,Hoch,23.56
+2026-06-15,Early Play,1,NVO,Novo Nordisk A/S,43.91999816894531,0.23,-0.54,0.18,4,Neutral,10,Hoch,30.0
+2026-06-15,Early Play,2,BLK,"BlackRock, Inc.",1042.8699951171875,0.45,-0.09,0.08,6,Gut,10,Hoch,28.0
+2026-06-15,Early Play,3,AFL,AFLAC Incorporated,116.95999908447266,0.91,0.82,0.07,5,Neutral,10,Hoch,25.0
+2026-06-15,Early Play,4,HALO,"Halozyme Therapeutics, Inc.",71.27999877929688,0.65,0.3,0.09,8,Sehr gut,10,Hoch,25.0
+2026-06-15,Early Play,5,KGC,Kinross Gold Corporation,27.34000015258789,0.52,0.04,-0.12,4,Neutral,10,Hoch,25.0
+2026-06-15,Early Play,6,NU,Nu Holdings Ltd.,12.43000030517578,0.16,-0.68,-0.13,0,Riskant,10,Hoch,25.0
+2026-06-15,Early Play,7,NVDA,NVIDIA Corporation,212.4499969482422,0.75,0.5,0.17,7,Gut,10,Hoch,25.0
+2026-06-15,Early Play,8,FIS,Fidelity National Information S,38.970001220703125,0.03,-0.95,-0.22,0,Riskant,10,Hoch,25.0
