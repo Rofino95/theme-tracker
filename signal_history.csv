@@ -815,27 +815,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-15,Early Play,6,NU,Nu Holdings Ltd.,12.43000030517578,0.16,-0.68,-0.13,0,Riskant,10,Hoch,25.0
 2026-06-15,Early Play,7,NVDA,NVIDIA Corporation,212.4499969482422,0.75,0.5,0.17,7,Gut,10,Hoch,25.0
 2026-06-15,Early Play,8,FIS,Fidelity National Information S,38.970001220703125,0.03,-0.95,-0.22,0,Riskant,10,Hoch,25.0
-2026-06-16,Short Term,1,EXP,Eagle Materials Inc,217.9600067138672,0.65,0.3,0.16,7,Gut,3,Niedrig,16.5
-2026-06-16,Short Term,2,SAIC,Science Applications Internatio,109.38999938964844,0.67,0.34,0.16,7,Gut,4,Niedrig,16.5
-2026-06-16,Short Term,3,FLYW,Flywire Corporation - Voting,15.3100004196167,0.66,0.31,0.21,7,Gut,4,Niedrig,16.5
-2026-06-16,Short Term,4,ENPH,"Enphase Energy, Inc.",52.400001525878906,0.56,0.11,0.17,6,Gut,1,Niedrig,15.0
-2026-06-16,Short Term,5,ARES,Ares Management Corporation,135.36000061035156,0.43,-0.15,0.28,6,Gut,7,Mittel,14.0
-2026-06-16,Short Term,6,QLYS,"Qualys, Inc.",114.6500015258789,0.5,-0.01,0.21,6,Gut,6,Mittel,14.0
-2026-06-16,Short Term,7,NET,"Cloudflare, Inc.",235.7100067138672,0.65,0.3,0.11,5,Neutral,2,Niedrig,13.5
-2026-06-16,Short Term,8,VWS.CO,Vestas Wind Systems A/S,171.9499969482422,0.72,0.44,0.12,6,Gut,5,Mittel,13.0
-2026-06-16,Long Term,1,TSM,Taiwan Semiconductor Manufactur,441.3999938964844,0.97,0.94,0.28,5,Neutral,9,Hoch,22.94
-2026-06-16,Long Term,2,000660.KS,SK hynix,2382000.0,0.99,0.98,1.45,6,Gut,10,Hoch,20.98
-2026-06-16,Long Term,3,005930.KS,SamsungElec,343000.0,0.91,0.83,0.82,6,Gut,10,Hoch,20.82
-2026-06-16,Long Term,4,ANET,"Arista Networks, Inc.",169.08999633789062,0.89,0.77,0.27,5,Neutral,8,Hoch,20.78
-2026-06-16,Long Term,5,META,"Meta Platforms, Inc.",593.47998046875,0.27,-0.46,-0.05,1,Riskant,10,Hoch,20.54
-2026-06-16,Long Term,6,KGC,Kinross Gold Corporation,27.34000015258789,0.52,0.04,-0.12,4,Neutral,10,Hoch,20.04
-2026-06-16,Long Term,7,RUN,Sunrun Inc.,12.470000267028809,0.42,-0.17,-0.06,4,Neutral,9,Hoch,19.84
-2026-06-16,Long Term,8,AMG,"Affiliated Managers Group, Inc.",352.92999267578125,0.94,0.88,0.27,5,Neutral,7,Mittel,18.88
-2026-06-16,Early Play,1,META,"Meta Platforms, Inc.",593.47998046875,0.27,-0.46,-0.05,1,Riskant,10,Hoch,25.0
-2026-06-16,Early Play,2,NU,Nu Holdings Ltd.,12.43000030517578,0.16,-0.68,-0.13,0,Riskant,10,Hoch,25.0
-2026-06-16,Early Play,3,KGC,Kinross Gold Corporation,27.34000015258789,0.52,0.04,-0.12,4,Neutral,10,Hoch,25.0
-2026-06-16,Early Play,4,MLM,"Martin Marietta Materials, Inc.",588.8900146484375,0.35,-0.3,0.01,2,Riskant,8,Hoch,23.0
-2026-06-16,Early Play,5,BAM,Brookfield Asset Management Inc,48.18999862670898,0.32,-0.36,0.09,1,Riskant,6,Mittel,22.0
-2026-06-16,Early Play,6,PLTR,Palantir Technologies Inc.,134.7100067138672,0.14,-0.72,-0.13,0,Riskant,8,Hoch,21.0
-2026-06-16,Early Play,7,LYFT,"Lyft, Inc.",14.239999771118164,0.14,-0.73,0.01,2,Riskant,7,Mittel,21.0
-2026-06-16,Early Play,8,RUN,Sunrun Inc.,12.470000267028809,0.42,-0.17,-0.06,4,Neutral,9,Hoch,21.0
+2026-06-16,Short Term,1,HALO,"Halozyme Therapeutics, Inc.",68.9800033569336,0.58,0.15,0.08,8,Sehr gut,10,Hoch,19.0
+2026-06-16,Short Term,2,TEL,TE Connectivity plc,217.77999877929688,0.63,0.26,0.11,8,Sehr gut,6,Mittel,18.0
+2026-06-16,Short Term,3,AXP,American Express Company,340.95001220703125,0.55,0.1,0.16,8,Sehr gut,5,Mittel,18.0
+2026-06-16,Short Term,4,DB,Deutsche Bank AG,35.04499816894531,0.69,0.38,0.21,8,Sehr gut,5,Mittel,18.0
+2026-06-16,Short Term,5,AVGO,Broadcom Inc.,379.0899963378906,0.54,0.08,0.18,8,Sehr gut,10,Hoch,18.0
+2026-06-16,Short Term,6,F,Ford Motor Company,14.595000267028809,0.6,0.19,0.25,8,Sehr gut,5,Mittel,18.0
+2026-06-16,Short Term,7,V,Visa Inc.,332.19000244140625,0.61,0.21,0.08,7,Gut,8,Hoch,17.5
+2026-06-16,Short Term,8,NEM,Newmont Corporation,108.08999633789062,0.67,0.34,0.02,8,Sehr gut,10,Hoch,17.0
+2026-06-16,Long Term,1,HALO,"Halozyme Therapeutics, Inc.",68.9800033569336,0.58,0.15,0.08,8,Sehr gut,10,Hoch,26.16
+2026-06-16,Long Term,2,AVGO,Broadcom Inc.,379.0899963378906,0.54,0.08,0.18,8,Sehr gut,10,Hoch,26.08
+2026-06-16,Long Term,3,INCY,Incyte Corporation,100.25,0.74,0.47,0.09,6,Gut,10,Hoch,25.48
+2026-06-16,Long Term,4,NVDA,NVIDIA Corporation,208.9199981689453,0.71,0.42,0.16,7,Gut,10,Hoch,25.42
+2026-06-16,Long Term,5,FSLR,"First Solar, Inc.",267.67999267578125,0.71,0.43,0.35,7,Gut,10,Hoch,25.42
+2026-06-16,Long Term,6,BLK,"BlackRock, Inc.",1053.7850341796875,0.49,-0.02,0.09,6,Gut,10,Hoch,24.98
+2026-06-16,Long Term,7,AFL,AFLAC Incorporated,117.4749984741211,0.93,0.86,0.09,5,Neutral,10,Hoch,24.86
+2026-06-16,Long Term,8,NEM,Newmont Corporation,108.08999633789062,0.67,0.34,0.02,8,Sehr gut,10,Hoch,24.34
+2026-06-16,Early Play,1,ORCL,Oracle Corporation,188.9600067138672,0.26,-0.48,0.24,4,Neutral,10,Hoch,30.0
+2026-06-16,Early Play,2,AVGO,Broadcom Inc.,379.0899963378906,0.54,0.08,0.18,8,Sehr gut,10,Hoch,30.0
+2026-06-16,Early Play,3,HALO,"Halozyme Therapeutics, Inc.",68.9800033569336,0.58,0.15,0.08,8,Sehr gut,10,Hoch,30.0
+2026-06-16,Early Play,4,NVO,Novo Nordisk A/S,43.84000015258789,0.23,-0.54,0.21,4,Neutral,10,Hoch,30.0
+2026-06-16,Early Play,5,BLK,"BlackRock, Inc.",1053.7850341796875,0.49,-0.02,0.09,6,Gut,10,Hoch,28.0
+2026-06-16,Early Play,6,META,"Meta Platforms, Inc.",596.094970703125,0.28,-0.44,-0.03,1,Riskant,10,Hoch,25.0
+2026-06-16,Early Play,7,AFL,AFLAC Incorporated,117.4749984741211,0.93,0.86,0.09,5,Neutral,10,Hoch,25.0
+2026-06-16,Early Play,8,KGC,Kinross Gold Corporation,27.934999465942383,0.55,0.09,-0.03,5,Neutral,10,Hoch,25.0
