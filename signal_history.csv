@@ -815,17 +815,17 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-15,Early Play,6,NU,Nu Holdings Ltd.,12.43000030517578,0.16,-0.68,-0.13,0,Riskant,10,Hoch,25.0
 2026-06-15,Early Play,7,NVDA,NVIDIA Corporation,212.4499969482422,0.75,0.5,0.17,7,Gut,10,Hoch,25.0
 2026-06-15,Early Play,8,FIS,Fidelity National Information S,38.970001220703125,0.03,-0.95,-0.22,0,Riskant,10,Hoch,25.0
-2026-06-16,Short Term,1,VWS.CO,Vestas Wind Systems A/S,169.60000610351562,0.7,0.39,0.1,7,Gut,5,Mittel,16.5
+2026-06-16,Short Term,1,EXP,Eagle Materials Inc,217.9600067138672,0.65,0.3,0.16,7,Gut,3,Niedrig,16.5
 2026-06-16,Short Term,2,SAIC,Science Applications Internatio,109.38999938964844,0.67,0.34,0.16,7,Gut,4,Niedrig,16.5
-2026-06-16,Short Term,3,EXP,Eagle Materials Inc,217.9600067138672,0.65,0.3,0.16,7,Gut,3,Niedrig,16.5
-2026-06-16,Short Term,4,FLYW,Flywire Corporation - Voting,15.3100004196167,0.66,0.31,0.21,7,Gut,4,Niedrig,16.5
-2026-06-16,Short Term,5,ENPH,"Enphase Energy, Inc.",52.400001525878906,0.56,0.11,0.17,6,Gut,1,Niedrig,15.0
-2026-06-16,Short Term,6,ARES,Ares Management Corporation,135.36000061035156,0.43,-0.15,0.28,6,Gut,7,Mittel,14.0
-2026-06-16,Short Term,7,QLYS,"Qualys, Inc.",114.6500015258789,0.5,-0.01,0.21,6,Gut,6,Mittel,14.0
-2026-06-16,Short Term,8,NET,"Cloudflare, Inc.",235.7100067138672,0.65,0.3,0.11,5,Neutral,2,Niedrig,13.5
+2026-06-16,Short Term,3,FLYW,Flywire Corporation - Voting,15.3100004196167,0.66,0.31,0.21,7,Gut,4,Niedrig,16.5
+2026-06-16,Short Term,4,ENPH,"Enphase Energy, Inc.",52.400001525878906,0.56,0.11,0.17,6,Gut,1,Niedrig,15.0
+2026-06-16,Short Term,5,ARES,Ares Management Corporation,135.36000061035156,0.43,-0.15,0.28,6,Gut,7,Mittel,14.0
+2026-06-16,Short Term,6,QLYS,"Qualys, Inc.",114.6500015258789,0.5,-0.01,0.21,6,Gut,6,Mittel,14.0
+2026-06-16,Short Term,7,NET,"Cloudflare, Inc.",235.7100067138672,0.65,0.3,0.11,5,Neutral,2,Niedrig,13.5
+2026-06-16,Short Term,8,VWS.CO,Vestas Wind Systems A/S,171.9499969482422,0.72,0.44,0.12,6,Gut,5,Mittel,13.0
 2026-06-16,Long Term,1,TSM,Taiwan Semiconductor Manufactur,441.3999938964844,0.97,0.94,0.28,5,Neutral,9,Hoch,22.94
-2026-06-16,Long Term,2,000660.KS,SK hynix,2380000.0,0.99,0.98,1.44,6,Gut,10,Hoch,20.98
-2026-06-16,Long Term,3,005930.KS,SamsungElec,342000.0,0.91,0.82,0.82,6,Gut,10,Hoch,20.82
+2026-06-16,Long Term,2,000660.KS,SK hynix,2382000.0,0.99,0.98,1.45,6,Gut,10,Hoch,20.98
+2026-06-16,Long Term,3,005930.KS,SamsungElec,343000.0,0.91,0.83,0.82,6,Gut,10,Hoch,20.82
 2026-06-16,Long Term,4,ANET,"Arista Networks, Inc.",169.08999633789062,0.89,0.77,0.27,5,Neutral,8,Hoch,20.78
 2026-06-16,Long Term,5,META,"Meta Platforms, Inc.",593.47998046875,0.27,-0.46,-0.05,1,Riskant,10,Hoch,20.54
 2026-06-16,Long Term,6,KGC,Kinross Gold Corporation,27.34000015258789,0.52,0.04,-0.12,4,Neutral,10,Hoch,20.04
