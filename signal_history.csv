@@ -870,7 +870,7 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-18,Short Term,5,AVGO,Broadcom Inc.,392.8999938964844,0.6,0.19,0.23,8,Sehr gut,9,Hoch,19.0
 2026-06-18,Short Term,6,DB,Deutsche Bank AG,35.04999923706055,0.69,0.38,0.24,8,Sehr gut,5,Mittel,18.0
 2026-06-18,Short Term,7,V,Visa Inc.,330.3800048828125,0.58,0.16,0.1,7,Gut,8,Hoch,17.5
-2026-06-18,Short Term,8,EXP,Eagle Materials Inc,213.2400054931641,0.58,0.17,0.21,7,Gut,3,Niedrig,16.5
+2026-06-18,Short Term,8,BLK,"BlackRock, Inc.",1057.3800048828125,0.5,0.01,0.1,7,Gut,10,Hoch,16.5
 2026-06-18,Long Term,1,NVDA,NVIDIA Corporation,204.6499938964844,0.67,0.33,0.15,9,Sehr gut,10,Hoch,26.34
 2026-06-18,Long Term,2,FSLR,"First Solar, Inc.",254.8000030517578,0.64,0.27,0.28,9,Sehr gut,10,Hoch,26.28
 2026-06-18,Long Term,3,HALO,"Halozyme Therapeutics, Inc.",68.56999969482422,0.56,0.12,0.08,8,Sehr gut,10,Hoch,26.12
@@ -879,11 +879,11 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-18,Long Term,6,NEM,Newmont Corporation,105.66999816894533,0.64,0.28,0.07,8,Sehr gut,10,Hoch,24.28
 2026-06-18,Long Term,7,AVGO,Broadcom Inc.,392.8999938964844,0.6,0.19,0.23,8,Sehr gut,9,Hoch,24.2
 2026-06-18,Long Term,8,C,"Citigroup, Inc.",143.77999877929688,0.96,0.92,0.32,6,Gut,9,Hoch,23.92
-2026-06-18,Early Play,1,BLK,"BlackRock, Inc.",1057.3800048828125,0.5,0.01,0.1,7,Gut,10,Hoch,30.0
-2026-06-18,Early Play,2,HALO,"Halozyme Therapeutics, Inc.",68.56999969482422,0.56,0.12,0.08,8,Sehr gut,10,Hoch,30.0
-2026-06-18,Early Play,3,ORCL,Oracle Corporation,183.52999877929688,0.23,-0.53,0.18,4,Neutral,10,Hoch,30.0
-2026-06-18,Early Play,4,NVO,Novo Nordisk A/S,43.52000045776367,0.24,-0.51,0.22,4,Neutral,10,Hoch,30.0
+2026-06-18,Early Play,1,HALO,"Halozyme Therapeutics, Inc.",68.56999969482422,0.56,0.12,0.08,8,Sehr gut,10,Hoch,30.0
+2026-06-18,Early Play,2,ORCL,Oracle Corporation,183.52999877929688,0.23,-0.53,0.18,4,Neutral,10,Hoch,30.0
+2026-06-18,Early Play,3,NVO,Novo Nordisk A/S,43.52000045776367,0.24,-0.51,0.22,4,Neutral,10,Hoch,30.0
+2026-06-18,Early Play,4,BLK,"BlackRock, Inc.",1057.3800048828125,0.5,0.01,0.1,7,Gut,10,Hoch,30.0
 2026-06-18,Early Play,5,WPM,Wheaton Precious Metals Corp,125.8499984741211,0.51,0.01,0.04,6,Gut,9,Hoch,28.0
-2026-06-18,Early Play,6,MLM,"Martin Marietta Materials, Inc.",591.0800170898438,0.36,-0.28,0.04,4,Neutral,8,Hoch,26.0
-2026-06-18,Early Play,7,V,Visa Inc.,330.3800048828125,0.58,0.16,0.1,7,Gut,8,Hoch,26.0
-2026-06-18,Early Play,8,NVDA,NVIDIA Corporation,204.6499938964844,0.67,0.33,0.15,9,Sehr gut,10,Hoch,25.0
+2026-06-18,Early Play,6,V,Visa Inc.,330.3800048828125,0.58,0.16,0.1,7,Gut,8,Hoch,26.0
+2026-06-18,Early Play,7,MLM,"Martin Marietta Materials, Inc.",591.0800170898438,0.36,-0.28,0.04,4,Neutral,8,Hoch,26.0
+2026-06-18,Early Play,8,META,"Meta Platforms, Inc.",567.5800170898438,0.17,-0.65,-0.06,1,Riskant,10,Hoch,25.0
