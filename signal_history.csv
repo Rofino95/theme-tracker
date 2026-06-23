@@ -986,10 +986,10 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-23,Short Term,1,AVGO,Broadcom Inc.,392.1300048828125,0.59,0.18,0.22,8,Sehr gut,9,Hoch,19.0
 2026-06-23,Short Term,2,HALO,"Halozyme Therapeutics, Inc.",68.98999786376953,0.58,0.15,0.1,8,Sehr gut,10,Hoch,19.0
 2026-06-23,Short Term,3,NEM,Newmont Corporation,101.8000030517578,0.59,0.18,0.04,8,Sehr gut,10,Hoch,17.0
-2026-06-23,Short Term,4,APO,"Apollo Global Management, Inc. ",135.2100067138672,0.65,0.3,0.23,7,Gut,2,Niedrig,16.5
-2026-06-23,Short Term,5,FLYW,Flywire Corporation - Voting,15.43000030517578,0.67,0.34,0.23,7,Gut,4,Niedrig,16.5
-2026-06-23,Short Term,6,PRU,"Prudential Financial, Inc.",108.26000213623048,0.68,0.36,0.16,7,Gut,3,Niedrig,16.5
-2026-06-23,Short Term,7,TEL,TE Connectivity plc,212.69000244140625,0.57,0.15,0.06,7,Gut,6,Mittel,16.5
+2026-06-23,Short Term,4,TEL,TE Connectivity plc,212.69000244140625,0.57,0.15,0.06,7,Gut,6,Mittel,16.5
+2026-06-23,Short Term,5,PRU,"Prudential Financial, Inc.",108.26000213623048,0.68,0.36,0.16,7,Gut,3,Niedrig,16.5
+2026-06-23,Short Term,6,FLYW,Flywire Corporation - Voting,15.43000030517578,0.67,0.34,0.23,7,Gut,4,Niedrig,16.5
+2026-06-23,Short Term,7,APO,"Apollo Global Management, Inc. ",135.2100067138672,0.65,0.3,0.23,7,Gut,2,Niedrig,16.5
 2026-06-23,Short Term,8,VMC,Vulcan Materials Company (Holdi,304.3900146484375,0.68,0.35,0.16,7,Gut,5,Mittel,16.5
 2026-06-23,Long Term,1,HALO,"Halozyme Therapeutics, Inc.",68.98999786376953,0.58,0.15,0.1,8,Sehr gut,10,Hoch,26.16
 2026-06-23,Long Term,2,INCY,Incyte Corporation,103.66000366210938,0.81,0.62,0.15,7,Gut,10,Hoch,25.62
@@ -1006,4 +1006,4 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-23,Early Play,5,AVGO,Broadcom Inc.,392.1300048828125,0.59,0.18,0.22,8,Sehr gut,9,Hoch,28.0
 2026-06-23,Early Play,6,RUN,Sunrun Inc.,13.619999885559082,0.46,-0.07,0.1,6,Gut,9,Hoch,26.0
 2026-06-23,Early Play,7,V,Visa Inc.,326.6000061035156,0.52,0.04,0.08,6,Gut,8,Hoch,26.0
-2026-06-23,Early Play,8,AFL,AFLAC Incorporated,116.5500030517578,0.89,0.78,0.1,5,Neutral,10,Hoch,25.0
+2026-06-23,Early Play,8,AEM,Agnico Eagle Mines Limited,166.85000610351562,0.38,-0.24,-0.09,3,Riskant,10,Hoch,25.0
