@@ -1055,27 +1055,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-25,Early Play,6,RUN,Sunrun Inc.,13.600000381469728,0.42,-0.16,0.1,6,Gut,9,Hoch,26.0
 2026-06-25,Early Play,7,V,Visa Inc.,330.5199890136719,0.58,0.17,0.08,7,Gut,8,Hoch,26.0
 2026-06-25,Early Play,8,NEM,Newmont Corporation,95.3499984741211,0.51,0.02,-0.04,5,Neutral,10,Hoch,25.0
-2026-06-26,Short Term,1,HALO,"Halozyme Therapeutics, Inc.",72.63999938964844,0.69,0.39,0.15,9,Sehr gut,10,Hoch,20.5
-2026-06-26,Short Term,2,DB,Deutsche Bank AG,34.380001068115234,0.61,0.22,0.23,8,Sehr gut,5,Mittel,18.0
-2026-06-26,Short Term,3,AVGO,Broadcom Inc.,378.9100036621094,0.51,0.01,0.23,8,Sehr gut,10,Hoch,18.0
-2026-06-26,Short Term,4,NVDA,NVIDIA Corporation,195.7400054931641,0.52,0.05,0.14,8,Sehr gut,10,Hoch,18.0
-2026-06-26,Short Term,5,AXP,American Express Company,342.4599914550781,0.57,0.14,0.15,8,Sehr gut,5,Mittel,18.0
-2026-06-26,Short Term,6,MLM,"Martin Marietta Materials, Inc.",628.9400024414062,0.57,0.13,0.09,7,Gut,8,Hoch,17.5
-2026-06-26,Short Term,7,AAPL,Apple Inc.,275.1499938964844,0.64,0.29,0.09,7,Gut,8,Hoch,17.5
-2026-06-26,Short Term,8,V,Visa Inc.,330.5199890136719,0.58,0.17,0.08,7,Gut,8,Hoch,17.5
-2026-06-26,Long Term,1,HALO,"Halozyme Therapeutics, Inc.",72.63999938964844,0.69,0.39,0.15,9,Sehr gut,10,Hoch,26.38
-2026-06-26,Long Term,2,FSLR,"First Solar, Inc.",248.63999938964844,0.58,0.16,0.34,9,Sehr gut,10,Hoch,26.16
-2026-06-26,Long Term,3,NVDA,NVIDIA Corporation,195.7400054931641,0.52,0.05,0.14,8,Sehr gut,10,Hoch,26.04
-2026-06-26,Long Term,4,AVGO,Broadcom Inc.,378.9100036621094,0.51,0.01,0.23,8,Sehr gut,10,Hoch,26.02
-2026-06-26,Long Term,5,INCY,Incyte Corporation,107.52999877929688,0.9,0.79,0.17,6,Gut,10,Hoch,25.8
-2026-06-26,Long Term,6,AFL,AFLAC Incorporated,118.2300033569336,0.92,0.84,0.1,5,Neutral,10,Hoch,24.84
-2026-06-26,Long Term,7,C,"Citigroup, Inc.",144.97999572753906,0.96,0.91,0.3,6,Gut,9,Hoch,23.92
-2026-06-26,Long Term,8,TSM,Taiwan Semiconductor Manufactur,434.989990234375,0.84,0.68,0.34,6,Gut,9,Hoch,23.68
-2026-06-26,Early Play,1,AVGO,Broadcom Inc.,378.9100036621094,0.51,0.01,0.23,8,Sehr gut,10,Hoch,30.0
-2026-06-26,Early Play,2,NVDA,NVIDIA Corporation,195.7400054931641,0.52,0.05,0.14,8,Sehr gut,10,Hoch,30.0
-2026-06-26,Early Play,3,ORCL,Oracle Corporation,152.4600067138672,0.09,-0.83,0.07,3,Riskant,10,Hoch,30.0
-2026-06-26,Early Play,4,BLK,"BlackRock, Inc.",971.9199829101562,0.21,-0.59,0.01,3,Riskant,10,Hoch,27.0
-2026-06-26,Early Play,5,MLM,"Martin Marietta Materials, Inc.",628.9400024414062,0.57,0.13,0.09,7,Gut,8,Hoch,26.0
-2026-06-26,Early Play,6,RUN,Sunrun Inc.,13.600000381469728,0.42,-0.16,0.1,6,Gut,9,Hoch,26.0
-2026-06-26,Early Play,7,V,Visa Inc.,330.5199890136719,0.58,0.17,0.08,7,Gut,8,Hoch,26.0
-2026-06-26,Early Play,8,FIS,Fidelity National Information S,37.86000061035156,0.01,-0.98,-0.19,0,Riskant,10,Hoch,25.0
+2026-06-26,Short Term,1,AAPL,Apple Inc.,275.9700012207031,0.65,0.3,0.11,8,Sehr gut,8,Hoch,19.0
+2026-06-26,Short Term,2,FSLR,"First Solar, Inc.",237.97250366210935,0.52,0.03,0.25,8,Sehr gut,10,Hoch,18.0
+2026-06-26,Short Term,3,NVDA,NVIDIA Corporation,194.2949981689453,0.51,0.01,0.16,8,Sehr gut,10,Hoch,18.0
+2026-06-26,Short Term,4,SEIC,SEI Investments Company,87.11499786376953,0.68,0.36,0.16,8,Sehr gut,6,Mittel,18.0
+2026-06-26,Short Term,5,AXP,American Express Company,342.0096130371094,0.56,0.13,0.17,8,Sehr gut,5,Mittel,18.0
+2026-06-26,Short Term,6,DB,Deutsche Bank AG,33.68000030517578,0.55,0.1,0.23,8,Sehr gut,5,Mittel,18.0
+2026-06-26,Short Term,7,RHHBY,Roche Holding Ltd,51.869998931884766,0.69,0.37,0.07,7,Gut,6,Mittel,16.5
+2026-06-26,Short Term,8,MDLZ,"Mondelez International, Inc.",61.630001068115234,0.59,0.17,0.07,7,Gut,5,Mittel,16.5
+2026-06-26,Long Term,1,FSLR,"First Solar, Inc.",237.97250366210935,0.52,0.03,0.25,8,Sehr gut,10,Hoch,26.04
+2026-06-26,Long Term,2,NVDA,NVIDIA Corporation,194.28500366210935,0.51,0.01,0.16,8,Sehr gut,10,Hoch,26.02
+2026-06-26,Long Term,3,AFL,AFLAC Incorporated,119.45999908447266,0.97,0.94,0.13,6,Gut,10,Hoch,25.94
+2026-06-26,Long Term,4,INCY,Incyte Corporation,113.36000061035156,0.95,0.91,0.26,6,Gut,10,Hoch,25.9
+2026-06-26,Long Term,5,HALO,"Halozyme Therapeutics, Inc.",75.34500122070312,0.78,0.56,0.22,7,Gut,10,Hoch,25.56
+2026-06-26,Long Term,6,AVGO,Broadcom Inc.,371.3049926757813,0.47,-0.05,0.24,7,Gut,10,Hoch,24.94
+2026-06-26,Long Term,7,C,"Citigroup, Inc.",142.17999267578125,0.91,0.83,0.33,6,Gut,9,Hoch,23.82
+2026-06-26,Long Term,8,MS,Morgan Stanley,213.40499877929688,0.83,0.65,0.35,7,Gut,9,Hoch,23.66
+2026-06-26,Early Play,1,BLK,"BlackRock, Inc.",978.0499877929688,0.23,-0.54,0.05,3,Riskant,10,Hoch,30.0
+2026-06-26,Early Play,2,META,"Meta Platforms, Inc.",554.875,0.13,-0.74,0.06,3,Riskant,10,Hoch,30.0
+2026-06-26,Early Play,3,NVDA,NVIDIA Corporation,194.2949981689453,0.51,0.01,0.16,8,Sehr gut,10,Hoch,30.0
+2026-06-26,Early Play,4,ORCL,Oracle Corporation,150.6721954345703,0.08,-0.85,0.08,3,Riskant,10,Hoch,30.0
+2026-06-26,Early Play,5,AVGO,Broadcom Inc.,371.3049926757813,0.47,-0.05,0.24,7,Gut,10,Hoch,28.0
+2026-06-26,Early Play,6,AMSC,American Superconductor Corpora,39.97999954223633,0.33,-0.34,0.19,3,Riskant,9,Hoch,28.0
+2026-06-26,Early Play,7,RUN,Sunrun Inc.,13.399999618530272,0.41,-0.19,0.06,6,Gut,9,Hoch,26.0
+2026-06-26,Early Play,8,MLM,"Martin Marietta Materials, Inc.",617.625,0.5,0.01,0.08,6,Gut,8,Hoch,26.0
