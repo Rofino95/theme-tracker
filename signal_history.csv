@@ -1127,3 +1127,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-28,Early Play,6,AVGO,Broadcom Inc.,365.0199890136719,0.45,-0.11,0.22,7,Gut,10,Hoch,28.0
 2026-06-28,Early Play,7,AMSC,American Superconductor Corpora,39.72999954223633,0.33,-0.35,0.18,3,Riskant,9,Hoch,28.0
 2026-06-28,Early Play,8,RUN,Sunrun Inc.,13.489999771118164,0.41,-0.18,0.07,6,Gut,9,Hoch,26.0
+2026-06-29,Short Term,1,V,Visa Inc.,336.2300109863281,0.67,0.35,0.14,8,Sehr gut,8,Hoch,19.0
+2026-06-29,Short Term,2,FSLR,"First Solar, Inc.",239.07000732421875,0.52,0.04,0.26,8,Sehr gut,10,Hoch,18.0
+2026-06-29,Short Term,3,SEIC,SEI Investments Company,87.25,0.69,0.38,0.16,8,Sehr gut,6,Mittel,18.0
+2026-06-29,Short Term,4,PGR,Progressive Corporation (The),224.33999633789065,0.57,0.14,0.13,8,Sehr gut,5,Mittel,18.0
+2026-06-29,Short Term,5,CRH,CRH PLC,112.31999969482422,0.56,0.12,0.11,7,Gut,3,Niedrig,16.5
+2026-06-29,Short Term,6,HRL,Hormel Foods Corporation,26.51000022888184,0.64,0.28,0.17,7,Gut,2,Niedrig,16.5
+2026-06-29,Short Term,7,RHHBY,Roche Holding Ltd,51.7400016784668,0.68,0.36,0.07,7,Gut,6,Mittel,16.5
+2026-06-29,Short Term,8,SAIC,Science Applications Internatio,110.29000091552734,0.69,0.38,0.14,7,Gut,4,Niedrig,16.5
+2026-06-29,Long Term,1,FSLR,"First Solar, Inc.",239.07000732421875,0.52,0.04,0.26,8,Sehr gut,10,Hoch,26.04
+2026-06-29,Long Term,2,AFL,AFLAC Incorporated,120.1500015258789,1.0,0.99,0.13,6,Gut,10,Hoch,26.0
+2026-06-29,Long Term,3,INCY,Incyte Corporation,113.75,0.96,0.93,0.26,6,Gut,10,Hoch,25.92
+2026-06-29,Long Term,4,HALO,"Halozyme Therapeutics, Inc.",74.95999908447266,0.77,0.53,0.22,7,Gut,10,Hoch,25.54
+2026-06-29,Long Term,5,NVDA,NVIDIA Corporation,192.52999877929688,0.49,-0.03,0.15,7,Gut,10,Hoch,24.98
+2026-06-29,Long Term,6,AVGO,Broadcom Inc.,365.0199890136719,0.45,-0.11,0.22,7,Gut,10,Hoch,24.9
+2026-06-29,Long Term,7,C,"Citigroup, Inc.",141.75999450683594,0.91,0.81,0.33,6,Gut,9,Hoch,23.82
+2026-06-29,Long Term,8,TSM,Taiwan Semiconductor Manufactur,432.3500061035156,0.83,0.66,0.33,6,Gut,9,Hoch,23.66
+2026-06-29,Early Play,1,BLK,"BlackRock, Inc.",964.7100219726562,0.18,-0.64,0.04,3,Riskant,10,Hoch,30.0
+2026-06-29,Early Play,2,ORCL,Oracle Corporation,148.52999877929688,0.07,-0.87,0.07,3,Riskant,10,Hoch,30.0
+2026-06-29,Early Play,3,META,"Meta Platforms, Inc.",550.25,0.11,-0.78,0.05,3,Riskant,10,Hoch,30.0
+2026-06-29,Early Play,4,MSFT,Microsoft Corporation,372.9700012207031,0.12,-0.76,0.05,3,Riskant,9,Hoch,28.0
+2026-06-29,Early Play,5,NVDA,NVIDIA Corporation,192.52999877929688,0.49,-0.03,0.15,7,Gut,10,Hoch,28.0
+2026-06-29,Early Play,6,AVGO,Broadcom Inc.,365.0199890136719,0.45,-0.11,0.22,7,Gut,10,Hoch,28.0
+2026-06-29,Early Play,7,AMSC,American Superconductor Corpora,39.72999954223633,0.33,-0.35,0.18,3,Riskant,9,Hoch,28.0
+2026-06-29,Early Play,8,RUN,Sunrun Inc.,13.489999771118164,0.41,-0.18,0.07,6,Gut,9,Hoch,26.0
