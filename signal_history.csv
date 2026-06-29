@@ -1141,11 +1141,11 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-29,Long Term,4,HALO,"Halozyme Therapeutics, Inc.",77.18000030517578,0.84,0.68,0.24,7,Gut,10,Hoch,25.68
 2026-06-29,Long Term,5,AVGO,Broadcom Inc.,372.4500122070313,0.48,-0.04,0.27,7,Gut,10,Hoch,24.96
 2026-06-29,Long Term,6,FSLR,"First Solar, Inc.",232.8000030517578,0.46,-0.09,0.26,7,Gut,10,Hoch,24.92
-2026-06-29,Long Term,7,C,"Citigroup, Inc.",142.52000427246094,0.92,0.83,0.33,6,Gut,9,Hoch,23.84
-2026-06-29,Long Term,8,MS,Morgan Stanley,211.75999450683597,0.81,0.62,0.34,7,Gut,9,Hoch,23.62
+2026-06-29,Long Term,7,C,"Citigroup, Inc.",142.49000549316406,0.92,0.83,0.33,6,Gut,9,Hoch,23.84
+2026-06-29,Long Term,8,MS,Morgan Stanley,211.72000122070312,0.81,0.62,0.34,7,Gut,9,Hoch,23.62
 2026-06-29,Early Play,1,META,"Meta Platforms, Inc.",562.5999755859375,0.16,-0.69,0.05,3,Riskant,10,Hoch,30.0
 2026-06-29,Early Play,2,NVDA,NVIDIA Corporation,194.97000122070312,0.51,0.03,0.18,8,Sehr gut,10,Hoch,30.0
-2026-06-29,Early Play,3,ORCL,Oracle Corporation,147.7899932861328,0.06,-0.87,0.07,3,Riskant,10,Hoch,30.0
+2026-06-29,Early Play,3,ORCL,Oracle Corporation,147.75999450683594,0.06,-0.87,0.07,3,Riskant,10,Hoch,30.0
 2026-06-29,Early Play,4,AMSC,American Superconductor Corpora,39.83000183105469,0.33,-0.34,0.24,3,Riskant,9,Hoch,28.0
 2026-06-29,Early Play,5,BLK,"BlackRock, Inc.",950.1699829101562,0.13,-0.74,0.02,3,Riskant,10,Hoch,27.0
 2026-06-29,Early Play,6,RUN,Sunrun Inc.,13.479999542236328,0.4,-0.21,0.11,6,Gut,9,Hoch,26.0
