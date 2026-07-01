@@ -1179,10 +1179,10 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-07-01,Short Term,2,DB,Deutsche Bank AG,33.7599983215332,0.56,0.12,0.17,8,Sehr gut,5,Mittel,18.0
 2026-07-01,Short Term,3,STLD,"Steel Dynamics, Inc.",229.4600067138672,0.65,0.31,0.28,8,Sehr gut,5,Mittel,18.0
 2026-07-01,Short Term,4,PLUS,ePlus inc.,83.2300033569336,0.68,0.37,0.11,8,Sehr gut,5,Mittel,18.0
-2026-07-01,Short Term,5,SAIC,Science Applications Internatio,110.41000366210938,0.7,0.39,0.17,7,Gut,4,Niedrig,16.5
+2026-07-01,Short Term,5,FSLR,"First Solar, Inc.",235.9600067138672,0.48,-0.05,0.2,7,Gut,10,Hoch,16.5
 2026-07-01,Short Term,6,PRU,"Prudential Financial, Inc.",107.93000030517578,0.67,0.33,0.12,7,Gut,3,Niedrig,16.5
-2026-07-01,Short Term,7,AVGO,Broadcom Inc.,377.75,0.5,0.0,0.22,7,Gut,10,Hoch,16.5
-2026-07-01,Short Term,8,FSLR,"First Solar, Inc.",235.9600067138672,0.48,-0.05,0.2,7,Gut,10,Hoch,16.5
+2026-07-01,Short Term,7,SAIC,Science Applications Internatio,110.41000366210938,0.7,0.39,0.17,7,Gut,4,Niedrig,16.5
+2026-07-01,Short Term,8,AVGO,Broadcom Inc.,377.75,0.5,0.0,0.22,7,Gut,10,Hoch,16.5
 2026-07-01,Long Term,1,NVDA,NVIDIA Corporation,200.08999633789065,0.57,0.15,0.15,9,Sehr gut,10,Hoch,26.14
 2026-07-01,Long Term,2,INCY,Incyte Corporation,113.36000061035156,0.95,0.91,0.2,6,Gut,10,Hoch,25.9
 2026-07-01,Long Term,3,HALO,"Halozyme Therapeutics, Inc.",78.2699966430664,0.87,0.74,0.21,6,Gut,10,Hoch,25.74
