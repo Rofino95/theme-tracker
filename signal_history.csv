@@ -1175,3 +1175,27 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-06-30,Early Play,6,WPM,Wheaton Precious Metals Corp,112.31999969482422,0.34,-0.32,-0.14,0,Riskant,10,Hoch,25.0
 2026-06-30,Early Play,7,AFL,AFLAC Incorporated,117.25,0.88,0.76,0.07,5,Neutral,10,Hoch,25.0
 2026-06-30,Early Play,8,INCY,Incyte Corporation,113.36000061035156,0.95,0.91,0.2,6,Gut,10,Hoch,25.0
+2026-07-01,Short Term,1,NVDA,NVIDIA Corporation,200.08999633789065,0.57,0.15,0.15,9,Sehr gut,10,Hoch,20.5
+2026-07-01,Short Term,2,PLUS,ePlus inc.,83.2300033569336,0.68,0.37,0.11,8,Sehr gut,5,Mittel,18.0
+2026-07-01,Short Term,3,STLD,"Steel Dynamics, Inc.",229.4600067138672,0.65,0.3,0.27,8,Sehr gut,5,Mittel,18.0
+2026-07-01,Short Term,4,DB,Deutsche Bank AG,33.7599983215332,0.56,0.12,0.17,8,Sehr gut,5,Mittel,18.0
+2026-07-01,Short Term,5,HEINY,Heineken N.V.,42.27000045776367,0.57,0.13,0.15,7,Gut,3,Niedrig,16.5
+2026-07-01,Short Term,6,AVGO,Broadcom Inc.,377.75,0.5,0.0,0.22,7,Gut,10,Hoch,16.5
+2026-07-01,Short Term,7,SAIC,Science Applications Internatio,110.41000366210938,0.7,0.39,0.17,7,Gut,4,Niedrig,16.5
+2026-07-01,Short Term,8,PRU,"Prudential Financial, Inc.",107.93000030517578,0.67,0.33,0.12,7,Gut,3,Niedrig,16.5
+2026-07-01,Long Term,1,NVDA,NVIDIA Corporation,200.08999633789065,0.57,0.15,0.15,9,Sehr gut,10,Hoch,26.14
+2026-07-01,Long Term,2,INCY,Incyte Corporation,113.36000061035156,0.95,0.91,0.2,6,Gut,10,Hoch,25.9
+2026-07-01,Long Term,3,HALO,"Halozyme Therapeutics, Inc.",78.2699966430664,0.87,0.74,0.21,6,Gut,10,Hoch,25.74
+2026-07-01,Long Term,4,AVGO,Broadcom Inc.,377.75,0.5,0.0,0.22,7,Gut,10,Hoch,25.0
+2026-07-01,Long Term,5,FSLR,"First Solar, Inc.",235.9600067138672,0.48,-0.05,0.2,7,Gut,10,Hoch,24.96
+2026-07-01,Long Term,6,NVO,Novo Nordisk A/S,47.93999862670898,0.39,-0.21,0.3,6,Gut,10,Hoch,24.78
+2026-07-01,Long Term,7,C,"Citigroup, Inc.",139.9600067138672,0.88,0.75,0.24,6,Gut,9,Hoch,23.76
+2026-07-01,Long Term,8,GOOGL,Alphabet Inc.,357.3699951171875,0.78,0.57,0.24,6,Gut,9,Hoch,23.56
+2026-07-01,Early Play,1,NVDA,NVIDIA Corporation,200.08999633789065,0.57,0.15,0.15,9,Sehr gut,10,Hoch,30.0
+2026-07-01,Early Play,2,AVGO,Broadcom Inc.,377.75,0.5,0.0,0.22,7,Gut,10,Hoch,28.0
+2026-07-01,Early Play,3,AMSC,American Superconductor Corpora,41.5099983215332,0.36,-0.27,0.23,5,Neutral,9,Hoch,28.0
+2026-07-01,Early Play,4,FSLR,"First Solar, Inc.",235.9600067138672,0.48,-0.05,0.2,7,Gut,10,Hoch,28.0
+2026-07-01,Early Play,5,BLK,"BlackRock, Inc.",961.5599975585938,0.17,-0.66,0.01,3,Riskant,10,Hoch,27.0
+2026-07-01,Early Play,6,AEM,Agnico Eagle Mines Limited,155.1300048828125,0.29,-0.42,-0.23,0,Riskant,10,Hoch,25.0
+2026-07-01,Early Play,7,KGC,Kinross Gold Corporation,23.6200008392334,0.36,-0.28,-0.22,2,Riskant,10,Hoch,25.0
+2026-07-01,Early Play,8,META,"Meta Platforms, Inc.",563.2899780273438,0.16,-0.68,-0.01,1,Riskant,10,Hoch,25.0
