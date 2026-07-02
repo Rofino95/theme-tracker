@@ -1199,13 +1199,13 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-07-01,Early Play,6,AMSC,American Superconductor Corpora,39.91999816894531,0.33,-0.34,0.22,3,Riskant,9,Hoch,28.0
 2026-07-01,Early Play,7,BLK,"BlackRock, Inc.",980.3800048828124,0.24,-0.53,0.03,3,Riskant,10,Hoch,27.0
 2026-07-01,Early Play,8,AEM,Agnico Eagle Mines Limited,154.85000610351562,0.29,-0.42,-0.26,0,Riskant,10,Hoch,25.0
-2026-07-02,Short Term,1,STLD,"Steel Dynamics, Inc.",220.38999938964844,0.6,0.2,0.23,8,Sehr gut,5,Mittel,18.0
-2026-07-02,Short Term,2,NUE,Nucor Corporation,220.75,0.65,0.29,0.28,8,Sehr gut,6,Mittel,18.0
+2026-07-02,Short Term,1,NUE,Nucor Corporation,220.75,0.65,0.29,0.28,8,Sehr gut,6,Mittel,18.0
+2026-07-02,Short Term,2,STLD,"Steel Dynamics, Inc.",220.38999938964844,0.6,0.2,0.23,8,Sehr gut,5,Mittel,18.0
 2026-07-02,Short Term,3,AXP,American Express Company,351.9599914550781,0.66,0.33,0.17,8,Sehr gut,5,Mittel,18.0
 2026-07-02,Short Term,4,MA,Mastercard Incorporated,539.3900146484375,0.56,0.11,0.1,7,Gut,8,Hoch,17.5
 2026-07-02,Short Term,5,AMZN,"Amazon.com, Inc.",242.6699981689453,0.57,0.13,0.16,7,Gut,5,Mittel,16.5
-2026-07-02,Short Term,6,EXP,Eagle Materials Inc,220.1499938964844,0.66,0.31,0.17,7,Gut,3,Niedrig,16.5
-2026-07-02,Short Term,7,AVGO,Broadcom Inc.,360.4500122070313,0.41,-0.18,0.15,7,Gut,10,Hoch,16.5
+2026-07-02,Short Term,6,AVGO,Broadcom Inc.,360.4500122070313,0.41,-0.18,0.15,7,Gut,10,Hoch,16.5
+2026-07-02,Short Term,7,TDG,Transdigm Group Incorporated,1348.489990234375,0.57,0.14,0.16,7,Gut,5,Mittel,16.5
 2026-07-02,Short Term,8,MDLZ,"Mondelez International, Inc.",60.90999984741211,0.57,0.15,0.07,7,Gut,5,Mittel,16.5
 2026-07-02,Long Term,1,INCY,Incyte Corporation,116.86000061035156,0.96,0.93,0.22,6,Gut,10,Hoch,25.92
 2026-07-02,Long Term,2,HALO,"Halozyme Therapeutics, Inc.",79.44999694824219,0.9,0.81,0.23,6,Gut,10,Hoch,25.8
@@ -1214,11 +1214,11 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-07-02,Long Term,5,AVGO,Broadcom Inc.,360.4500122070313,0.41,-0.18,0.15,7,Gut,10,Hoch,24.82
 2026-07-02,Long Term,6,FSLR,"First Solar, Inc.",224.57000732421875,0.4,-0.2,0.15,7,Gut,10,Hoch,24.8
 2026-07-02,Long Term,7,C,"Citigroup, Inc.",139.97000122070312,0.88,0.75,0.22,6,Gut,9,Hoch,23.76
-2026-07-02,Long Term,8,MS,Morgan Stanley,213.92999267578125,0.83,0.66,0.3,7,Gut,9,Hoch,23.66
+2026-07-02,Long Term,8,TSM,Taiwan Semiconductor Manufactur,434.1600036621094,0.83,0.65,0.28,6,Gut,9,Hoch,23.66
 2026-07-02,Early Play,1,BLK,"BlackRock, Inc.",995.72998046875,0.29,-0.42,0.04,3,Riskant,10,Hoch,30.0
-2026-07-02,Early Play,2,NVDA,NVIDIA Corporation,194.8300018310547,0.48,-0.05,0.1,6,Gut,10,Hoch,28.0
-2026-07-02,Early Play,3,AMSC,American Superconductor Corpora,37.11000061035156,0.27,-0.46,0.16,3,Riskant,9,Hoch,28.0
-2026-07-02,Early Play,4,FSLR,"First Solar, Inc.",224.57000732421875,0.4,-0.2,0.15,7,Gut,10,Hoch,28.0
+2026-07-02,Early Play,2,FSLR,"First Solar, Inc.",224.57000732421875,0.4,-0.2,0.15,7,Gut,10,Hoch,28.0
+2026-07-02,Early Play,3,NVDA,NVIDIA Corporation,194.8300018310547,0.48,-0.05,0.1,6,Gut,10,Hoch,28.0
+2026-07-02,Early Play,4,AMSC,American Superconductor Corpora,37.11000061035156,0.27,-0.46,0.16,3,Riskant,9,Hoch,28.0
 2026-07-02,Early Play,5,AVGO,Broadcom Inc.,360.4500122070313,0.41,-0.18,0.15,7,Gut,10,Hoch,28.0
 2026-07-02,Early Play,6,META,"Meta Platforms, Inc.",582.9000244140625,0.23,-0.54,0.02,3,Riskant,10,Hoch,27.0
 2026-07-02,Early Play,7,MSFT,Microsoft Corporation,390.489990234375,0.2,-0.59,0.05,2,Riskant,8,Hoch,26.0
