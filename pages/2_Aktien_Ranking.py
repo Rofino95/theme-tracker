@@ -180,16 +180,42 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
-def get_momentum_risk(momentum_3m, zone):
+def get_momentum_risk(momentum_3m, momentum_1m, momentum_20d, ma50_distance, price_above_ma50, zone):
     if pd.isna(momentum_3m):
         return "Unklar"
 
+    # Stark gelaufen, aber kurzfristig kippt es
+    if momentum_3m > 0.50:
+        if pd.notna(momentum_1m) and momentum_1m < 0:
+            return "Kippt"
+
+        if pd.notna(momentum_20d) and momentum_20d < 0:
+            return "Kippt"
+
+        if price_above_ma50 is False:
+            return "Kippt"
+
+    # Fallendes Messer / kurzfristiger Bruch
+    if pd.notna(momentum_1m) and momentum_1m < -0.10:
+        return "Fallend"
+
+    if pd.notna(momentum_20d) and momentum_20d < -0.10:
+        return "Fallend"
+
+    if pd.notna(ma50_distance) and ma50_distance < -0.05:
+        return "Fallend"
+
+    if price_above_ma50 is False and pd.notna(momentum_1m) and momentum_1m < 0:
+        return "Fallend"
+
+    # Überhitzung ohne klaren Bruch
     if momentum_3m > 0.80:
         return "Extrem ueberhitzt"
 
     if momentum_3m > 0.50:
         return "Ueberhitzt"
 
+    # Alte Sicherheitsregel
     if momentum_3m < -0.10:
         return "Fallend"
 
@@ -446,10 +472,14 @@ ranking_df["Risiko"] = ranking_df.apply(
     axis=1
 )
 
-ranking_df["Momentum Risiko"] = ranking_df.apply(
+.format({
     lambda row: get_momentum_risk(
-        row["3M Momentum"],
-        row["Zone"]
+        row.get("3M Momentum"),
+        row.get("1M Momentum"),
+        row.get("20D Momentum"),
+        row.get("MA50 Abstand"),
+        row.get("Preis ueber MA50"),
+        row.get("Zone")
     ),
     axis=1
 )
@@ -626,6 +656,10 @@ display_df = filtered_df[[
     "Entry Quality",
     "Entry Score",
     "3M Momentum",
+    "1M Momentum",
+    "20D Momentum",
+    "MA50 Abstand",
+    "Preis ueber MA50",
     "Momentum Risiko",
     "Signal",
     "Risiko",
@@ -647,8 +681,11 @@ st.dataframe(
     .format({
         "Entry Score": "{:.0f}",
         "3M Momentum": "{:.1%}",
+        "1M Momentum": "{:.1%}",
+        "20D Momentum": "{:.1%}",
+        "MA50 Abstand": "{:.1%}",
         "Fundamental Score": "{:.0f}"
-    }),
+    })
     use_container_width=True,
     hide_index=True,
     height=height_table
