@@ -143,16 +143,17 @@ def fetch_data(ticker, existing_description=""):
 
         hist = data.history(period="1y")
 
-        if hist.empty:
-            return (
-                None, None, None,
-                ticker,
-                existing_description,
-                None, None, None,
-                None, None, None,
-                None, None, None,
-                None, None, None, None
-            )
+if hist.empty:
+    return (
+        None, None, None,
+        ticker,
+        existing_description,
+        None, None, None,
+        None, None, None,
+        None, None, None,
+        None, None, None, None,
+        None, None
+    )
 
         price = hist["Close"].iloc[-1]
 
