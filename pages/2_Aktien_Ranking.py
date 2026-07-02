@@ -14,8 +14,18 @@ if not os.path.exists("theme_scores.csv"):
 
 df = pd.read_csv("theme_scores.csv")
 
-if "3M Momentum" not in df.columns:
-    st.error("Die Spalte '3M Momentum' fehlt. Bitte zuerst update_data.py ausführen.")
+required_columns = [
+    "3M Momentum",
+    "1M Momentum",
+    "20D Momentum",
+    "MA50 Abstand",
+    "Preis ueber MA50"
+]
+
+missing_columns = [col for col in required_columns if col not in df.columns]
+
+if missing_columns:
+    st.error(f"Diese Spalten fehlen in theme_scores.csv: {missing_columns}")
     st.stop()
 
 
@@ -26,6 +36,25 @@ def get_status(score):
         return "Neutral"
     else:
         return "Baerisch"
+
+
+def normalize_bool(value):
+    if value is True:
+        return True
+
+    if value is False:
+        return False
+
+    if isinstance(value, str):
+        value = value.strip().lower()
+
+        if value == "true":
+            return True
+
+        if value == "false":
+            return False
+
+    return None
 
 
 def get_signal(stock_score, range_momentum, momentum_3m, theme_status, theme_bullish_pct):
@@ -86,7 +115,16 @@ def get_zone(price, low_52, high_52):
         return "Upper Range"
 
 
-def get_entry_score(zone, trend_direction, range_momentum, momentum_3m, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+def get_entry_score(
+    zone,
+    trend_direction,
+    range_momentum,
+    momentum_3m,
+    fundamental_quality,
+    forward_pe,
+    revenue_growth,
+    earnings_growth
+):
     score = 0
 
     if zone == "Watchlist Zone":
@@ -180,7 +218,16 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
-def get_momentum_risk(momentum_3m, momentum_1m, momentum_20d, ma50_distance, price_above_ma50, zone):
+def get_momentum_risk(
+    momentum_3m,
+    momentum_1m,
+    momentum_20d,
+    ma50_distance,
+    price_above_ma50,
+    zone
+):
+    price_above_ma50 = normalize_bool(price_above_ma50)
+
     if pd.isna(momentum_3m):
         return "Unklar"
 
@@ -215,7 +262,6 @@ def get_momentum_risk(momentum_3m, momentum_1m, momentum_20d, ma50_distance, pri
     if momentum_3m > 0.50:
         return "Ueberhitzt"
 
-    # Alte Sicherheitsregel
     if momentum_3m < -0.10:
         return "Fallend"
 
@@ -347,7 +393,7 @@ def color_momentum_risk(val):
 
 
 st.title("Aktien-Ranking")
-st.caption("Screening nach Entry Score, 3M Momentum, Zonen, Risiko und Fundamentaldaten.")
+st.caption("Screening nach Entry Score, 3M Momentum, 1M Momentum, MA50, Risiko und Fundamentaldaten.")
 
 st.markdown("### Navigation")
 
@@ -372,6 +418,7 @@ theme_summary = (
     df.groupby("Sub Theme", as_index=False)
     .agg({"Trend Score": "mean"})
 )
+
 theme_summary["Theme Status"] = theme_summary["Trend Score"].apply(get_status)
 
 theme_bullish = (
@@ -472,7 +519,7 @@ ranking_df["Risiko"] = ranking_df.apply(
     axis=1
 )
 
-.format({
+ranking_df["Momentum Risiko"] = ranking_df.apply(
     lambda row: get_momentum_risk(
         row.get("3M Momentum"),
         row.get("1M Momentum"),
@@ -497,7 +544,7 @@ ranking_df.loc[
 ranking_df.loc[
     ranking_df["Momentum Risiko"].isin(["Fallend", "Kippt"]),
     "Entry Score"
-] = ranking_df["Entry Score"] - 2
+] = ranking_df["Entry Score"] - 3
 
 ranking_df["Entry Score"] = ranking_df["Entry Score"].clip(lower=0, upper=10)
 ranking_df["Entry Quality"] = ranking_df["Entry Score"].apply(get_entry_quality_from_score)
@@ -589,6 +636,9 @@ with st.expander("Filter anzeigen / ausblenden", expanded=True):
                 "Entry Score",
                 "Fundamental Score",
                 "3M Momentum",
+                "1M Momentum",
+                "20D Momentum",
+                "MA50 Abstand",
                 "Trend Score",
                 "Momentum",
                 "Preis",
@@ -685,7 +735,7 @@ st.dataframe(
         "20D Momentum": "{:.1%}",
         "MA50 Abstand": "{:.1%}",
         "Fundamental Score": "{:.0f}"
-    })
+    }),
     use_container_width=True,
     hide_index=True,
     height=height_table
