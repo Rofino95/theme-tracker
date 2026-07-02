@@ -1200,13 +1200,13 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-07-01,Early Play,7,BLK,"BlackRock, Inc.",980.3800048828124,0.24,-0.53,0.03,3,Riskant,10,Hoch,27.0
 2026-07-01,Early Play,8,AEM,Agnico Eagle Mines Limited,154.85000610351562,0.29,-0.42,-0.26,0,Riskant,10,Hoch,25.0
 2026-07-02,Short Term,1,NVDA,NVIDIA Corporation,197.5800018310547,0.54,0.07,0.13,8,Sehr gut,10,Hoch,18.0
-2026-07-02,Short Term,2,PGR,Progressive Corporation (The),225.3000030517578,0.63,0.25,0.17,8,Sehr gut,5,Mittel,18.0
-2026-07-02,Short Term,3,NUE,Nucor Corporation,219.0200042724609,0.63,0.27,0.26,8,Sehr gut,6,Mittel,18.0
-2026-07-02,Short Term,4,STLD,"Steel Dynamics, Inc.",221.75999450683597,0.61,0.22,0.22,8,Sehr gut,5,Mittel,18.0
+2026-07-02,Short Term,2,NUE,Nucor Corporation,219.0200042724609,0.63,0.27,0.26,8,Sehr gut,6,Mittel,18.0
+2026-07-02,Short Term,3,STLD,"Steel Dynamics, Inc.",221.75999450683597,0.61,0.22,0.22,8,Sehr gut,5,Mittel,18.0
+2026-07-02,Short Term,4,PGR,Progressive Corporation (The),225.3000030517578,0.63,0.25,0.17,8,Sehr gut,5,Mittel,18.0
 2026-07-02,Short Term,5,AXP,American Express Company,348.0,0.62,0.25,0.16,8,Sehr gut,5,Mittel,18.0
 2026-07-02,Short Term,6,DB,Deutsche Bank AG,33.86000061035156,0.57,0.13,0.15,8,Sehr gut,5,Mittel,18.0
-2026-07-02,Short Term,7,AMZN,"Amazon.com, Inc.",241.6999969482422,0.55,0.11,0.15,7,Gut,5,Mittel,16.5
-2026-07-02,Short Term,8,HEINY,Heineken N.V.,42.470001220703125,0.59,0.17,0.11,7,Gut,3,Niedrig,16.5
+2026-07-02,Short Term,7,PLUS,ePlus inc.,82.3499984741211,0.66,0.31,0.09,7,Gut,5,Mittel,16.5
+2026-07-02,Short Term,8,AMZN,"Amazon.com, Inc.",241.6999969482422,0.55,0.11,0.15,7,Gut,5,Mittel,16.5
 2026-07-02,Long Term,1,NVDA,NVIDIA Corporation,197.5800018310547,0.54,0.07,0.13,8,Sehr gut,10,Hoch,26.08
 2026-07-02,Long Term,2,INCY,Incyte Corporation,113.80999755859376,0.96,0.91,0.21,6,Gut,10,Hoch,25.92
 2026-07-02,Long Term,3,HALO,"Halozyme Therapeutics, Inc.",77.01000213623047,0.82,0.65,0.18,7,Gut,10,Hoch,25.64
@@ -1222,4 +1222,4 @@ Date,Signal Type,Rank,Ticker,Name,Entry Price,Trend Score,Range Momentum,3M Mome
 2026-07-02,Early Play,5,AVGO,Broadcom Inc.,369.3399963378906,0.46,-0.07,0.18,7,Gut,10,Hoch,28.0
 2026-07-02,Early Play,6,FSLR,"First Solar, Inc.",232.0800018310547,0.45,-0.1,0.16,7,Gut,10,Hoch,28.0
 2026-07-02,Early Play,7,BLK,"BlackRock, Inc.",980.3800048828124,0.24,-0.53,0.03,3,Riskant,10,Hoch,27.0
-2026-07-02,Early Play,8,FIS,Fidelity National Information S,40.79999923706055,0.08,-0.84,-0.09,1,Riskant,10,Hoch,25.0
+2026-07-02,Early Play,8,AEM,Agnico Eagle Mines Limited,154.85000610351562,0.29,-0.42,-0.26,0,Riskant,10,Hoch,25.0
