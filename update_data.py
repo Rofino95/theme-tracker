@@ -134,16 +134,7 @@ def calculate_moving_averages(hist, price):
     )
 
 
-def fetch_data(ticker, existing_description=""):
-
-    try:
-        data = yf.Ticker(ticker)
-
-        info = data.info
-
-        hist = data.history(period="1y")
-
-if hist.empty:
+def empty_result(ticker, existing_description):
     return (
         None, None, None,
         ticker,
@@ -154,6 +145,19 @@ if hist.empty:
         None, None, None, None,
         None, None
     )
+
+
+def fetch_data(ticker, existing_description=""):
+
+    try:
+        data = yf.Ticker(ticker)
+
+        info = data.info
+
+        hist = data.history(period="1y")
+
+        if hist.empty:
+            return empty_result(ticker, existing_description)
 
         price = hist["Close"].iloc[-1]
 
@@ -179,7 +183,6 @@ if hist.empty:
         profit_margin = info.get("profitMargins")
         market_cap = info.get("marketCap")
 
-        # Momentum-Werte
         momentum_3m = calculate_momentum(hist, 63)
         momentum_1m = calculate_momentum(hist, 21)
         momentum_20d = calculate_momentum(hist, 20)
@@ -220,16 +223,7 @@ if hist.empty:
 
         print(f"Fehler bei {ticker}: {e}")
 
-        return (
-            None, None, None,
-            ticker,
-            existing_description,
-            None, None, None,
-            None, None, None,
-            None, None, None,
-            None, None, None, None,
-            None, None
-        )
+        return empty_result(ticker, existing_description)
 
 
 def main():
@@ -352,14 +346,12 @@ def main():
         subset=["Preis", "52W High", "52W Low"]
     ).copy()
 
-    # Trend Score
     df["Trend Score"] = (
         (df["Preis"] - df["52W Low"])
         /
         (df["52W High"] - df["52W Low"])
     )
 
-    # Range Momentum
     df["Momentum"] = (
         (
             df["Preis"]
