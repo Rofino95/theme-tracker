@@ -167,6 +167,25 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
+def get_momentum_risk(momentum_3m, zone):
+    if pd.isna(momentum_3m):
+        return "Unklar"
+
+    if momentum_3m > 0.80:
+        return "Extrem ueberhitzt"
+
+    if momentum_3m > 0.50:
+        return "Ueberhitzt"
+
+    if momentum_3m < -0.10:
+        return "Fallend"
+
+    if zone == "Upper Range" and momentum_3m < 0:
+        return "Kippt"
+
+    return "Normal"
+
+
 def get_fundamental_score(pe, forward_pe, revenue_growth, earnings_growth, profit_margin):
     score = 0
 
@@ -397,6 +416,37 @@ ranking_df["Risiko"] = ranking_df.apply(
     axis=1
 )
 
+ranking_df["Momentum Risiko"] = ranking_df.apply(
+    lambda row: get_momentum_risk(
+        row["3M Momentum"],
+        row["Zone"]
+    ),
+    axis=1
+)
+
+ranking_df.loc[
+    ranking_df["Momentum Risiko"] == "Ueberhitzt",
+    "Entry Score"
+] = ranking_df["Entry Score"] - 2
+
+ranking_df.loc[
+    ranking_df["Momentum Risiko"] == "Extrem ueberhitzt",
+    "Entry Score"
+] = ranking_df["Entry Score"] - 4
+
+ranking_df.loc[
+    ranking_df["Momentum Risiko"].isin(["Fallend", "Kippt"]),
+    "Entry Score"
+] = ranking_df["Entry Score"] - 2
+
+ranking_df["Entry Score"] = ranking_df["Entry Score"].clip(lower=0, upper=10)
+ranking_df["Entry Quality"] = ranking_df["Entry Score"].apply(get_entry_quality_from_score)
+
+ranking_df.loc[
+    ranking_df["Momentum Risiko"].isin(["Ueberhitzt", "Extrem ueberhitzt", "Fallend", "Kippt"]),
+    "Signal"
+] = "Review"
+
 ranking_df["Rank im Theme"] = ranking_df.groupby("Sub Theme")["Trend Score"].rank(ascending=False, method="min")
 ranking_df["Anzahl im Theme"] = ranking_df.groupby("Sub Theme")["Ticker"].transform("count")
 ranking_df["Top %"] = (ranking_df["Rank im Theme"] / ranking_df["Anzahl im Theme"] * 100).round(0)
@@ -535,6 +585,7 @@ display_df = filtered_df[[
     "Entry Quality",
     "Entry Score",
     "3M Momentum",
+    "Momentum Risiko",
     "Signal",
     "Risiko",
     "Fundamental Quality",
