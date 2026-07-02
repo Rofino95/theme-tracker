@@ -21,7 +21,44 @@ def get_status(score):
         return "Baerisch"
 
 
-def get_master_score(entry_score, fundamental_score, risk_score):
+def get_momentum_risk(momentum_3m, zone):
+    if pd.isna(momentum_3m):
+        return "Unklar"
+
+    if momentum_3m > 0.80:
+        return "Extrem ueberhitzt"
+
+    if momentum_3m > 0.50:
+        return "Ueberhitzt"
+
+    if momentum_3m < -0.10:
+        return "Fallend"
+
+    if zone == "Upper Range" and momentum_3m < 0:
+        return "Kippt"
+
+    return "Normal"
+
+
+def adjust_entry_score_for_momentum_risk(entry_score, momentum_risk):
+    adjusted_score = entry_score
+
+    if momentum_risk == "Ueberhitzt":
+        adjusted_score -= 2
+
+    if momentum_risk == "Extrem ueberhitzt":
+        adjusted_score -= 4
+
+    if momentum_risk in ["Fallend", "Kippt"]:
+        adjusted_score -= 3
+
+    if momentum_risk == "Unklar":
+        adjusted_score -= 1
+
+    return max(0, min(adjusted_score, 10))
+
+
+def get_master_score(entry_score, fundamental_score, risk_score, momentum_risk):
     score = entry_score * 0.5
     score += fundamental_score * 0.3
 
@@ -32,10 +69,25 @@ def get_master_score(entry_score, fundamental_score, risk_score):
     elif risk_score == "Niedrig":
         score += 1
 
+    if momentum_risk == "Ueberhitzt":
+        score -= 1.5
+    elif momentum_risk == "Extrem ueberhitzt":
+        score -= 3
+    elif momentum_risk in ["Fallend", "Kippt"]:
+        score -= 2.5
+    elif momentum_risk == "Unklar":
+        score -= 0.5
+
     return round(score, 1)
 
 
-def get_master_signal(master_score):
+def get_master_signal(master_score, momentum_risk):
+    if momentum_risk in ["Extrem ueberhitzt", "Fallend", "Kippt"]:
+        return "🔴 Kein Einstieg"
+
+    if momentum_risk == "Ueberhitzt":
+        return "🟡 Beobachten"
+
     if master_score >= 7:
         return "🟢 Einstieg sinnvoll"
     elif master_score >= 5:
@@ -193,13 +245,20 @@ def get_entry_quality_from_score(score):
         return "Riskant"
 
 
-def get_exit_signal(zone, range_momentum, trend_direction):
+def get_exit_signal(zone, range_momentum, momentum_3m, trend_direction):
+    if zone == "Upper Range" and momentum_3m < 0:
+        return "Gewinne sichern"
+
+    if zone == "Upper Range" and trend_direction == "Trend schwaecht sich ab":
+        return "Gewinne sichern"
+
     if zone == "Upper Range" and range_momentum < 0.30:
         return "Gewinne sichern"
-    elif trend_direction == "Trend schwaecht sich ab":
+
+    if trend_direction == "Trend schwaecht sich ab":
         return "Vorsicht"
-    else:
-        return "Hold"
+
+    return "Hold"
 
 
 def get_risk_score(zone, trend_direction):
@@ -256,7 +315,19 @@ def get_fundamental_quality(score):
         return "Niedrig"
 
 
-def get_fazit_text(entry_quality, risk_score, position_label, trend_direction, momentum_3m, fundamental_quality):
+def get_fazit_text(entry_quality, risk_score, position_label, trend_direction, momentum_3m, fundamental_quality, momentum_risk):
+    if momentum_risk == "Extrem ueberhitzt":
+        return "Die Aktie ist extrem stark gelaufen. Für einen Neueinstieg ist das Chance-Risiko-Verhältnis aktuell ungünstig."
+
+    if momentum_risk == "Ueberhitzt":
+        return "Die Aktie ist stark gelaufen. Ein Einstieg ist nicht ausgeschlossen, aber ein Rücksetzer wäre deutlich sinnvoller."
+
+    if momentum_risk == "Fallend":
+        return "Die Aktie fällt aktuell deutlich. Hier besteht Risiko, in ein fallendes Messer zu greifen."
+
+    if momentum_risk == "Kippt":
+        return "Der Trend wirkt angeschlagen. Erst Stabilisierung abwarten."
+
     if entry_quality == "Sehr gut" and fundamental_quality == "Hoch" and risk_score in ["Niedrig", "Mittel"]:
         return "Sehr starkes Setup: Gute Einstiegslage, starke Fundamentaldaten und vertretbares Risiko."
 
@@ -360,6 +431,18 @@ def direction_badge(direction):
     return badge(direction, colors.get(direction, "#374151"))
 
 
+def momentum_risk_badge(momentum_risk):
+    colors = {
+        "Normal": "#123524",
+        "Ueberhitzt": "#6a3d00",
+        "Extrem ueberhitzt": "#5a1e1e",
+        "Fallend": "#5a1e1e",
+        "Kippt": "#6a3d00",
+        "Unklar": "#374151",
+    }
+    return badge(momentum_risk, colors.get(momentum_risk, "#374151"))
+
+
 st.title("Aktien-Detailseite")
 
 st.caption("Screening nach Entry Score, 3M Momentum, Zonen, Risiko und Fundamentaldaten.")
@@ -431,7 +514,13 @@ high_52 = float(stock_df.iloc[0]["52W High"])
 low_52 = float(stock_df.iloc[0]["52W Low"])
 trend_score = float(stock_df.iloc[0]["Trend Score"])
 range_momentum = float(stock_df.iloc[0]["Momentum"])
-momentum_3m = float(stock_df.iloc[0]["3M Momentum"]) if "3M Momentum" in stock_df.columns and pd.notna(stock_df.iloc[0]["3M Momentum"]) else 0
+
+momentum_3m = (
+    float(stock_df.iloc[0]["3M Momentum"])
+    if "3M Momentum" in stock_df.columns and pd.notna(stock_df.iloc[0]["3M Momentum"])
+    else 0
+)
+
 description = stock_df.iloc[0]["Description"] if "Description" in stock_df.columns else ""
 
 pe = stock_df.iloc[0]["PE"] if "PE" in stock_df.columns else None
@@ -473,6 +562,11 @@ elif hold_zone_min <= price < upper_range_min:
 else:
     position_label = "Upper Range"
 
+momentum_risk = get_momentum_risk(momentum_3m, position_label)
+
+if momentum_risk in ["Ueberhitzt", "Extrem ueberhitzt", "Fallend", "Kippt"]:
+    signal = "Review"
+
 fundamental_score = get_fundamental_score(
     pe,
     forward_pe,
@@ -494,12 +588,29 @@ entry_score = get_entry_score(
     earnings_growth
 )
 
+entry_score = adjust_entry_score_for_momentum_risk(entry_score, momentum_risk)
 entry_quality = get_entry_quality_from_score(entry_score)
-exit_signal = get_exit_signal(position_label, range_momentum, trend_direction)
+
+exit_signal = get_exit_signal(
+    position_label,
+    range_momentum,
+    momentum_3m,
+    trend_direction
+)
+
 risk_score = get_risk_score(position_label, trend_direction)
 
-master_score = get_master_score(entry_score, fundamental_score, risk_score)
-master_signal = get_master_signal(master_score)
+master_score = get_master_score(
+    entry_score,
+    fundamental_score,
+    risk_score,
+    momentum_risk
+)
+
+master_signal = get_master_signal(
+    master_score,
+    momentum_risk
+)
 
 fazit_text = get_fazit_text(
     entry_quality,
@@ -507,10 +618,15 @@ fazit_text = get_fazit_text(
     position_label,
     trend_direction,
     momentum_3m,
-    fundamental_quality
+    fundamental_quality,
+    momentum_risk
 )
 
-if fundamental_quality == "Hoch" and entry_quality in ["Sehr gut", "Gut"]:
+if momentum_risk in ["Extrem ueberhitzt", "Ueberhitzt"]:
+    combined_text = "Fundamental kann die Aktie stark sein, aber das Timing ist wegen Überhitzung aktuell schwierig."
+elif momentum_risk in ["Fallend", "Kippt"]:
+    combined_text = "Das technische Bild ist angeschlagen. Erst Stabilisierung abwarten."
+elif fundamental_quality == "Hoch" and entry_quality in ["Sehr gut", "Gut"]:
     combined_text = "Technik und Fundamentaldaten passen gut zusammen."
 elif fundamental_quality == "Hoch":
     combined_text = "Fundamental stark, aber der Einstieg ist technisch aktuell nicht ideal."
@@ -572,13 +688,14 @@ top2.metric("Trend Score", f"{trend_score:.2f}")
 top3.metric("Entry Score", f"{entry_score}/10")
 top4.metric("Master Score", f"{master_score}")
 
-mid1, mid2, mid3, mid4 = st.columns(4)
+mid1, mid2, mid3, mid4, mid5 = st.columns(5)
 mid1.metric("Range Momentum", f"{range_momentum:.2f}")
 mid2.metric("3M Momentum", f"{momentum_3m * 100:.1f}%")
 mid3.metric("Fundamental Score", f"{fundamental_score}/10")
 mid4.metric("Risiko", risk_score)
+mid5.metric("Momentum Risiko", momentum_risk)
 
-badge1, badge2, badge3 = st.columns(3)
+badge1, badge2, badge3, badge4 = st.columns(4)
 
 with badge1:
     st.markdown("**Signal**")
@@ -592,21 +709,59 @@ with badge3:
     st.markdown("**Trendrichtung**")
     st.markdown(direction_badge(trend_direction), unsafe_allow_html=True)
 
+with badge4:
+    st.markdown("**Momentum Risiko**")
+    st.markdown(momentum_risk_badge(momentum_risk), unsafe_allow_html=True)
+
+
+if momentum_risk == "Extrem ueberhitzt":
+    st.error("Diese Aktie ist nach dem 3M Momentum extrem überhitzt. Ein Neueinstieg wäre aktuell riskant.")
+elif momentum_risk == "Ueberhitzt":
+    st.warning("Diese Aktie ist stark gelaufen. Ein Rücksetzer wäre für einen Einstieg sinnvoller.")
+elif momentum_risk == "Fallend":
+    st.error("Diese Aktie fällt aktuell deutlich. Risiko eines fallenden Messers.")
+elif momentum_risk == "Kippt":
+    st.warning("Der Trend wirkt angeschlagen. Erst Stabilisierung abwarten.")
+
 
 # CHART
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
 
 if not hist.empty:
+    chart_hist = hist.copy()
+    chart_hist["MA50"] = chart_hist["Close"].rolling(50).mean()
+    chart_hist["MA200"] = chart_hist["Close"].rolling(200).mean()
+
     fig = go.Figure()
 
     fig.add_trace(
         go.Scatter(
-            x=hist.index,
-            y=hist["Close"],
+            x=chart_hist.index,
+            y=chart_hist["Close"],
             mode="lines",
             name="Kurs",
             line=dict(width=2)
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=chart_hist.index,
+            y=chart_hist["MA50"],
+            mode="lines",
+            name="MA50",
+            line=dict(width=1, dash="dot")
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=chart_hist.index,
+            y=chart_hist["MA200"],
+            mode="lines",
+            name="MA200",
+            line=dict(width=1, dash="dash")
         )
     )
 
@@ -630,7 +785,7 @@ if not hist.empty:
         yaxis_title="Preis",
         height=520,
         margin=dict(l=20, r=20, t=60, b=20),
-        showlegend=False
+        showlegend=True
     )
 
     st.plotly_chart(fig, use_container_width=True)
@@ -641,11 +796,12 @@ else:
 # FAZIT
 st.markdown("### Fazit")
 
-f1, f2, f3, f4 = st.columns(4)
+f1, f2, f3, f4, f5 = st.columns(5)
 f1.metric("Entry Quality", entry_quality)
 f2.metric("Fundamental Quality", fundamental_quality)
 f3.metric("Position", position_label)
 f4.metric("Exit Signal", exit_signal)
+f5.metric("Momentum Risiko", momentum_risk)
 
 st.info(
     f"""
@@ -653,7 +809,7 @@ st.info(
 
 **Gesamtbild:** {combined_text}
 
-Das Fazit kombiniert Preiszone, Trendstruktur, echtes 3M Momentum und Fundamentaldaten.
+Das Fazit kombiniert Preiszone, Trendstruktur, echtes 3M Momentum, Momentum-Risiko und Fundamentaldaten.
 """
 )
 
@@ -673,6 +829,12 @@ analysis_df = pd.DataFrame([
         "Wert": f"{momentum_3m * 100:.1f}% 3M",
         "Score": f"Range: {range_momentum:.2f}",
         "Interpretation": "echtes Momentum positiv" if momentum_3m > 0 else "echtes Momentum negativ"
+    },
+    {
+        "Bereich": "Momentum Risiko",
+        "Wert": momentum_risk,
+        "Score": "-",
+        "Interpretation": "sauber" if momentum_risk == "Normal" else "Timing-Risiko erhöht"
     },
     {
         "Bereich": "Fundamentals",
@@ -770,6 +932,7 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 - Trend Score: **{trend_score:.2f}**
 - Range Momentum: **{range_momentum:.2f}**
 - 3M Momentum: **{momentum_3m * 100:.1f}%**
+- Momentum Risiko: **{momentum_risk}**
 - Theme Status: **{theme_status}**
 - Bullisch-Anteil: **{theme_bullish_pct:.0f}%**
 - Position: **{position_label}**
@@ -777,6 +940,8 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 - Entry Quality: **{entry_quality}**
 - Fundamental Quality: **{fundamental_quality}**
 - Risiko: **{risk_score}**
+
+Wenn das Momentum Risiko **Ueberhitzt**, **Extrem ueberhitzt**, **Fallend** oder **Kippt** ist, wird das Signal bewusst konservativer bewertet.
 """
     )
 
