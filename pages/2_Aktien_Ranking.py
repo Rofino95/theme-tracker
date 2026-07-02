@@ -31,8 +31,10 @@ def get_status(score):
 def get_signal(stock_score, range_momentum, momentum_3m, theme_status, theme_bullish_pct):
     if stock_score < 0.35 and momentum_3m < 0 and theme_status == "Baerisch":
         return "Avoid"
+
     if stock_score > 0.85 and momentum_3m < 0:
         return "Take Profits"
+
     if (
         0.55 <= stock_score <= 0.85
         and range_momentum > 0
@@ -41,10 +43,13 @@ def get_signal(stock_score, range_momentum, momentum_3m, theme_status, theme_bul
         and theme_bullish_pct >= 50
     ):
         return "Attraktiv"
+
     if stock_score > 0.85 and momentum_3m > 0:
         return "Hold"
+
     if stock_score >= 0.50 and range_momentum >= -0.10 and momentum_3m >= 0 and theme_status != "Baerisch":
         return "Hold"
+
     return "Review"
 
 
@@ -63,6 +68,7 @@ def get_trend_phase(stock_score, range_momentum, momentum_3m):
 
 def get_zone(price, low_52, high_52):
     range_52 = high_52 - low_52
+
     weak_zone_max = low_52 + 0.35 * range_52
     watchlist_zone_min = low_52 + 0.55 * range_52
     hold_zone_min = low_52 + 0.70 * range_52
@@ -147,13 +153,20 @@ def get_entry_quality_from_score(score):
         return "Riskant"
 
 
-def get_exit_signal(zone, range_momentum, trend_direction):
+def get_exit_signal(zone, range_momentum, momentum_3m, trend_direction):
+    if zone == "Upper Range" and momentum_3m < 0:
+        return "Gewinne sichern"
+
+    if zone == "Upper Range" and trend_direction == "Trend schwaecht sich ab":
+        return "Gewinne sichern"
+
     if zone == "Upper Range" and range_momentum < 0.30:
         return "Gewinne sichern"
-    elif trend_direction == "Trend schwaecht sich ab":
+
+    if trend_direction == "Trend schwaecht sich ab":
         return "Vorsicht"
-    else:
-        return "Hold"
+
+    return "Hold"
 
 
 def get_risk_score(zone, trend_direction):
@@ -291,6 +304,22 @@ def color_risk(val):
     return ""
 
 
+def color_momentum_risk(val):
+    if val == "Normal":
+        return "background-color: #123524; color: white"
+    elif val == "Ueberhitzt":
+        return "background-color: #6a3d00; color: white"
+    elif val == "Extrem ueberhitzt":
+        return "background-color: #5a1e1e; color: white"
+    elif val == "Fallend":
+        return "background-color: #5a1e1e; color: white"
+    elif val == "Kippt":
+        return "background-color: #6a3d00; color: white"
+    elif val == "Unklar":
+        return "background-color: #374151; color: white"
+    return ""
+
+
 st.title("Aktien-Ranking")
 st.caption("Screening nach Entry Score, 3M Momentum, Zonen, Risiko und Fundamentaldaten.")
 
@@ -403,6 +432,7 @@ ranking_df["Exit Signal"] = ranking_df.apply(
     lambda row: get_exit_signal(
         row["Zone"],
         row["Momentum"],
+        row["3M Momentum"],
         row["Trendrichtung"]
     ),
     axis=1
@@ -514,9 +544,15 @@ with st.expander("Filter anzeigen / ausblenden", expanded=True):
             ["Alle", "Positiv", "Negativ"]
         )
 
-    filter_col10, filter_col11 = st.columns(2)
+    filter_col10, filter_col11, filter_col12 = st.columns(3)
 
     with filter_col10:
+        selected_momentum_risk = st.selectbox(
+            "Momentum Risiko",
+            ["Alle", "Normal", "Ueberhitzt", "Extrem ueberhitzt", "Fallend", "Kippt", "Unklar"]
+        )
+
+    with filter_col11:
         sort_by = st.selectbox(
             "Sortieren nach",
             [
@@ -527,11 +563,12 @@ with st.expander("Filter anzeigen / ausblenden", expanded=True):
                 "Momentum",
                 "Preis",
                 "Name",
-                "Top %"
+                "Top %",
+                "Momentum Risiko"
             ]
         )
 
-    with filter_col11:
+    with filter_col12:
         sort_ascending = st.checkbox("Aufsteigend sortieren", value=False)
 
 filtered_df = ranking_df.copy()
@@ -566,15 +603,19 @@ if selected_momentum_3m == "Positiv":
 if selected_momentum_3m == "Negativ":
     filtered_df = filtered_df[filtered_df["3M Momentum"] < 0]
 
+if selected_momentum_risk != "Alle":
+    filtered_df = filtered_df[filtered_df["Momentum Risiko"] == selected_momentum_risk]
+
 filtered_df = filtered_df.sort_values(by=sort_by, ascending=sort_ascending)
 
-summary1, summary2, summary3, summary4, summary5 = st.columns(5)
+summary1, summary2, summary3, summary4, summary5, summary6 = st.columns(6)
 
 summary1.metric("Gefilterte Aktien", len(filtered_df))
 summary2.metric("Sehr guter Entry", int((filtered_df["Entry Quality"] == "Sehr gut").sum()) if len(filtered_df) > 0 else 0)
 summary3.metric("Fundamental Hoch", int((filtered_df["Fundamental Quality"] == "Hoch").sum()) if len(filtered_df) > 0 else 0)
 summary4.metric("3M Momentum positiv", int((filtered_df["3M Momentum"] > 0).sum()) if len(filtered_df) > 0 else 0)
 summary5.metric("Niedriges Risiko", int((filtered_df["Risiko"] == "Niedrig").sum()) if len(filtered_df) > 0 else 0)
+summary6.metric("Momentum Risiko", int((filtered_df["Momentum Risiko"] != "Normal").sum()) if len(filtered_df) > 0 else 0)
 
 st.markdown("### Ergebnisliste")
 
@@ -592,10 +633,6 @@ display_df = filtered_df[[
     "Fundamental Score"
 ]].copy()
 
-display_df = display_df.rename(columns={
-    "Momentum": "Range Momentum"
-})
-
 height_table = min(1000, 50 + len(display_df) * 35)
 
 st.dataframe(
@@ -603,6 +640,7 @@ st.dataframe(
     .style
     .map(color_zone, subset=["Zone"])
     .map(color_entry_quality, subset=["Entry Quality"])
+    .map(color_momentum_risk, subset=["Momentum Risiko"])
     .map(color_signal, subset=["Signal"])
     .map(color_risk, subset=["Risiko"])
     .map(color_fundamental_quality, subset=["Fundamental Quality"])
@@ -640,4 +678,3 @@ if len(display_df) > 0:
     )
 else:
     st.info("Keine Aktien fuer die aktuelle Filterkombination gefunden.")
-    
