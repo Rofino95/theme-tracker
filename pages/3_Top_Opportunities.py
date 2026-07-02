@@ -31,7 +31,7 @@ st.markdown("---")
 
 st.markdown("""
 **Short Term (2 Wochen – 3 Monate)**  
-Fokus: Entry Score, echtes 3M Momentum, Zone und Risiko.
+Fokus: Entry Score, echtes 3M Momentum, Zone, Risiko und Momentum-Risiko.
 
 **Long Term Core (6+ Monate bis mehrere Jahre)**  
 Fokus: Unternehmensqualität, strukturelle Stärke und langfristige Robustheit.
@@ -128,6 +128,25 @@ def get_trend_direction(hist, price):
             return "Kurzfristig positiv"
         else:
             return "Kurzfristig negativ"
+
+
+def get_momentum_risk(momentum_3m, zone):
+    if pd.isna(momentum_3m):
+        return "Unklar"
+
+    if momentum_3m > 0.80:
+        return "Extrem ueberhitzt"
+
+    if momentum_3m > 0.50:
+        return "Ueberhitzt"
+
+    if momentum_3m < -0.10:
+        return "Fallend"
+
+    if zone == "Upper Range" and momentum_3m < 0:
+        return "Kippt"
+
+    return "Normal"
 
 
 def get_fundamental_score(row):
@@ -259,6 +278,21 @@ def get_risk_score(zone, trend_direction):
         return "Niedrig"
 
 
+def apply_momentum_risk_to_entry(row):
+    score = row["Entry Score"]
+
+    if row["Momentum Risiko"] == "Ueberhitzt":
+        score -= 2
+
+    if row["Momentum Risiko"] == "Extrem ueberhitzt":
+        score -= 4
+
+    if row["Momentum Risiko"] in ["Fallend", "Kippt"]:
+        score -= 3
+
+    return max(0, min(score, 10))
+
+
 def short_score(row):
     score = 0
 
@@ -318,6 +352,15 @@ def short_score(row):
         and row["Trend Score"] < 0.7
     ):
         score += 2
+
+    if row["Momentum Risiko"] == "Ueberhitzt":
+        score -= 4
+    elif row["Momentum Risiko"] == "Extrem ueberhitzt":
+        score -= 8
+    elif row["Momentum Risiko"] in ["Fallend", "Kippt"]:
+        score -= 6
+    elif row["Momentum Risiko"] == "Unklar":
+        score -= 2
 
     return score
 
@@ -387,6 +430,12 @@ def long_warning(row):
     if row["3M Momentum"] > 0.60:
         warnings.append("Hype Momentum")
 
+    if row["Momentum Risiko"] in ["Ueberhitzt", "Extrem ueberhitzt"]:
+        warnings.append(row["Momentum Risiko"])
+
+    if row["Momentum Risiko"] in ["Fallend", "Kippt"]:
+        warnings.append("Trend kippt")
+
     if row["Risiko"] in ["Hoch", "Sehr hoch"]:
         warnings.append("Erhoehtes Risiko")
 
@@ -397,6 +446,7 @@ def long_score(row):
     score = 0
 
     quality_block = row["Fundamental Score"] * 2
+
     if row["Fundamental Quality"] == "Hoch":
         quality_block += 2
     elif row["Fundamental Quality"] == "Mittel":
@@ -429,7 +479,17 @@ def long_score(row):
     elif row["3M Momentum"] < 0:
         timing_block -= 1
 
+    if row["Momentum Risiko"] == "Ueberhitzt":
+        timing_block -= 3
+    elif row["Momentum Risiko"] == "Extrem ueberhitzt":
+        timing_block -= 6
+    elif row["Momentum Risiko"] in ["Fallend", "Kippt"]:
+        timing_block -= 5
+    elif row["Momentum Risiko"] == "Unklar":
+        timing_block -= 1
+
     risk_block = 0
+
     if row["Risiko"] == "Niedrig":
         risk_block += 2
     elif row["Risiko"] == "Mittel":
@@ -440,15 +500,17 @@ def long_score(row):
         risk_block -= 3
 
     turnaround_block = 0
+
     if (
-        row["Trendrichtung"] == "Turnaround moeglich" and
-        row["Fundamental Quality"] == "Hoch"
+        row["Trendrichtung"] == "Turnaround moeglich"
+        and row["Fundamental Quality"] == "Hoch"
     ):
         turnaround_block += 1.5
 
     structure_block = row["Structural Score"] * 1.5
 
     score = quality_block + timing_block + risk_block + turnaround_block + structure_block
+
     return score
 
 
@@ -496,6 +558,9 @@ def early_score(row):
     if row["Risiko"] == "Sehr hoch":
         score -= 4
 
+    if row["Momentum Risiko"] != "Normal":
+        score -= 6
+
     return score
 
 
@@ -504,6 +569,7 @@ def add_rank(df_to_rank):
     medals = ["🏆 1.", "🥈 2.", "🥉 3."]
 
     ranks = []
+
     for i in range(len(ranked)):
         if i < 3:
             ranks.append(medals[i])
@@ -511,7 +577,35 @@ def add_rank(df_to_rank):
             ranks.append(f"{i + 1}.")
 
     ranked.insert(0, "Rang", ranks)
+
     return ranked
+
+
+def show_open_detail_section(display_df, label, key):
+    if display_df.empty:
+        return
+
+    st.markdown(f"### {label} Aktie oeffnen")
+
+    options = display_df[["Name", "Ticker"]].drop_duplicates().copy()
+    options["Label"] = options["Name"] + " (" + options["Ticker"] + ")"
+
+    selected = st.selectbox(
+        f"{label} Aktie fuer Detailseite auswaehlen",
+        options["Label"].tolist(),
+        key=key
+    )
+
+    selected_ticker = options.loc[
+        options["Label"] == selected, "Ticker"
+    ].iloc[0]
+
+    st.page_link(
+        "pages/1_Aktien_Detail.py",
+        label=f"Zur Detailseite von {selected}",
+        icon="📈",
+        query_params={"ticker": selected_ticker}
+    )
 
 
 df["Zone"] = df.apply(get_zone, axis=1)
@@ -519,6 +613,7 @@ df["Fundamental Score"] = df.apply(get_fundamental_score, axis=1)
 df["Fundamental Quality"] = df["Fundamental Score"].apply(get_fundamental_quality)
 
 trendrichtungen = []
+
 for _, row in df.iterrows():
     hist = load_price_history(row["Ticker"])
     trendrichtungen.append(get_trend_direction(hist, row["Preis"]))
@@ -546,6 +641,17 @@ df["Risiko"] = df.apply(
     axis=1
 )
 
+df["Momentum Risiko"] = df.apply(
+    lambda row: get_momentum_risk(
+        row["3M Momentum"],
+        row["Zone"]
+    ),
+    axis=1
+)
+
+df["Entry Score"] = df.apply(apply_momentum_risk_to_entry, axis=1)
+df["Entry Quality"] = df["Entry Score"].apply(get_entry_quality_from_score)
+
 df["Structural Score"] = df.apply(structural_score, axis=1)
 df["Long Type"] = df.apply(long_type, axis=1)
 df["Long Warning"] = df.apply(long_warning, axis=1)
@@ -555,9 +661,10 @@ df["Long Score"] = df.apply(long_score, axis=1)
 df["Early Score"] = df.apply(early_score, axis=1)
 
 df["High Conviction"] = (
-    (df["Early Score"] >= 12) &
-    (df["Fundamental Quality"] == "Hoch") &
-    (df["3M Momentum"] > 0)
+    (df["Early Score"] >= 12)
+    & (df["Fundamental Quality"] == "Hoch")
+    & (df["3M Momentum"] > 0)
+    & (df["Momentum Risiko"] == "Normal")
 )
 
 df = (
@@ -568,8 +675,14 @@ df = (
     .drop_duplicates(subset=["Ticker"], keep="first")
 )
 
+safe_momentum_mask = df["Momentum Risiko"].isin(["Normal"])
+
 short_df = (
-    df.sort_values(
+    df[
+        safe_momentum_mask
+        & ~df["Trendrichtung"].isin(["Abwaertstrend", "Trend schwaecht sich ab"])
+    ]
+    .sort_values(
         by=["Short Score", "Entry Score", "3M Momentum", "Fundamental Score"],
         ascending=[False, False, False, False]
     )
@@ -590,6 +703,8 @@ long_core_df = (
 long_entry_df = (
     df[
         df["Fundamental Quality"].isin(["Hoch", "Mittel"])
+        & safe_momentum_mask
+        & ~df["Trendrichtung"].isin(["Abwaertstrend", "Trend schwaecht sich ab"])
     ]
     .sort_values(
         by=["Long Score", "Entry Score", "Trend Score", "Fundamental Score"],
@@ -602,13 +717,14 @@ has_volume_cols = {"Volume", "Avg Volume"}.issubset(df.columns)
 
 if has_volume_cols:
     early_mask = (
-        (df["Trend Score"] < 0.65) &
-        (df["Trend Score"] > 0.25) &
-        (df["3M Momentum"] > 0.03) &
-        (df["3M Momentum"] < 0.20) &
-        (df["Trendrichtung"] == "Frischer Aufwaertstrend") &
-        (df["Avg Volume"] > 0) &
-        (df["Volume"] > 1.2 * df["Avg Volume"])
+        (df["Trend Score"] < 0.65)
+        & (df["Trend Score"] > 0.25)
+        & (df["3M Momentum"] > 0.03)
+        & (df["3M Momentum"] < 0.20)
+        & (df["Trendrichtung"] == "Frischer Aufwaertstrend")
+        & (df["Momentum Risiko"] == "Normal")
+        & (df["Avg Volume"] > 0)
+        & (df["Volume"] > 1.2 * df["Avg Volume"])
     )
 else:
     early_mask = pd.Series([False] * len(df), index=df.index)
@@ -626,6 +742,7 @@ long_entry_display = add_rank(long_entry_df)
 early_display = add_rank(early_df)
 
 st.markdown("## 🚀 Top 8 Short Term Chancen")
+st.caption("Überhitzte, fallende oder kippende Werte werden hier bewusst ausgeschlossen.")
 
 st.dataframe(
     short_display[[
@@ -635,6 +752,7 @@ st.dataframe(
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
+        "Momentum Risiko",
         "Zone",
         "Risiko",
         "Fundamental Quality",
@@ -648,32 +766,12 @@ st.dataframe(
     hide_index=True
 )
 
-st.markdown("### Short Term Aktie oeffnen")
-
-short_options = short_display[["Name", "Ticker"]].drop_duplicates().copy()
-short_options["Label"] = short_options["Name"] + " (" + short_options["Ticker"] + ")"
-
-selected_short = st.selectbox(
-    "Short Term Aktie fuer Detailseite auswaehlen",
-    short_options["Label"].tolist(),
-    key="short_detail_select"
-)
-
-selected_short_ticker = short_options.loc[
-    short_options["Label"] == selected_short, "Ticker"
-].iloc[0]
-
-st.page_link(
-    "pages/1_Aktien_Detail.py",
-    label=f"Zur Detailseite von {selected_short}",
-    icon="📈",
-    query_params={"ticker": selected_short_ticker}
-)
+show_open_detail_section(short_display, "Short Term", "short_detail_select")
 
 st.markdown("---")
 
 st.markdown("## 📈 Long Term Core")
-st.caption("Die qualitativ stärksten langfristigen Kandidaten – stärker auf Unternehmensqualität und strukturelle Stärke fokussiert.")
+st.caption("Die qualitativ stärksten langfristigen Kandidaten. Überhitzung wird angezeigt, aber nicht automatisch ausgeschlossen.")
 
 st.dataframe(
     long_core_display[[
@@ -687,6 +785,7 @@ st.dataframe(
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
+        "Momentum Risiko",
         "Risiko",
         "Trend Score",
         "Long Warning"
@@ -701,32 +800,12 @@ st.dataframe(
     hide_index=True
 )
 
-st.markdown("### Long Term Core Aktie oeffnen")
-
-long_core_options = long_core_display[["Name", "Ticker"]].drop_duplicates().copy()
-long_core_options["Label"] = long_core_options["Name"] + " (" + long_core_options["Ticker"] + ")"
-
-selected_long_core = st.selectbox(
-    "Long Term Core Aktie fuer Detailseite auswaehlen",
-    long_core_options["Label"].tolist(),
-    key="long_core_detail_select"
-)
-
-selected_long_core_ticker = long_core_options.loc[
-    long_core_options["Label"] == selected_long_core, "Ticker"
-].iloc[0]
-
-st.page_link(
-    "pages/1_Aktien_Detail.py",
-    label=f"Zur Detailseite von {selected_long_core}",
-    icon="📈",
-    query_params={"ticker": selected_long_core_ticker}
-)
+show_open_detail_section(long_core_display, "Long Term Core", "long_core_detail_select")
 
 st.markdown("---")
 
 st.markdown("## 🔵 Long Term Entry")
-st.caption("Langfristige Qualitätskandidaten mit stärkerem Fokus auf gute Einstiegsbereiche statt Peak-Momentum.")
+st.caption("Langfristige Qualitätskandidaten mit Fokus auf sinnvollere Einstiegsbereiche. Überhitzte und fallende Werte werden ausgeschlossen.")
 
 st.dataframe(
     long_entry_display[[
@@ -740,6 +819,7 @@ st.dataframe(
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
+        "Momentum Risiko",
         "Risiko",
         "Trend Score",
         "Long Score",
@@ -756,27 +836,7 @@ st.dataframe(
     hide_index=True
 )
 
-st.markdown("### Long Term Entry Aktie oeffnen")
-
-long_entry_options = long_entry_display[["Name", "Ticker"]].drop_duplicates().copy()
-long_entry_options["Label"] = long_entry_options["Name"] + " (" + long_entry_options["Ticker"] + ")"
-
-selected_long_entry = st.selectbox(
-    "Long Term Entry Aktie fuer Detailseite auswaehlen",
-    long_entry_options["Label"].tolist(),
-    key="long_entry_detail_select"
-)
-
-selected_long_entry_ticker = long_entry_options.loc[
-    long_entry_options["Label"] == selected_long_entry, "Ticker"
-].iloc[0]
-
-st.page_link(
-    "pages/1_Aktien_Detail.py",
-    label=f"Zur Detailseite von {selected_long_entry}",
-    icon="📈",
-    query_params={"ticker": selected_long_entry_ticker}
-)
+show_open_detail_section(long_entry_display, "Long Term Entry", "long_entry_detail_select")
 
 st.markdown("---")
 
@@ -796,6 +856,7 @@ st.dataframe(
         "Trendrichtung",
         "Trend Score",
         "3M Momentum",
+        "Momentum Risiko",
         "Early Score",
         "High Conviction"
     ]].style.format({
@@ -808,27 +869,6 @@ st.dataframe(
 )
 
 if not early_display.empty:
-    st.markdown("### Early Play oeffnen")
-
-    early_options = early_display[["Name", "Ticker"]].drop_duplicates().copy()
-    early_options["Label"] = early_options["Name"] + " (" + early_options["Ticker"] + ")"
-
-    selected_early = st.selectbox(
-        "Early Play fuer Detailseite auswaehlen",
-        early_options["Label"].tolist(),
-        key="early_detail_select"
-    )
-
-    selected_early_ticker = early_options.loc[
-        early_options["Label"] == selected_early, "Ticker"
-    ].iloc[0]
-
-    st.page_link(
-        "pages/1_Aktien_Detail.py",
-        label=f"Zur Detailseite von {selected_early}",
-        icon="📈",
-        query_params={"ticker": selected_early_ticker}
-    )
+    show_open_detail_section(early_display, "Early Play", "early_detail_select")
 else:
     st.warning("Aktuell keine Early Plays im Markt gefunden.")
-    
