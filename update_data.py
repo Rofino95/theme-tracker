@@ -83,6 +83,57 @@ def get_description(ticker, name, existing_description):
     return description
 
 
+def calculate_momentum(hist, days):
+    try:
+        if len(hist) >= days + 1:
+            current_price = hist["Close"].iloc[-1]
+            old_price = hist["Close"].iloc[-days]
+
+            if old_price != 0:
+                return (current_price - old_price) / old_price
+
+    except Exception:
+        return None
+
+    return None
+
+
+def calculate_moving_averages(hist, price):
+    ma50 = None
+    ma200 = None
+    ma50_distance = None
+    ma200_distance = None
+    price_above_ma50 = None
+    price_above_ma200 = None
+
+    try:
+        if len(hist) >= 50:
+            ma50 = hist["Close"].rolling(50).mean().iloc[-1]
+
+            if pd.notna(ma50) and ma50 != 0:
+                ma50_distance = (price - ma50) / ma50
+                price_above_ma50 = price > ma50
+
+        if len(hist) >= 200:
+            ma200 = hist["Close"].rolling(200).mean().iloc[-1]
+
+            if pd.notna(ma200) and ma200 != 0:
+                ma200_distance = (price - ma200) / ma200
+                price_above_ma200 = price > ma200
+
+    except Exception:
+        pass
+
+    return (
+        ma50,
+        ma200,
+        ma50_distance,
+        ma200_distance,
+        price_above_ma50,
+        price_above_ma200
+    )
+
+
 def fetch_data(ticker, existing_description=""):
 
     try:
@@ -99,7 +150,8 @@ def fetch_data(ticker, existing_description=""):
                 existing_description,
                 None, None, None,
                 None, None, None,
-                None
+                None, None, None,
+                None, None, None, None
             )
 
         price = hist["Close"].iloc[-1]
@@ -126,23 +178,19 @@ def fetch_data(ticker, existing_description=""):
         profit_margin = info.get("profitMargins")
         market_cap = info.get("marketCap")
 
-        # Echtes 3M Momentum
-        momentum_3m = None
+        # Momentum-Werte
+        momentum_3m = calculate_momentum(hist, 63)
+        momentum_1m = calculate_momentum(hist, 21)
+        momentum_20d = calculate_momentum(hist, 20)
 
-        try:
-            if len(hist) >= 63:
-
-                current_price = hist["Close"].iloc[-1]
-                old_price = hist["Close"].iloc[-63]
-
-                if old_price != 0:
-                    momentum_3m = (
-                        (current_price - old_price)
-                        / old_price
-                    )
-
-        except Exception:
-            momentum_3m = None
+        (
+            ma50,
+            ma200,
+            ma50_distance,
+            ma200_distance,
+            price_above_ma50,
+            price_above_ma200
+        ) = calculate_moving_averages(hist, price)
 
         return (
             price,
@@ -156,7 +204,15 @@ def fetch_data(ticker, existing_description=""):
             earnings_growth,
             profit_margin,
             market_cap,
-            momentum_3m
+            momentum_3m,
+            momentum_1m,
+            momentum_20d,
+            ma50,
+            ma200,
+            ma50_distance,
+            ma200_distance,
+            price_above_ma50,
+            price_above_ma200
         )
 
     except Exception as e:
@@ -169,7 +225,9 @@ def fetch_data(ticker, existing_description=""):
             existing_description,
             None, None, None,
             None, None, None,
-            None
+            None, None, None,
+            None, None, None, None,
+            None, None
         )
 
 
@@ -199,6 +257,15 @@ def main():
     market_cap_list = []
 
     momentum_3m_list = []
+    momentum_1m_list = []
+    momentum_20d_list = []
+
+    ma50_list = []
+    ma200_list = []
+    ma50_distance_list = []
+    ma200_distance_list = []
+    price_above_ma50_list = []
+    price_above_ma200_list = []
 
     for ticker in df["Ticker"]:
 
@@ -216,7 +283,15 @@ def main():
             earnings_growth,
             profit_margin,
             market_cap,
-            momentum_3m
+            momentum_3m,
+            momentum_1m,
+            momentum_20d,
+            ma50,
+            ma200,
+            ma50_distance,
+            ma200_distance,
+            price_above_ma50,
+            price_above_ma200
 
         ) = fetch_data(
             ticker,
@@ -237,6 +312,15 @@ def main():
         market_cap_list.append(market_cap)
 
         momentum_3m_list.append(momentum_3m)
+        momentum_1m_list.append(momentum_1m)
+        momentum_20d_list.append(momentum_20d)
+
+        ma50_list.append(ma50)
+        ma200_list.append(ma200)
+        ma50_distance_list.append(ma50_distance)
+        ma200_distance_list.append(ma200_distance)
+        price_above_ma50_list.append(price_above_ma50)
+        price_above_ma200_list.append(price_above_ma200)
 
     df["Preis"] = prices
     df["52W High"] = highs
@@ -253,6 +337,15 @@ def main():
     df["Market Cap"] = market_cap_list
 
     df["3M Momentum"] = momentum_3m_list
+    df["1M Momentum"] = momentum_1m_list
+    df["20D Momentum"] = momentum_20d_list
+
+    df["MA50"] = ma50_list
+    df["MA200"] = ma200_list
+    df["MA50 Abstand"] = ma50_distance_list
+    df["MA200 Abstand"] = ma200_distance_list
+    df["Preis ueber MA50"] = price_above_ma50_list
+    df["Preis ueber MA200"] = price_above_ma200_list
 
     df = df.dropna(
         subset=["Preis", "52W High", "52W Low"]
@@ -282,7 +375,15 @@ def main():
 
     df["Trend Score"] = df["Trend Score"].round(2)
     df["Momentum"] = df["Momentum"].round(2)
+
     df["3M Momentum"] = df["3M Momentum"].round(2)
+    df["1M Momentum"] = df["1M Momentum"].round(2)
+    df["20D Momentum"] = df["20D Momentum"].round(2)
+
+    df["MA50"] = df["MA50"].round(2)
+    df["MA200"] = df["MA200"].round(2)
+    df["MA50 Abstand"] = df["MA50 Abstand"].round(2)
+    df["MA200 Abstand"] = df["MA200 Abstand"].round(2)
 
     df.to_csv(
         OUTPUT_FILE,
