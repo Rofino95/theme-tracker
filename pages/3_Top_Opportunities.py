@@ -54,7 +54,10 @@ required_columns = [
     "1M Momentum",
     "20D Momentum",
     "MA50 Abstand",
-    "Preis ueber MA50"
+    "Preis ueber MA50",
+    "Volume",
+    "Avg Volume",
+    "Volume Ratio"
 ]
 
 missing_columns = [col for col in required_columns if col not in df.columns]
@@ -676,16 +679,14 @@ def early_score(row):
     else:
         score -= 3
 
-    if pd.notna(row.get("Volume")) and pd.notna(row.get("Avg Volume")) and row["Avg Volume"] not in [0, None]:
-        vol_ratio = row["Volume"] / row["Avg Volume"]
-
-        if vol_ratio > 2:
+    if pd.notna(row.get("Volume Ratio")):
+        if row["Volume Ratio"] > 2:
             score += 6
-        elif vol_ratio > 1.5:
+        elif row["Volume Ratio"] > 1.5:
             score += 4
-        elif vol_ratio > 1.2:
+        elif row["Volume Ratio"] > 1.15:
             score += 2
-        else:
+        elif row["Volume Ratio"] < 0.8:
             score -= 1
 
     if row["Momentum"] > 0:
@@ -868,69 +869,56 @@ long_entry_df = (
     .head(8)
 )
 
-has_volume_cols = {"Volume", "Avg Volume"}.issubset(df.columns)
+early_mask = (
+    # Nicht mehr ganz unten, aber auch noch nicht spät im Trend
+    (df["Trend Score"] > 0.20)
+    & (df["Trend Score"] < 0.78)
 
-# Early Plays sollen frühe Kandidaten finden.
-# Mit Volumendaten ist der Filter strenger.
-# Ohne Volumendaten nutzt die Seite einen technischen Ersatzfilter.
+    # 3M Momentum leicht bis moderat positiv
+    & (df["3M Momentum"] > 0.02)
+    & (df["3M Momentum"] < 0.40)
 
-if has_volume_cols:
-    early_mask = (
-        (df["Trend Score"] > 0.20)
-        & (df["Trend Score"] < 0.75)
-        & (df["3M Momentum"] > 0.02)
-        & (df["3M Momentum"] < 0.35)
-        & (df["1M Momentum"] > -0.03)
-        & (df["20D Momentum"] > -0.03)
-        & (df["Momentum Risiko"] == "Normal")
-        & (df["MA50 Abstand"] > -0.05)
-        & (df["MA50 Abstand"] < 0.20)
-        & (
-            df["Trendrichtung"].isin([
-                "Frischer Aufwaertstrend",
-                "Turnaround moeglich",
-                "Kurzfristig positiv",
-                "Aufwaertstrend"
-            ])
-        )
-        & (df["Avg Volume"] > 0)
-        & (df["Volume"] > 1.1 * df["Avg Volume"])
+    # Kurzfristig darf es leicht wackeln, aber nicht kaputt sein
+    & (df["1M Momentum"] > -0.04)
+    & (df["20D Momentum"] > -0.04)
+
+    # Kein überhitztes, fallendes oder kippendes Setup
+    & (df["Momentum Risiko"] == "Normal")
+
+    # Nicht zu weit unter MA50, aber auch nicht extrem weit darüber
+    & (df["MA50 Abstand"] > -0.06)
+    & (df["MA50 Abstand"] < 0.22)
+
+    # Trendstruktur darf früh oder gerade erst positiv sein
+    & (
+        df["Trendrichtung"].isin([
+            "Frischer Aufwaertstrend",
+            "Turnaround moeglich",
+            "Kurzfristig positiv",
+            "Aufwaertstrend",
+            "Seitwaerts / unklar"
+        ])
     )
 
-    min_early_score = 12
-
-else:
-    early_mask = (
-        (df["Trend Score"] > 0.20)
-        & (df["Trend Score"] < 0.75)
-        & (df["3M Momentum"] > 0.02)
-        & (df["3M Momentum"] < 0.35)
-        & (df["1M Momentum"] > -0.03)
-        & (df["20D Momentum"] > -0.03)
-        & (df["Momentum Risiko"] == "Normal")
-        & (df["MA50 Abstand"] > -0.05)
-        & (df["MA50 Abstand"] < 0.20)
-        & (
-            df["Trendrichtung"].isin([
-                "Frischer Aufwaertstrend",
-                "Turnaround moeglich",
-                "Kurzfristig positiv",
-                "Aufwaertstrend"
-            ])
-        )
-    )
-
-    min_early_score = 8
+    # Volumen muss zumindest leicht erhöht sein
+    & (df["Volume Ratio"] > 1.05)
+)
 
 early_df = (
     df[early_mask]
     .sort_values(
-        by=["Early Score", "Fundamental Score", "1M Momentum", "20D Momentum"],
-        ascending=[False, False, False, False]
+        by=[
+            "Early Score",
+            "Volume Ratio",
+            "Fundamental Score",
+            "1M Momentum",
+            "20D Momentum"
+        ],
+        ascending=[False, False, False, False, False]
     )
 )
 
-early_df = early_df[early_df["Early Score"] >= min_early_score].head(8)
+early_df = early_df[early_df["Early Score"] >= 8].head(8)
 
 short_display = add_rank(short_df)
 long_core_display = add_rank(long_core_df)
@@ -1073,6 +1061,7 @@ st.dataframe(
         "1M Momentum",
         "20D Momentum",
         "MA50 Abstand",
+        "Volume Ratio",
         "Momentum Risiko",
         "Early Score",
         "High Conviction"
@@ -1082,6 +1071,7 @@ st.dataframe(
         "1M Momentum": "{:.1%}",
         "20D Momentum": "{:.1%}",
         "MA50 Abstand": "{:.1%}",
+        "Volume Ratio": "{:.2f}"
         "Early Score": "{:.1f}"
     }),
     use_container_width=True,
