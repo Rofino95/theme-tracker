@@ -21,10 +21,63 @@ def get_status(score):
         return "Baerisch"
 
 
-def get_momentum_risk(momentum_3m, zone):
+def normalize_bool(value):
+    if value is True:
+        return True
+
+    if value is False:
+        return False
+
+    if isinstance(value, str):
+        value = value.strip().lower()
+
+        if value == "true":
+            return True
+
+        if value == "false":
+            return False
+
+    return None
+
+
+def get_momentum_risk(
+    momentum_3m,
+    momentum_1m,
+    momentum_20d,
+    ma50_distance,
+    price_above_ma50,
+    zone
+):
+    price_above_ma50 = normalize_bool(price_above_ma50)
+
     if pd.isna(momentum_3m):
         return "Unklar"
 
+    # Stark gelaufen, aber kurzfristig kippt es.
+    if momentum_3m > 0.50:
+        if pd.notna(momentum_1m) and momentum_1m < 0:
+            return "Kippt"
+
+        if pd.notna(momentum_20d) and momentum_20d < 0:
+            return "Kippt"
+
+        if price_above_ma50 is False:
+            return "Kippt"
+
+    # Fallendes Messer / kurzfristiger Bruch.
+    if pd.notna(momentum_1m) and momentum_1m < -0.10:
+        return "Fallend"
+
+    if pd.notna(momentum_20d) and momentum_20d < -0.10:
+        return "Fallend"
+
+    if pd.notna(ma50_distance) and ma50_distance < -0.05:
+        return "Fallend"
+
+    if price_above_ma50 is False and pd.notna(momentum_1m) and momentum_1m < 0:
+        return "Fallend"
+
+    # Überhitzung ohne klaren Bruch.
     if momentum_3m > 0.80:
         return "Extrem ueberhitzt"
 
@@ -178,7 +231,16 @@ def get_trend_direction(hist, price):
             return "Kurzfristig negativ"
 
 
-def get_entry_score(zone, trend_direction, range_momentum, momentum_3m, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+def get_entry_score(
+    zone,
+    trend_direction,
+    range_momentum,
+    momentum_3m,
+    fundamental_quality,
+    forward_pe,
+    revenue_growth,
+    earnings_growth
+):
     score = 0
 
     if zone == "Watchlist Zone":
@@ -192,7 +254,7 @@ def get_entry_score(zone, trend_direction, range_momentum, momentum_3m, fundamen
         score += 2
     elif trend_direction == "Aufwaertstrend":
         score += 1
-    elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab"]:
+    elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab", "Kurzfristig negativ"]:
         score -= 1
 
     if range_momentum > 0:
@@ -245,7 +307,10 @@ def get_entry_quality_from_score(score):
         return "Riskant"
 
 
-def get_exit_signal(zone, range_momentum, momentum_3m, trend_direction):
+def get_exit_signal(zone, range_momentum, momentum_3m, trend_direction, momentum_risk):
+    if momentum_risk in ["Fallend", "Kippt"]:
+        return "Vorsicht"
+
     if zone == "Upper Range" and momentum_3m < 0:
         return "Gewinne sichern"
 
@@ -255,7 +320,7 @@ def get_exit_signal(zone, range_momentum, momentum_3m, trend_direction):
     if zone == "Upper Range" and range_momentum < 0.30:
         return "Gewinne sichern"
 
-    if trend_direction == "Trend schwaecht sich ab":
+    if trend_direction in ["Trend schwaecht sich ab", "Kurzfristig negativ"]:
         return "Vorsicht"
 
     return "Hold"
@@ -268,6 +333,8 @@ def get_risk_score(zone, trend_direction):
         return "Hoch"
     elif zone == "Upper Range":
         return "Mittel"
+    elif trend_direction in ["Abwaertstrend", "Trend schwaecht sich ab", "Kurzfristig negativ"]:
+        return "Hoch"
     else:
         return "Niedrig"
 
@@ -315,7 +382,18 @@ def get_fundamental_quality(score):
         return "Niedrig"
 
 
-def get_fazit_text(entry_quality, risk_score, position_label, trend_direction, momentum_3m, fundamental_quality, momentum_risk):
+def get_fazit_text(
+    entry_quality,
+    risk_score,
+    position_label,
+    trend_direction,
+    momentum_3m,
+    momentum_1m,
+    momentum_20d,
+    ma50_distance,
+    fundamental_quality,
+    momentum_risk
+):
     if momentum_risk == "Extrem ueberhitzt":
         return "Die Aktie ist extrem stark gelaufen. Für einen Neueinstieg ist das Chance-Risiko-Verhältnis aktuell ungünstig."
 
@@ -323,10 +401,15 @@ def get_fazit_text(entry_quality, risk_score, position_label, trend_direction, m
         return "Die Aktie ist stark gelaufen. Ein Einstieg ist nicht ausgeschlossen, aber ein Rücksetzer wäre deutlich sinnvoller."
 
     if momentum_risk == "Fallend":
-        return "Die Aktie fällt aktuell deutlich. Hier besteht Risiko, in ein fallendes Messer zu greifen."
+        return "Die Aktie fällt aktuell deutlich oder liegt klar unter wichtigen kurzfristigen Trendmarken. Hier besteht Risiko, in ein fallendes Messer zu greifen."
 
     if momentum_risk == "Kippt":
-        return "Der Trend wirkt angeschlagen. Erst Stabilisierung abwarten."
+        return "Die Aktie war zuletzt stark, aber kurzfristige Signale wie 1M Momentum, 20D Momentum oder MA50 zeigen Schwäche. Erst Stabilisierung abwarten."
+
+    if pd.notna(momentum_1m) and pd.notna(momentum_20d):
+        if momentum_3m > 0 and momentum_1m > 0 and momentum_20d > 0 and pd.notna(ma50_distance) and ma50_distance > 0:
+            if entry_quality in ["Sehr gut", "Gut"] and fundamental_quality in ["Hoch", "Mittel"]:
+                return "Starkes Setup: 3M, 1M und 20D Momentum sind positiv, der Kurs liegt über dem MA50 und die Einstiegslage ist solide."
 
     if entry_quality == "Sehr gut" and fundamental_quality == "Hoch" and risk_score in ["Niedrig", "Mittel"]:
         return "Sehr starkes Setup: Gute Einstiegslage, starke Fundamentaldaten und vertretbares Risiko."
@@ -443,9 +526,15 @@ def momentum_risk_badge(momentum_risk):
     return badge(momentum_risk, colors.get(momentum_risk, "#374151"))
 
 
+def format_pct(value):
+    if pd.notna(value):
+        return f"{value * 100:.1f}%"
+    return "n/a"
+
+
 st.title("Aktien-Detailseite")
 
-st.caption("Screening nach Entry Score, 3M Momentum, Zonen, Risiko und Fundamentaldaten.")
+st.caption("Screening nach Entry Score, 3M/1M/20D Momentum, MA50, Zonen, Risiko und Fundamentaldaten.")
 
 st.markdown("### Navigation")
 
@@ -469,6 +558,20 @@ if not os.path.exists("theme_scores.csv"):
     st.stop()
 
 df = pd.read_csv("theme_scores.csv")
+
+required_columns = [
+    "3M Momentum",
+    "1M Momentum",
+    "20D Momentum",
+    "MA50 Abstand",
+    "Preis ueber MA50"
+]
+
+missing_columns = [col for col in required_columns if col not in df.columns]
+
+if missing_columns:
+    st.error(f"Diese Spalten fehlen in theme_scores.csv: {missing_columns}")
+    st.stop()
 
 stock_options = (
     df[["Name", "Ticker"]]
@@ -517,9 +620,48 @@ range_momentum = float(stock_df.iloc[0]["Momentum"])
 
 momentum_3m = (
     float(stock_df.iloc[0]["3M Momentum"])
-    if "3M Momentum" in stock_df.columns and pd.notna(stock_df.iloc[0]["3M Momentum"])
+    if pd.notna(stock_df.iloc[0]["3M Momentum"])
     else 0
 )
+
+momentum_1m = (
+    float(stock_df.iloc[0]["1M Momentum"])
+    if pd.notna(stock_df.iloc[0]["1M Momentum"])
+    else None
+)
+
+momentum_20d = (
+    float(stock_df.iloc[0]["20D Momentum"])
+    if pd.notna(stock_df.iloc[0]["20D Momentum"])
+    else None
+)
+
+ma50 = (
+    float(stock_df.iloc[0]["MA50"])
+    if "MA50" in stock_df.columns and pd.notna(stock_df.iloc[0]["MA50"])
+    else None
+)
+
+ma200 = (
+    float(stock_df.iloc[0]["MA200"])
+    if "MA200" in stock_df.columns and pd.notna(stock_df.iloc[0]["MA200"])
+    else None
+)
+
+ma50_distance = (
+    float(stock_df.iloc[0]["MA50 Abstand"])
+    if pd.notna(stock_df.iloc[0]["MA50 Abstand"])
+    else None
+)
+
+ma200_distance = (
+    float(stock_df.iloc[0]["MA200 Abstand"])
+    if "MA200 Abstand" in stock_df.columns and pd.notna(stock_df.iloc[0]["MA200 Abstand"])
+    else None
+)
+
+price_above_ma50 = stock_df.iloc[0]["Preis ueber MA50"]
+price_above_ma200 = stock_df.iloc[0]["Preis ueber MA200"] if "Preis ueber MA200" in stock_df.columns else None
 
 description = stock_df.iloc[0]["Description"] if "Description" in stock_df.columns else ""
 
@@ -562,7 +704,14 @@ elif hold_zone_min <= price < upper_range_min:
 else:
     position_label = "Upper Range"
 
-momentum_risk = get_momentum_risk(momentum_3m, position_label)
+momentum_risk = get_momentum_risk(
+    momentum_3m,
+    momentum_1m,
+    momentum_20d,
+    ma50_distance,
+    price_above_ma50,
+    position_label
+)
 
 if momentum_risk in ["Ueberhitzt", "Extrem ueberhitzt", "Fallend", "Kippt"]:
     signal = "Review"
@@ -591,14 +740,15 @@ entry_score = get_entry_score(
 entry_score = adjust_entry_score_for_momentum_risk(entry_score, momentum_risk)
 entry_quality = get_entry_quality_from_score(entry_score)
 
+risk_score = get_risk_score(position_label, trend_direction)
+
 exit_signal = get_exit_signal(
     position_label,
     range_momentum,
     momentum_3m,
-    trend_direction
+    trend_direction,
+    momentum_risk
 )
-
-risk_score = get_risk_score(position_label, trend_direction)
 
 master_score = get_master_score(
     entry_score,
@@ -618,6 +768,9 @@ fazit_text = get_fazit_text(
     position_label,
     trend_direction,
     momentum_3m,
+    momentum_1m,
+    momentum_20d,
+    ma50_distance,
     fundamental_quality,
     momentum_risk
 )
@@ -636,7 +789,6 @@ else:
     combined_text = "Aktuell liefert die Kombination aus Technik und Fundamentaldaten kein starkes Gesamtbild."
 
 
-# HEADER
 st.markdown(f"## {stock_name}")
 st.markdown(f"**Ticker:** `{ticker}`")
 
@@ -679,7 +831,6 @@ with theme_col2:
 st.markdown("---")
 
 
-# KENNZAHLEN
 st.markdown("### Überblick")
 
 top1, top2, top3, top4 = st.columns(4)
@@ -690,10 +841,17 @@ top4.metric("Master Score", f"{master_score}")
 
 mid1, mid2, mid3, mid4, mid5 = st.columns(5)
 mid1.metric("Range Momentum", f"{range_momentum:.2f}")
-mid2.metric("3M Momentum", f"{momentum_3m * 100:.1f}%")
-mid3.metric("Fundamental Score", f"{fundamental_score}/10")
-mid4.metric("Risiko", risk_score)
+mid2.metric("3M Momentum", format_pct(momentum_3m))
+mid3.metric("1M Momentum", format_pct(momentum_1m))
+mid4.metric("20D Momentum", format_pct(momentum_20d))
 mid5.metric("Momentum Risiko", momentum_risk)
+
+ma1, ma2, ma3, ma4, ma5 = st.columns(5)
+ma1.metric("MA50", f"{ma50:.2f}" if ma50 is not None else "n/a")
+ma2.metric("MA200", f"{ma200:.2f}" if ma200 is not None else "n/a")
+ma3.metric("MA50 Abstand", format_pct(ma50_distance))
+ma4.metric("MA200 Abstand", format_pct(ma200_distance))
+ma5.metric("Preis ueber MA50", str(normalize_bool(price_above_ma50)))
 
 badge1, badge2, badge3, badge4 = st.columns(4)
 
@@ -719,12 +877,11 @@ if momentum_risk == "Extrem ueberhitzt":
 elif momentum_risk == "Ueberhitzt":
     st.warning("Diese Aktie ist stark gelaufen. Ein Rücksetzer wäre für einen Einstieg sinnvoller.")
 elif momentum_risk == "Fallend":
-    st.error("Diese Aktie fällt aktuell deutlich. Risiko eines fallenden Messers.")
+    st.error("Diese Aktie fällt aktuell deutlich oder liegt klar unter wichtigen kurzfristigen Trendmarken. Risiko eines fallenden Messers.")
 elif momentum_risk == "Kippt":
-    st.warning("Der Trend wirkt angeschlagen. Erst Stabilisierung abwarten.")
+    st.warning("Der längerfristige Trend war stark, aber kurzfristig kippt das Bild. Erst Stabilisierung abwarten.")
 
 
-# CHART
 st.markdown("---")
 st.markdown("### Kurschart (1 Jahr)")
 
@@ -793,7 +950,6 @@ else:
     st.warning("Kein Kursverlauf verfuegbar.")
 
 
-# FAZIT
 st.markdown("### Fazit")
 
 f1, f2, f3, f4, f5 = st.columns(5)
@@ -809,12 +965,11 @@ st.info(
 
 **Gesamtbild:** {combined_text}
 
-Das Fazit kombiniert Preiszone, Trendstruktur, echtes 3M Momentum, Momentum-Risiko und Fundamentaldaten.
+Das Fazit kombiniert Preiszone, Trendstruktur, echtes 3M Momentum, 1M Momentum, 20D Momentum, MA50-Abstand, Momentum-Risiko und Fundamentaldaten.
 """
 )
 
 
-# KOMPAKTE ANALYSE
 st.markdown("### Kompakte Analyse")
 
 analysis_df = pd.DataFrame([
@@ -826,9 +981,15 @@ analysis_df = pd.DataFrame([
     },
     {
         "Bereich": "Momentum",
-        "Wert": f"{momentum_3m * 100:.1f}% 3M",
+        "Wert": f"3M: {format_pct(momentum_3m)} | 1M: {format_pct(momentum_1m)} | 20D: {format_pct(momentum_20d)}",
         "Score": f"Range: {range_momentum:.2f}",
-        "Interpretation": "echtes Momentum positiv" if momentum_3m > 0 else "echtes Momentum negativ"
+        "Interpretation": "kurzfristig intakt" if momentum_risk == "Normal" else "kurzfristiges Timing-Risiko"
+    },
+    {
+        "Bereich": "MA50",
+        "Wert": f"Abstand: {format_pct(ma50_distance)}",
+        "Score": f"Preis ueber MA50: {normalize_bool(price_above_ma50)}",
+        "Interpretation": "über MA50" if normalize_bool(price_above_ma50) is True else "unter MA50 oder unklar"
     },
     {
         "Bereich": "Momentum Risiko",
@@ -853,7 +1014,6 @@ analysis_df = pd.DataFrame([
 st.table(analysis_df)
 
 
-# FUNDAMENTALS
 st.markdown("### Fundamentaldaten")
 
 fund1, fund2, fund3 = st.columns(3)
@@ -884,7 +1044,6 @@ fund_df = pd.DataFrame([
 st.table(fund_df)
 
 
-# ZONEN
 st.markdown("### Zonen-Uebersicht")
 
 zones_data = [
@@ -923,7 +1082,6 @@ zones_data = [
 st.table(pd.DataFrame(zones_data))
 
 
-# EXPANDER
 with st.expander("Warum dieses Signal?"):
     st.write(
         f"""
@@ -931,7 +1089,11 @@ Diese Aktie wird aktuell als **{signal}** eingestuft.
 
 - Trend Score: **{trend_score:.2f}**
 - Range Momentum: **{range_momentum:.2f}**
-- 3M Momentum: **{momentum_3m * 100:.1f}%**
+- 3M Momentum: **{format_pct(momentum_3m)}**
+- 1M Momentum: **{format_pct(momentum_1m)}**
+- 20D Momentum: **{format_pct(momentum_20d)}**
+- MA50 Abstand: **{format_pct(ma50_distance)}**
+- Preis ueber MA50: **{normalize_bool(price_above_ma50)}**
 - Momentum Risiko: **{momentum_risk}**
 - Theme Status: **{theme_status}**
 - Bullisch-Anteil: **{theme_bullish_pct:.0f}%**
