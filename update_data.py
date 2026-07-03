@@ -134,6 +134,36 @@ def calculate_moving_averages(hist, price):
     )
 
 
+def calculate_volume_data(hist):
+    volume = None
+    avg_volume = None
+    volume_ratio = None
+
+    try:
+        if "Volume" not in hist.columns:
+            return volume, avg_volume, volume_ratio
+
+        volume_series = hist["Volume"].dropna()
+
+        if volume_series.empty:
+            return volume, avg_volume, volume_ratio
+
+        volume = volume_series.iloc[-1]
+
+        if len(volume_series) >= 20:
+            avg_volume = volume_series.tail(20).mean()
+        else:
+            avg_volume = volume_series.mean()
+
+        if pd.notna(avg_volume) and avg_volume != 0:
+            volume_ratio = volume / avg_volume
+
+    except Exception:
+        pass
+
+    return volume, avg_volume, volume_ratio
+
+
 def empty_result(ticker, existing_description):
     return (
         None, None, None,
@@ -143,7 +173,8 @@ def empty_result(ticker, existing_description):
         None, None, None,
         None, None, None,
         None, None, None, None,
-        None, None
+        None, None,
+        None, None, None
     )
 
 
@@ -196,6 +227,12 @@ def fetch_data(ticker, existing_description=""):
             price_above_ma200
         ) = calculate_moving_averages(hist, price)
 
+        (
+            volume,
+            avg_volume,
+            volume_ratio
+        ) = calculate_volume_data(hist)
+
         return (
             price,
             high,
@@ -216,7 +253,10 @@ def fetch_data(ticker, existing_description=""):
             ma50_distance,
             ma200_distance,
             price_above_ma50,
-            price_above_ma200
+            price_above_ma200,
+            volume,
+            avg_volume,
+            volume_ratio
         )
 
     except Exception as e:
@@ -262,6 +302,10 @@ def main():
     price_above_ma50_list = []
     price_above_ma200_list = []
 
+    volume_list = []
+    avg_volume_list = []
+    volume_ratio_list = []
+
     for ticker in df["Ticker"]:
 
         existing_description = existing_descriptions.get(ticker, "")
@@ -286,7 +330,10 @@ def main():
             ma50_distance,
             ma200_distance,
             price_above_ma50,
-            price_above_ma200
+            price_above_ma200,
+            volume,
+            avg_volume,
+            volume_ratio
 
         ) = fetch_data(
             ticker,
@@ -317,6 +364,10 @@ def main():
         price_above_ma50_list.append(price_above_ma50)
         price_above_ma200_list.append(price_above_ma200)
 
+        volume_list.append(volume)
+        avg_volume_list.append(avg_volume)
+        volume_ratio_list.append(volume_ratio)
+
     df["Preis"] = prices
     df["52W High"] = highs
     df["52W Low"] = lows
@@ -341,6 +392,10 @@ def main():
     df["MA200 Abstand"] = ma200_distance_list
     df["Preis ueber MA50"] = price_above_ma50_list
     df["Preis ueber MA200"] = price_above_ma200_list
+
+    df["Volume"] = volume_list
+    df["Avg Volume"] = avg_volume_list
+    df["Volume Ratio"] = volume_ratio_list
 
     df = df.dropna(
         subset=["Preis", "52W High", "52W Low"]
@@ -377,6 +432,10 @@ def main():
     df["MA200"] = df["MA200"].round(2)
     df["MA50 Abstand"] = df["MA50 Abstand"].round(2)
     df["MA200 Abstand"] = df["MA200 Abstand"].round(2)
+
+    df["Volume"] = df["Volume"].round(0)
+    df["Avg Volume"] = df["Avg Volume"].round(0)
+    df["Volume Ratio"] = df["Volume Ratio"].round(2)
 
     df.to_csv(
         OUTPUT_FILE,
