@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 st.title("🔥 Top Opportunities")
-st.caption("Top-Kandidaten nach Entry Score, 3M Momentum, Risiko und Fundamentaldaten.")
+st.caption("Top-Kandidaten nach Entry Score, 3M/1M/20D Momentum, MA50, Risiko und Fundamentaldaten.")
 
 st.markdown("### Navigation")
 
@@ -31,7 +31,7 @@ st.markdown("---")
 
 st.markdown("""
 **Short Term (2 Wochen – 3 Monate)**  
-Fokus: Entry Score, echtes 3M Momentum, Zone, Risiko und Momentum-Risiko.
+Fokus: Entry Score, 3M Momentum, 1M Momentum, 20D Momentum, MA50, Zone und Risiko.
 
 **Long Term Core (6+ Monate bis mehrere Jahre)**  
 Fokus: Unternehmensqualität, strukturelle Stärke und langfristige Robustheit.
@@ -49,8 +49,18 @@ if not os.path.exists("theme_scores.csv"):
 
 df = pd.read_csv("theme_scores.csv")
 
-if "3M Momentum" not in df.columns:
-    st.error("Die Spalte '3M Momentum' fehlt. Bitte zuerst update_data.py ausführen.")
+required_columns = [
+    "3M Momentum",
+    "1M Momentum",
+    "20D Momentum",
+    "MA50 Abstand",
+    "Preis ueber MA50"
+]
+
+missing_columns = [col for col in required_columns if col not in df.columns]
+
+if missing_columns:
+    st.error(f"Diese Spalten fehlen in theme_scores.csv: {missing_columns}")
     st.stop()
 
 
@@ -60,6 +70,25 @@ def load_price_history(ticker):
         return yf.Ticker(ticker).history(period="1y")
     except Exception:
         return pd.DataFrame()
+
+
+def normalize_bool(value):
+    if value is True:
+        return True
+
+    if value is False:
+        return False
+
+    if isinstance(value, str):
+        value = value.strip().lower()
+
+        if value == "true":
+            return True
+
+        if value == "false":
+            return False
+
+    return None
 
 
 def get_zone(row):
@@ -130,10 +159,44 @@ def get_trend_direction(hist, price):
             return "Kurzfristig negativ"
 
 
-def get_momentum_risk(momentum_3m, zone):
+def get_momentum_risk(
+    momentum_3m,
+    momentum_1m,
+    momentum_20d,
+    ma50_distance,
+    price_above_ma50,
+    zone
+):
+    price_above_ma50 = normalize_bool(price_above_ma50)
+
     if pd.isna(momentum_3m):
         return "Unklar"
 
+    # Stark gelaufen, aber kurzfristig kippt es.
+    if momentum_3m > 0.50:
+        if pd.notna(momentum_1m) and momentum_1m < 0:
+            return "Kippt"
+
+        if pd.notna(momentum_20d) and momentum_20d < 0:
+            return "Kippt"
+
+        if price_above_ma50 is False:
+            return "Kippt"
+
+    # Fallendes Messer / kurzfristiger Bruch.
+    if pd.notna(momentum_1m) and momentum_1m < -0.10:
+        return "Fallend"
+
+    if pd.notna(momentum_20d) and momentum_20d < -0.10:
+        return "Fallend"
+
+    if pd.notna(ma50_distance) and ma50_distance < -0.05:
+        return "Fallend"
+
+    if price_above_ma50 is False and pd.notna(momentum_1m) and momentum_1m < 0:
+        return "Fallend"
+
+    # Überhitzung ohne klaren Bruch.
     if momentum_3m > 0.80:
         return "Extrem ueberhitzt"
 
@@ -200,7 +263,16 @@ def get_fundamental_quality(score):
         return "Niedrig"
 
 
-def get_entry_score(zone, trend_direction, range_momentum, momentum_3m, fundamental_quality, forward_pe, revenue_growth, earnings_growth):
+def get_entry_score(
+    zone,
+    trend_direction,
+    range_momentum,
+    momentum_3m,
+    fundamental_quality,
+    forward_pe,
+    revenue_growth,
+    earnings_growth
+):
     score = 0
 
     if zone == "Watchlist Zone":
@@ -290,6 +362,9 @@ def apply_momentum_risk_to_entry(row):
     if row["Momentum Risiko"] in ["Fallend", "Kippt"]:
         score -= 3
 
+    if row["Momentum Risiko"] == "Unklar":
+        score -= 1
+
     return max(0, min(score, 10))
 
 
@@ -308,6 +383,26 @@ def short_score(row):
         score -= 3
     elif row["3M Momentum"] < 0:
         score -= 1
+
+    if pd.notna(row.get("1M Momentum")):
+        if row["1M Momentum"] > 0.03:
+            score += 1
+        elif row["1M Momentum"] < -0.05:
+            score -= 3
+
+    if pd.notna(row.get("20D Momentum")):
+        if row["20D Momentum"] > 0.03:
+            score += 1
+        elif row["20D Momentum"] < -0.05:
+            score -= 3
+
+    if pd.notna(row.get("MA50 Abstand")):
+        if 0 <= row["MA50 Abstand"] <= 0.10:
+            score += 1
+        elif row["MA50 Abstand"] < -0.03:
+            score -= 3
+        elif row["MA50 Abstand"] > 0.25:
+            score -= 2
 
     if row["Momentum"] > 0:
         score += row["Momentum"] * 1.5
@@ -331,7 +426,7 @@ def short_score(row):
         score += 2
     elif row["Trendrichtung"] == "Turnaround moeglich":
         score += 1
-    elif row["Trendrichtung"] in ["Abwaertstrend", "Trend schwaecht sich ab"]:
+    elif row["Trendrichtung"] in ["Abwaertstrend", "Trend schwaecht sich ab", "Kurzfristig negativ"]:
         score -= 3
 
     if row["Risiko"] == "Niedrig":
@@ -358,7 +453,7 @@ def short_score(row):
     elif row["Momentum Risiko"] == "Extrem ueberhitzt":
         score -= 8
     elif row["Momentum Risiko"] in ["Fallend", "Kippt"]:
-        score -= 6
+        score -= 8
     elif row["Momentum Risiko"] == "Unklar":
         score -= 2
 
@@ -430,6 +525,15 @@ def long_warning(row):
     if row["3M Momentum"] > 0.60:
         warnings.append("Hype Momentum")
 
+    if pd.notna(row.get("1M Momentum")) and row["1M Momentum"] < 0:
+        warnings.append("1M negativ")
+
+    if pd.notna(row.get("20D Momentum")) and row["20D Momentum"] < 0:
+        warnings.append("20D negativ")
+
+    if pd.notna(row.get("MA50 Abstand")) and row["MA50 Abstand"] < 0:
+        warnings.append("Unter/nahe MA50")
+
     if row["Momentum Risiko"] in ["Ueberhitzt", "Extrem ueberhitzt"]:
         warnings.append(row["Momentum Risiko"])
 
@@ -479,12 +583,32 @@ def long_score(row):
     elif row["3M Momentum"] < 0:
         timing_block -= 1
 
+    if pd.notna(row.get("1M Momentum")):
+        if row["1M Momentum"] < -0.05:
+            timing_block -= 3
+        elif row["1M Momentum"] > 0.02:
+            timing_block += 1
+
+    if pd.notna(row.get("20D Momentum")):
+        if row["20D Momentum"] < -0.05:
+            timing_block -= 3
+        elif row["20D Momentum"] > 0.02:
+            timing_block += 1
+
+    if pd.notna(row.get("MA50 Abstand")):
+        if row["MA50 Abstand"] < -0.03:
+            timing_block -= 3
+        elif 0 <= row["MA50 Abstand"] <= 0.15:
+            timing_block += 1
+        elif row["MA50 Abstand"] > 0.25:
+            timing_block -= 2
+
     if row["Momentum Risiko"] == "Ueberhitzt":
         timing_block -= 3
     elif row["Momentum Risiko"] == "Extrem ueberhitzt":
         timing_block -= 6
     elif row["Momentum Risiko"] in ["Fallend", "Kippt"]:
-        timing_block -= 5
+        timing_block -= 6
     elif row["Momentum Risiko"] == "Unklar":
         timing_block -= 1
 
@@ -533,6 +657,18 @@ def early_score(row):
     elif row["3M Momentum"] > 0:
         score += 2
 
+    if pd.notna(row.get("1M Momentum")):
+        if 0.02 < row["1M Momentum"] < 0.20:
+            score += 3
+        elif row["1M Momentum"] < 0:
+            score -= 5
+
+    if pd.notna(row.get("20D Momentum")):
+        if 0.02 < row["20D Momentum"] < 0.18:
+            score += 3
+        elif row["20D Momentum"] < 0:
+            score -= 5
+
     if row["Trendrichtung"] == "Frischer Aufwaertstrend":
         score += 4
     elif row["Trendrichtung"] == "Turnaround moeglich":
@@ -555,11 +691,19 @@ def early_score(row):
     if row["Momentum"] > 0:
         score += 2
 
+    if pd.notna(row.get("MA50 Abstand")):
+        if -0.03 <= row["MA50 Abstand"] <= 0.12:
+            score += 2
+        elif row["MA50 Abstand"] < -0.05:
+            score -= 5
+        elif row["MA50 Abstand"] > 0.20:
+            score -= 2
+
     if row["Risiko"] == "Sehr hoch":
         score -= 4
 
     if row["Momentum Risiko"] != "Normal":
-        score -= 6
+        score -= 8
 
     return score
 
@@ -643,8 +787,12 @@ df["Risiko"] = df.apply(
 
 df["Momentum Risiko"] = df.apply(
     lambda row: get_momentum_risk(
-        row["3M Momentum"],
-        row["Zone"]
+        row.get("3M Momentum"),
+        row.get("1M Momentum"),
+        row.get("20D Momentum"),
+        row.get("MA50 Abstand"),
+        row.get("Preis ueber MA50"),
+        row.get("Zone")
     ),
     axis=1
 )
@@ -664,6 +812,8 @@ df["High Conviction"] = (
     (df["Early Score"] >= 12)
     & (df["Fundamental Quality"] == "Hoch")
     & (df["3M Momentum"] > 0)
+    & (df["1M Momentum"] > 0)
+    & (df["20D Momentum"] > 0)
     & (df["Momentum Risiko"] == "Normal")
 )
 
@@ -675,16 +825,21 @@ df = (
     .drop_duplicates(subset=["Ticker"], keep="first")
 )
 
-safe_momentum_mask = df["Momentum Risiko"].isin(["Normal"])
+safe_momentum_mask = (
+    (df["Momentum Risiko"] == "Normal")
+    & (df["1M Momentum"] > 0)
+    & (df["20D Momentum"] > 0)
+    & (df["MA50 Abstand"] > -0.03)
+)
 
 short_df = (
     df[
         safe_momentum_mask
-        & ~df["Trendrichtung"].isin(["Abwaertstrend", "Trend schwaecht sich ab"])
+        & ~df["Trendrichtung"].isin(["Abwaertstrend", "Trend schwaecht sich ab", "Kurzfristig negativ"])
     ]
     .sort_values(
-        by=["Short Score", "Entry Score", "3M Momentum", "Fundamental Score"],
-        ascending=[False, False, False, False]
+        by=["Short Score", "Entry Score", "1M Momentum", "20D Momentum", "Fundamental Score"],
+        ascending=[False, False, False, False, False]
     )
     .head(8)
 )
@@ -704,11 +859,11 @@ long_entry_df = (
     df[
         df["Fundamental Quality"].isin(["Hoch", "Mittel"])
         & safe_momentum_mask
-        & ~df["Trendrichtung"].isin(["Abwaertstrend", "Trend schwaecht sich ab"])
+        & ~df["Trendrichtung"].isin(["Abwaertstrend", "Trend schwaecht sich ab", "Kurzfristig negativ"])
     ]
     .sort_values(
-        by=["Long Score", "Entry Score", "Trend Score", "Fundamental Score"],
-        ascending=[False, False, False, False]
+        by=["Long Score", "Entry Score", "1M Momentum", "20D Momentum", "Fundamental Score"],
+        ascending=[False, False, False, False, False]
     )
     .head(8)
 )
@@ -721,8 +876,12 @@ if has_volume_cols:
         & (df["Trend Score"] > 0.25)
         & (df["3M Momentum"] > 0.03)
         & (df["3M Momentum"] < 0.20)
+        & (df["1M Momentum"] > 0.02)
+        & (df["20D Momentum"] > 0.02)
         & (df["Trendrichtung"] == "Frischer Aufwaertstrend")
         & (df["Momentum Risiko"] == "Normal")
+        & (df["MA50 Abstand"] > -0.03)
+        & (df["MA50 Abstand"] < 0.15)
         & (df["Avg Volume"] > 0)
         & (df["Volume"] > 1.2 * df["Avg Volume"])
     )
@@ -731,7 +890,10 @@ else:
 
 early_df = (
     df[early_mask]
-    .sort_values(by=["Early Score", "Fundamental Score", "3M Momentum"], ascending=[False, False, False])
+    .sort_values(
+        by=["Early Score", "Fundamental Score", "1M Momentum", "20D Momentum"],
+        ascending=[False, False, False, False]
+    )
 )
 
 early_df = early_df[early_df["Early Score"] >= 12].head(8)
@@ -752,6 +914,9 @@ st.dataframe(
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
+        "1M Momentum",
+        "20D Momentum",
+        "MA50 Abstand",
         "Momentum Risiko",
         "Zone",
         "Risiko",
@@ -760,6 +925,9 @@ st.dataframe(
     ]].style.format({
         "Entry Score": "{:.0f}",
         "3M Momentum": "{:.1%}",
+        "1M Momentum": "{:.1%}",
+        "20D Momentum": "{:.1%}",
+        "MA50 Abstand": "{:.1%}",
         "Short Score": "{:.1f}"
     }),
     use_container_width=True,
@@ -771,7 +939,7 @@ show_open_detail_section(short_display, "Short Term", "short_detail_select")
 st.markdown("---")
 
 st.markdown("## 📈 Long Term Core")
-st.caption("Die qualitativ stärksten langfristigen Kandidaten. Überhitzung wird angezeigt, aber nicht automatisch ausgeschlossen.")
+st.caption("Die qualitativ stärksten langfristigen Kandidaten. Überhitzung oder kurzfristige Schwäche wird angezeigt, aber nicht automatisch ausgeschlossen.")
 
 st.dataframe(
     long_core_display[[
@@ -785,6 +953,9 @@ st.dataframe(
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
+        "1M Momentum",
+        "20D Momentum",
+        "MA50 Abstand",
         "Momentum Risiko",
         "Risiko",
         "Trend Score",
@@ -794,6 +965,9 @@ st.dataframe(
         "Structural Score": "{:.0f}",
         "Entry Score": "{:.0f}",
         "3M Momentum": "{:.1%}",
+        "1M Momentum": "{:.1%}",
+        "20D Momentum": "{:.1%}",
+        "MA50 Abstand": "{:.1%}",
         "Trend Score": "{:.2f}"
     }),
     use_container_width=True,
@@ -805,7 +979,7 @@ show_open_detail_section(long_core_display, "Long Term Core", "long_core_detail_
 st.markdown("---")
 
 st.markdown("## 🔵 Long Term Entry")
-st.caption("Langfristige Qualitätskandidaten mit Fokus auf sinnvollere Einstiegsbereiche. Überhitzte und fallende Werte werden ausgeschlossen.")
+st.caption("Langfristige Qualitätskandidaten mit Fokus auf sinnvollere Einstiegsbereiche. Kurzfristig fallende oder kippende Werte werden ausgeschlossen.")
 
 st.dataframe(
     long_entry_display[[
@@ -819,6 +993,9 @@ st.dataframe(
         "Entry Quality",
         "Entry Score",
         "3M Momentum",
+        "1M Momentum",
+        "20D Momentum",
+        "MA50 Abstand",
         "Momentum Risiko",
         "Risiko",
         "Trend Score",
@@ -829,6 +1006,9 @@ st.dataframe(
         "Structural Score": "{:.0f}",
         "Entry Score": "{:.0f}",
         "3M Momentum": "{:.1%}",
+        "1M Momentum": "{:.1%}",
+        "20D Momentum": "{:.1%}",
+        "MA50 Abstand": "{:.1%}",
         "Trend Score": "{:.2f}",
         "Long Score": "{:.1f}"
     }),
@@ -856,12 +1036,18 @@ st.dataframe(
         "Trendrichtung",
         "Trend Score",
         "3M Momentum",
+        "1M Momentum",
+        "20D Momentum",
+        "MA50 Abstand",
         "Momentum Risiko",
         "Early Score",
         "High Conviction"
     ]].style.format({
         "Trend Score": "{:.2f}",
         "3M Momentum": "{:.1%}",
+        "1M Momentum": "{:.1%}",
+        "20D Momentum": "{:.1%}",
+        "MA50 Abstand": "{:.1%}",
         "Early Score": "{:.1f}"
     }),
     use_container_width=True,
