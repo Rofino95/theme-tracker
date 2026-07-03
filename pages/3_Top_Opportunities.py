@@ -1071,7 +1071,7 @@ st.dataframe(
         "1M Momentum": "{:.1%}",
         "20D Momentum": "{:.1%}",
         "MA50 Abstand": "{:.1%}",
-        "Volume Ratio": "{:.2f}"
+        "Volume Ratio": "{:.2f}",
         "Early Score": "{:.1f}"
     }),
     use_container_width=True,
