@@ -870,23 +870,57 @@ long_entry_df = (
 
 has_volume_cols = {"Volume", "Avg Volume"}.issubset(df.columns)
 
+# Early Plays sollen frühe Kandidaten finden.
+# Mit Volumendaten ist der Filter strenger.
+# Ohne Volumendaten nutzt die Seite einen technischen Ersatzfilter.
+
 if has_volume_cols:
     early_mask = (
-        (df["Trend Score"] < 0.65)
-        & (df["Trend Score"] > 0.25)
-        & (df["3M Momentum"] > 0.03)
-        & (df["3M Momentum"] < 0.20)
-        & (df["1M Momentum"] > 0.02)
-        & (df["20D Momentum"] > 0.02)
-        & (df["Trendrichtung"] == "Frischer Aufwaertstrend")
+        (df["Trend Score"] > 0.20)
+        & (df["Trend Score"] < 0.75)
+        & (df["3M Momentum"] > 0.02)
+        & (df["3M Momentum"] < 0.35)
+        & (df["1M Momentum"] > -0.03)
+        & (df["20D Momentum"] > -0.03)
         & (df["Momentum Risiko"] == "Normal")
-        & (df["MA50 Abstand"] > -0.03)
-        & (df["MA50 Abstand"] < 0.15)
+        & (df["MA50 Abstand"] > -0.05)
+        & (df["MA50 Abstand"] < 0.20)
+        & (
+            df["Trendrichtung"].isin([
+                "Frischer Aufwaertstrend",
+                "Turnaround moeglich",
+                "Kurzfristig positiv",
+                "Aufwaertstrend"
+            ])
+        )
         & (df["Avg Volume"] > 0)
-        & (df["Volume"] > 1.2 * df["Avg Volume"])
+        & (df["Volume"] > 1.1 * df["Avg Volume"])
     )
+
+    min_early_score = 12
+
 else:
-    early_mask = pd.Series([False] * len(df), index=df.index)
+    early_mask = (
+        (df["Trend Score"] > 0.20)
+        & (df["Trend Score"] < 0.75)
+        & (df["3M Momentum"] > 0.02)
+        & (df["3M Momentum"] < 0.35)
+        & (df["1M Momentum"] > -0.03)
+        & (df["20D Momentum"] > -0.03)
+        & (df["Momentum Risiko"] == "Normal")
+        & (df["MA50 Abstand"] > -0.05)
+        & (df["MA50 Abstand"] < 0.20)
+        & (
+            df["Trendrichtung"].isin([
+                "Frischer Aufwaertstrend",
+                "Turnaround moeglich",
+                "Kurzfristig positiv",
+                "Aufwaertstrend"
+            ])
+        )
+    )
+
+    min_early_score = 8
 
 early_df = (
     df[early_mask]
@@ -896,7 +930,7 @@ early_df = (
     )
 )
 
-early_df = early_df[early_df["Early Score"] >= 12].head(8)
+early_df = early_df[early_df["Early Score"] >= min_early_score].head(8)
 
 short_display = add_rank(short_df)
 long_core_display = add_rank(long_core_df)
